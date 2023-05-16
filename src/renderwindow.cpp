@@ -1,9 +1,10 @@
-	#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 
 #include "renderwindow.hpp"
 #include "entity.hpp"
+#include "texture.hpp"
 
 RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
@@ -15,31 +16,21 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 		std::cout << "Window failed to init. Error: " << SDL_GetError() << std::endl;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-}
-
-RenderWindow::~RenderWindow() {
-	RenderWindow::cleanUp();
-	RenderWindow::clear();
-}
-
-SDL_Texture* RenderWindow::loadTexture(const char* p_filePath)
-{
-	SDL_Texture* texture = NULL;
-	texture = IMG_LoadTexture(renderer, p_filePath);
-
-	if (texture == NULL)
-		std::cout << "Failed to load texture. Error: " << SDL_GetError() << std::endl;
-	
-	
-	
-	return texture;
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED && SDL_RENDERER_PRESENTVSYNC);
 }
 
 void RenderWindow::cleanUp()
 {
-	SDL_DestroyWindow(window);
+    if (renderer != NULL) {
+        SDL_DestroyRenderer(renderer);
+        renderer = NULL;
+    }
+    if (window != NULL) {
+        SDL_DestroyWindow(window);
+        window = NULL;
+    }
 }
+
 
 void RenderWindow::clear()
 {
@@ -55,10 +46,10 @@ void RenderWindow::render(Entity& p_entity)
 	src.h = p_entity.getCurrentFrame().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getPos().x * 4;
-	dst.y = p_entity.getPos().y * 4;
-	dst.w = p_entity.getCurrentFrame().w * 4;
-	dst.h = p_entity.getCurrentFrame().h * 4;
+	dst.x = p_entity.getPos().x;
+	dst.y = p_entity.getPos().y;
+	dst.w = p_entity.getCurrentFrame().w;
+	dst.h = p_entity.getCurrentFrame().h;
 
 	SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
 }
