@@ -5,4 +5,5 @@ Alex and Connor's first C++ game
 ## setup
 $
     sudo apt-get install libsdl2-dev
-    g++ main.cpp -lSDL2
+    sudo apt-get install libsdl2-image-dev
+    ./buildRun.sh
