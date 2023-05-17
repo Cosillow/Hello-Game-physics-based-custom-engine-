@@ -5,6 +5,7 @@
 #include "entity.hpp"
 #include "texture.hpp"
 #include "player.hpp"
+#include "sword.hpp"
 
 void App::handleInputs(Player& player1, Player& player2) const {
 	_inputManager->update();
@@ -94,10 +95,13 @@ void App::run() const {
     Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
 
 	
-	Player wilson(100, 55, spaceDoritoTex, 1);
-	Player spilson(200, 55, spaceDoritoTex, 2); 
+	Player wilson(Vector2f(100.0f, 55.0f), spaceDoritoTex, 1);
+	Player spilson(Vector2f(200.0f, 55.0f), spaceDoritoTex, 2); 
 
-	
+
+	Sword spillySword(Vector2f(0.0f, 0.0f), spaceDoritoTex, spilson);
+	spilson.equipWeapon(&spillySword);
+
 
 
 	bool gameRunning = true;
@@ -126,10 +130,13 @@ void App::run() const {
 		// update
 		wilson.update(deltaTime);
 		spilson.update(deltaTime);
+		// spillySword.update(deltaTime);
 		
 		// render
 		_window.render(wilson);
 		_window.render(spilson);
+		_window.render(spillySword);
+		
 		
 		// display
 		_window.display();

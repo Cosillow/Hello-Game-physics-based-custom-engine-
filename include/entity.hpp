@@ -12,6 +12,8 @@ public:
     Entity(Vector2f pos, Texture& tex);
     Vector2f& getPos() { return _pos; }
     Texture& getTex() { return _tex; }
+
+    void setPos(Vector2f& pos) { _pos = pos; }
     SDL_Rect getCurrentFrame() { return _currentFrame; }
     virtual void update(float deltaTime) {}; // nothing to update
 private:

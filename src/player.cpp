@@ -26,7 +26,6 @@ void Player::moveLeft(bool start) {
 
 void Player::update(float deltaTime) {
     const float speed = Constants::PLAYER_SPEED * deltaTime;
-    Entity::getPos().print(); 
 
     if (_isMovingUp) {
         Entity::getPos().y -= speed;
@@ -37,6 +36,4 @@ void Player::update(float deltaTime) {
     } if (_isMovingRight) {
         Entity::getPos().x += speed;
     }
-
-    Entity::getPos().print();
 }
