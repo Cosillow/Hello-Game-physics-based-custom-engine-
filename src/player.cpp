@@ -7,31 +7,36 @@
 #include "inputmanager.hpp"
 #include "constants.hpp"
 
-//makes the player go upwards
+
 void Player::moveUp(bool start) {
-    if(start) {
-       Entity::getPos().y = Entity::getPos().y - Constants::PLAYER_SPEED;
-       std::cout << "move up" << std::endl;
-    }
+    _isMovingUp = start;
 }
-//changes the direction to be going downwards
+
 void Player::moveDown(bool start) {
-    if(start) {
-        Entity::getPos().y = Entity::getPos().y + Constants::PLAYER_SPEED;
-        std::cout << "move down" << std::endl;
-    }
+    _isMovingDown = start;
 }
-//makes the player go upwards
+
 void Player::moveRight(bool start) {
-    if (start) {
-        Entity::getPos().x = Entity::getPos().x + Constants::PLAYER_SPEED;
-        std::cout << "move right" << std::endl;
-    }
+    _isMovingRight = start;
 }
-//changes the direction to be going downwards
+
 void Player::moveLeft(bool start) {
-    if(start) {
-        Entity::getPos().x = Entity::getPos().x - Constants::PLAYER_SPEED;
-        std::cout << "move left" << std::endl;
+    _isMovingLeft = start;
+}
+
+void Player::update(float deltaTime) {
+    const float speed = Constants::PLAYER_SPEED * deltaTime;
+    Entity::getPos().print(); 
+
+    if (_isMovingUp) {
+        Entity::getPos().y -= speed;
+    } if (_isMovingDown) {
+        Entity::getPos().y += speed;
+    } if (_isMovingLeft) {
+        Entity::getPos().x -= speed;
+    } if (_isMovingRight) {
+        Entity::getPos().x += speed;
     }
+
+    Entity::getPos().print();
 }

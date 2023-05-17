@@ -13,6 +13,7 @@ public:
     Vector2f& getPos() { return _pos; }
     Texture& getTex() { return _tex; }
     SDL_Rect getCurrentFrame() { return _currentFrame; }
+    virtual void update(float deltaTime) {}; // nothing to update
 private:
     Vector2f _pos;
     SDL_Rect _currentFrame;

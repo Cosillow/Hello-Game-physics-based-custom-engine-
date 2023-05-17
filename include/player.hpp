@@ -13,6 +13,11 @@ public:
     void moveLeft(bool start);
     void moveRight(bool start);
     int getId() {return _id;}
+    void update(float deltaTime) override;
 private:
     int _id;
+    bool _isMovingUp;
+    bool _isMovingDown;
+    bool _isMovingLeft;
+    bool _isMovingRight; 
 };

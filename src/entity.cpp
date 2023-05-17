@@ -10,4 +10,3 @@ Entity::Entity(Vector2f pos, Texture& tex)
     _currentFrame.x = 0;
     _currentFrame.y = 0;
 }
-

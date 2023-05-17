@@ -101,11 +101,15 @@ void App::run() const {
 
 
 	bool gameRunning = true;
-
+	Uint32 prevTime = SDL_GetTicks();
+	float deltaTime = 0;
 	SDL_Event event;
 
 	while (gameRunning)
 	{
+		Uint32 currentTime = SDL_GetTicks();
+        deltaTime = (currentTime - prevTime) / 1000.0f; // Convert to seconds
+        prevTime = currentTime;
         
 		handleInputs(wilson, spilson);
 
@@ -116,13 +120,19 @@ void App::run() const {
 				gameRunning = false;
 		}
 
+		// clear
 		_window.clear();
+
+		// update
+		wilson.update(deltaTime);
+		spilson.update(deltaTime);
 		
+		// render
 		_window.render(wilson);
 		_window.render(spilson);
 		
+		// display
 		_window.display();
-
 	}
 
 	
