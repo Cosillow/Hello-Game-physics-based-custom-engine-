@@ -25,9 +25,3 @@ Texture::Texture(SDL_Renderer *renderer, const std::string &file)
         SDL_FreeSurface(surface);
     }
 }
-
-Texture::~Texture()
-{
-    // SDL_DestroyTexture can safely be called on nullptr, so no need to check for it here
-    SDL_DestroyTexture(_texture);
-}

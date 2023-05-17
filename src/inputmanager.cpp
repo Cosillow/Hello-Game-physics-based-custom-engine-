@@ -5,10 +5,6 @@ InputManager::InputManager()
     keyState = SDL_GetKeyboardState(&keyLength);
 }
 
-InputManager::~InputManager()
-{
-}
-
 void InputManager::update()
 {
     SDL_PumpEvents();  // update SDL event state

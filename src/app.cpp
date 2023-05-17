@@ -4,29 +4,101 @@
 #include "app.hpp"
 #include "entity.hpp"
 #include "texture.hpp"
+#include "player.hpp"
 
-void App::run() const {
-    Texture grassTexture(_window.getRenderer(), "res/spaceDorito.png");
-
-
-
-
-
-
-
-    std::vector<Entity> entitiees = {Entity(Vector2f(0, 0), grassTexture.get()),
-                         			 Entity(Vector2f(30, 0), grassTexture.get()),
-                           			 Entity(Vector2f(30, 30), grassTexture.get()),
-                          			 Entity(Vector2f(30, 60), grassTexture.get())};
-    {
-	    Entity wilson(Vector2f(100, 50), grassTexture.get());
-
-	    entitiees.push_back(wilson);
-	    
+void App::handleInputs(Player& player1, Player& player2) const {
+	_inputManager->update();
+	if (_inputManager->isKeyDown(SDL_SCANCODE_W)) 
+	{
+		player1.moveUp(true);
 	}
 
+	if (_inputManager->isKeyUp(SDL_SCANCODE_W))
+	{
+		player1.moveUp(false);
+	}
 
-	bool TESTHideImages = false;
+	if (_inputManager->isKeyDown(SDL_SCANCODE_S)) 
+	{
+		player1.moveDown(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_S))
+	{
+		player1.moveDown(false);
+	}
+
+	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
+	{
+		player1.moveLeft(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_A))
+	{
+		player1.moveLeft(false);
+	}
+
+	if (_inputManager->isKeyDown(SDL_SCANCODE_D)) 
+	{
+		player1.moveRight(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_D))
+	{
+		player1.moveRight(false);
+	}
+
+	// player 2
+	if (_inputManager->isKeyDown(SDL_SCANCODE_UP)) 
+	{
+		player2.moveUp(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_UP))
+	{
+		player2.moveUp(false);
+	}
+	
+	if (_inputManager->isKeyDown(SDL_SCANCODE_DOWN)) 
+	{
+		player2.moveDown(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_DOWN))
+	{
+		player2.moveDown(false);
+	}
+
+	if (_inputManager->isKeyDown(SDL_SCANCODE_LEFT)) 
+	{
+		player2.moveLeft(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_LEFT))
+	{
+		player2.moveLeft(false);
+	}
+
+	if (_inputManager->isKeyDown(SDL_SCANCODE_RIGHT)) 
+	{
+		player2.moveRight(true);
+	}
+
+	if (_inputManager->isKeyUp(SDL_SCANCODE_RIGHT))
+	{
+		player2.moveRight(false);
+	}
+}
+
+void App::run() const {
+    Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
+
+	
+	Player wilson(100, 55, spaceDoritoTex, 1);
+	Player spilson(200, 55, spaceDoritoTex, 2); 
+
+	
+
 
 	bool gameRunning = true;
 
@@ -34,18 +106,8 @@ void App::run() const {
 
 	while (gameRunning)
 	{
-        _inputManager->update();
-
-		if (_inputManager->isKeyDown(SDL_SCANCODE_SPACE)) 
-        {
-			TESTHideImages = true;
-        }
-
-		if (_inputManager->isKeyUp(SDL_SCANCODE_SPACE))
-        {
-            TESTHideImages = false;
-        }
-
+        
+		handleInputs(wilson, spilson);
 
 		// Get our controls and events
 		while (SDL_PollEvent(&event))
@@ -56,14 +118,9 @@ void App::run() const {
 
 		_window.clear();
 		
-		if (!TESTHideImages) {
-			for (Entity& e : entitiees)
-		{ 
-			_window.render(e);
-		}
-		}
+		_window.render(wilson);
+		_window.render(spilson);
 		
-
 		_window.display();
 
 	}

@@ -6,7 +6,6 @@ class InputManager
 {
 public:
     InputManager();
-    ~InputManager();
     void update();
     bool isKeyDown(SDL_Scancode key);
     bool isKeyUp(SDL_Scancode key);

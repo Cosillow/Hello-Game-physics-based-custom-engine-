@@ -1,15 +1,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <string.h>
 
 #include "renderwindow.hpp"
 #include "entity.hpp"
 #include "texture.hpp"
 
-RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
+
+RenderWindow::RenderWindow(const std::string& p_title, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
 {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow(p_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
 
 	if (window == NULL)
 	{
@@ -51,7 +53,7 @@ void RenderWindow::render(Entity& p_entity)
 	dst.w = p_entity.getCurrentFrame().w;
 	dst.h = p_entity.getCurrentFrame().h;
 
-	SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
+	SDL_RenderCopy(renderer, p_entity.getTex().get(), &src, &dst);
 }
 
 void RenderWindow::display()
