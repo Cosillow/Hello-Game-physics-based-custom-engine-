@@ -1,8 +1,6 @@
 #include "sword.hpp"
 #include "weapon.hpp"
 
-#include <iostream>
-
 void Sword::attack()
 {
     _swingTimer = _swingTime; // Start the swing timer
@@ -38,7 +36,5 @@ void Sword::update(float deltaTime)
         swordPos.y = playerPos.y + _offset.y;
     }
 
-    // Set the updated sword position
-    std::cout << "sword position: " << swordPos.x << ", " << swordPos.y << std::endl;
     setPosition(swordPos);
 }

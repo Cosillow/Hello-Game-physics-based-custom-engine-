@@ -48,8 +48,8 @@ void RenderWindow::clear()
 void RenderWindow::render(Entity& entity)
 {
 	SDL_Rect src; 
-	src.x = entity.getBoundingBox().x;
-	src.y = entity.getBoundingBox().y;
+	src.x = 0;
+	src.y = 0;
 	src.w = entity.getBoundingBox().w;
 	src.h = entity.getBoundingBox().h;
 

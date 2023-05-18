@@ -100,10 +100,12 @@ void App::run() const {
 	Player wilson({100, 55}, spaceDoritoTex, 1);
 	Player spilson({200, 55}, spaceDoritoTex, 2); 
 
-	Sword doriSword({-100, 200}, spaceDoritoTex, wilson);
+	Sword doriSword({-100, 200}, swordTex, wilson);
 	Sword spillySword({100, 200}, swordTex, spilson);
+
 	spilson.equipWeapon(&spillySword);
 	wilson.equipWeapon(&doriSword);
+
 
 
 
@@ -133,7 +135,19 @@ void App::run() const {
 		// update
 		wilson.update(deltaTime);
 		spilson.update(deltaTime);
-		
+
+		bool collision = false;
+		// check collisions
+		if (_collisionManager->checkCollision(spillySword, wilson)) {
+			std::cout << "wilson has been touched by spillySword" << std::endl;
+			collision = true;
+		}
+		if (_collisionManager->checkCollision(doriSword, spilson)) {
+			std::cout << "spilson has been touched by doriSword" << std::endl;
+			collision = true;
+		}
+		if (!collision) std::cout << "no collision" << std::endl;
+
 		// render
 		_window.render(wilson);
 		_window.render(spilson);
