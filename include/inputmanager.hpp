@@ -10,6 +10,6 @@ public:
     bool isKeyDown(SDL_Scancode key);
     bool isKeyUp(SDL_Scancode key);
 private:
-    const Uint8* keyState;
-    int keyLength;
+    const Uint8* _keyState;
+    int _keyLength;
 };

@@ -4,7 +4,7 @@
 #include "renderwindow.hpp"
 #include "app.hpp"
 
-
+// NON-preventable leaks
 // ==11220== LEAK SUMMARY:
 // ==11220==    definitely lost: 17 bytes in 1 blocks
 // ==11220==    indirectly lost: 0 bytes in 0 blocks
@@ -23,7 +23,6 @@ int main(int argc, char* args[])
 	{
 		// Create a new scope for `RenderWindow` and `App` deconstructors to be called
 		// Ensures order --> ~Textures(), ~RenderWindow(), SDL_Quit()
-
 		RenderWindow window("GAME v1.0", 1280, 720);
 
 		App app(window);

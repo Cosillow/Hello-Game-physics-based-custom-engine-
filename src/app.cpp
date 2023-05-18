@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <iostream>
 
 #include "app.hpp"
 #include "entity.hpp"
@@ -95,11 +96,11 @@ void App::run() const {
     Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
 
 	
-	Player wilson(Vector2f(100.0f, 55.0f), spaceDoritoTex, 1);
-	Player spilson(Vector2f(200.0f, 55.0f), spaceDoritoTex, 2); 
+	Player wilson({100, 55}, spaceDoritoTex, 1);
+	Player spilson({200, 55}, spaceDoritoTex, 2); 
 
 
-	Sword spillySword(Vector2f(0.0f, 0.0f), spaceDoritoTex, spilson);
+	Sword spillySword({500, 500}, spaceDoritoTex, spilson);
 	spilson.equipWeapon(&spillySword);
 
 
@@ -130,7 +131,6 @@ void App::run() const {
 		// update
 		wilson.update(deltaTime);
 		spilson.update(deltaTime);
-		// spillySword.update(deltaTime);
 		
 		// render
 		_window.render(wilson);

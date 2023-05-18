@@ -10,8 +10,6 @@ class Texture
 public:
     Texture(SDL_Renderer* renderer, const std::string& file);
     ~Texture() { SDL_DestroyTexture(_texture); }
-
-
     SDL_Texture* get() const { return _texture; }
 
 private:

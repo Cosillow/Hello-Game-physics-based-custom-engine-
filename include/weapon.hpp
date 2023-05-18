@@ -5,7 +5,7 @@
 class Weapon : public Entity
 {
 public:
-    Weapon(Vector2f pos, Texture& tex): Entity(pos, tex) {};
+    Weapon(SDL_FPoint pos, Texture& tex): Entity(pos, tex) {};
     virtual void attack() = 0;
     virtual void block() = 0;
     virtual void update(float deltaTime) override {};

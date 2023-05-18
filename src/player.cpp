@@ -25,15 +25,21 @@ void Player::moveLeft(bool start) {
 }
 
 void Player::update(float deltaTime) {
+    Entity::update(deltaTime);
+    if (_weapon) _weapon->update(deltaTime);
+
     const float speed = Constants::PLAYER_SPEED * deltaTime;
 
+    SDL_FPoint playerPosition = Entity::getPosition();
+    
     if (_isMovingUp) {
-        Entity::getPos().y -= speed;
+        playerPosition.y -= speed;
     } if (_isMovingDown) {
-        Entity::getPos().y += speed;
+        playerPosition.y += speed;
     } if (_isMovingLeft) {
-        Entity::getPos().x -= speed;
+        playerPosition.x -= speed;
     } if (_isMovingRight) {
-        Entity::getPos().x += speed;
+        playerPosition.x += speed;
     }
+    Entity::setPosition(playerPosition);
 }

@@ -8,14 +8,14 @@
 class RenderWindow 
 {
 public:
-	RenderWindow(const std::string& p_title, int p_w, int p_h);
+	RenderWindow(const std::string& title, int w, int h);
 	~RenderWindow() { cleanUp(); }
-	SDL_Renderer* getRenderer() const { return renderer; }
-	void render(Entity& p_entity);
+	SDL_Renderer* getRenderer() const { return _renderer; }
+	void render(Entity& entity);
 	void display();
 	void clear();
 private:
 	void cleanUp();
-	SDL_Window* window;
-	SDL_Renderer* renderer;
+	SDL_Window* _window;
+	SDL_Renderer* _renderer;
 };

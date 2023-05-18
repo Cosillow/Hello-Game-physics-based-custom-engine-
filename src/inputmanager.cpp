@@ -2,7 +2,7 @@
 
 InputManager::InputManager()
 {
-    keyState = SDL_GetKeyboardState(&keyLength);
+    _keyState = SDL_GetKeyboardState(&_keyLength);
 }
 
 void InputManager::update()
@@ -12,10 +12,10 @@ void InputManager::update()
 
 bool InputManager::isKeyDown(SDL_Scancode key)
 {
-    return keyState[key] == 1;
+    return _keyState[key] == 1;
 }
 
 bool InputManager::isKeyUp(SDL_Scancode key)
 {
-    return keyState[key] == 0;
+    return _keyState[key] == 0;
 }

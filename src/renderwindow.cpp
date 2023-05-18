@@ -8,55 +8,61 @@
 #include "texture.hpp"
 
 
-RenderWindow::RenderWindow(const std::string& p_title, int p_w, int p_h)
-	:window(NULL), renderer(NULL)
+RenderWindow::RenderWindow(const std::string& title, int w, int h)
+    : _window(nullptr), _renderer(nullptr)
 {
-	window = SDL_CreateWindow(p_title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
+    _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_SHOWN);
+    if (!_window)
+    {
+        std::cout << "Window failed to init. Error: " << SDL_GetError() << std::endl;
+        // Handle the error accordingly (e.g., throw an exception, clean up resources, etc.)
+    }
 
-	if (window == NULL)
-	{
-		std::cout << "Window failed to init. Error: " << SDL_GetError() << std::endl;
-	}
-
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED && SDL_RENDERER_PRESENTVSYNC);
+    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!_renderer)
+    {
+        std::cout << "Renderer failed to init. Error: " << SDL_GetError() << std::endl;
+        // Handle the error accordingly (e.g., throw an exception, clean up resources, etc.)
+    }
 }
+
 
 void RenderWindow::cleanUp()
 {
-    if (renderer != NULL) {
-        SDL_DestroyRenderer(renderer);
-        renderer = NULL;
+    if (_renderer) {
+        SDL_DestroyRenderer(_renderer);
+        _renderer = nullptr;
     }
-    if (window != NULL) {
-        SDL_DestroyWindow(window);
-        window = NULL;
+    if (_window) {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
     }
 }
 
 
 void RenderWindow::clear()
 {
-	SDL_RenderClear(renderer);
+	SDL_RenderClear(_renderer);
 }
 
-void RenderWindow::render(Entity& p_entity)
+void RenderWindow::render(Entity& entity)
 {
 	SDL_Rect src; 
-	src.x = p_entity.getCurrentFrame().x;
-	src.y = p_entity.getCurrentFrame().y;
-	src.w = p_entity.getCurrentFrame().w;
-	src.h = p_entity.getCurrentFrame().h;
+	src.x = entity.getBoundingBox().x;
+	src.y = entity.getBoundingBox().y;
+	src.w = entity.getBoundingBox().w;
+	src.h = entity.getBoundingBox().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getPos().x;
-	dst.y = p_entity.getPos().y;
-	dst.w = p_entity.getCurrentFrame().w;
-	dst.h = p_entity.getCurrentFrame().h;
+	dst.x = entity.getPosition().x;
+	dst.y = entity.getPosition().y;
+	dst.w = entity.getBoundingBox().w;
+	dst.h = entity.getBoundingBox().h;
 
-	SDL_RenderCopy(renderer, p_entity.getTex().get(), &src, &dst);
+	SDL_RenderCopy(_renderer, entity.getTexture().get(), &src, &dst);
 }
 
 void RenderWindow::display()
 {
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(_renderer);
 }
