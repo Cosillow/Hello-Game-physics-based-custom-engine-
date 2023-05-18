@@ -34,8 +34,8 @@ void Sword::update(float deltaTime)
     else
     {
         // Sword is not swinging, update position
-        swordPos.x = playerPos.x + _offsetX;
-        swordPos.y = playerPos.y + _offsetY;
+        swordPos.x = playerPos.x + _offset.x;
+        swordPos.y = playerPos.y + _offset.y;
     }
 
     // Set the updated sword position

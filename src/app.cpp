@@ -94,14 +94,16 @@ void App::handleInputs(Player& player1, Player& player2) const {
 
 void App::run() const {
     Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
+	Texture swordTex(_window.getRenderer(), "res/sword.png");
 
 	
 	Player wilson({100, 55}, spaceDoritoTex, 1);
 	Player spilson({200, 55}, spaceDoritoTex, 2); 
 
-
-	Sword spillySword({500, 500}, spaceDoritoTex, spilson);
+	Sword doriSword({-100, 200}, spaceDoritoTex, wilson);
+	Sword spillySword({100, 200}, swordTex, spilson);
 	spilson.equipWeapon(&spillySword);
+	wilson.equipWeapon(&doriSword);
 
 
 
@@ -136,7 +138,7 @@ void App::run() const {
 		_window.render(wilson);
 		_window.render(spilson);
 		_window.render(spillySword);
-		
+		_window.render(doriSword);
 		
 		// display
 		_window.display();

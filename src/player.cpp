@@ -26,7 +26,6 @@ void Player::moveLeft(bool start) {
 
 void Player::update(float deltaTime) {
     Entity::update(deltaTime);
-    if (_weapon) _weapon->update(deltaTime);
 
     const float speed = Constants::PLAYER_SPEED * deltaTime;
 
@@ -42,4 +41,6 @@ void Player::update(float deltaTime) {
         playerPosition.x += speed;
     }
     Entity::setPosition(playerPosition);
+
+    if (_weapon) _weapon->update(deltaTime);
 }

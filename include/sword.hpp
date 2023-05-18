@@ -5,9 +5,8 @@
 class Sword : public Weapon
 {
 public:
-    Sword(SDL_FPoint pos, Texture& tex, Player& player): Weapon(pos, tex), 
-    _offsetX(0.0f), 
-    _offsetY(0.0f), 
+    Sword(SDL_FPoint offset, Texture& tex, Player& player): Weapon(player.getPosition(), tex), 
+    _offset(offset),
     _player(player), 
     _swingTime(0.5f), 
     _swingTimer(0.0f) {}
@@ -17,8 +16,7 @@ public:
     void update(float deltaTime) override;
 
 private:
-    float _offsetX;
-    float _offsetY;
+    SDL_FPoint _offset;
     Player& _player;
     float _swingTime;
     float _swingTimer;
