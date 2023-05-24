@@ -27,8 +27,6 @@ void Player::moveLeft(bool start) {
 void Player::update(float deltaTime) {
     Entity::update(deltaTime);
 
-    Entity::applyGravity();
-
     const float speed = Constants::PLAYER_SPEED * deltaTime;
 
     SDL_FPoint playerPosition = Entity::getPosition();
@@ -45,4 +43,13 @@ void Player::update(float deltaTime) {
     Entity::setPosition(playerPosition);
 
     if (_weapon) _weapon->update(deltaTime);
+}
+
+void Player::jump() {
+    if (this->_currentState == State::TouchingGround) {
+        this->_currentState = State::FreeFall;
+        this->addForce(ForceType::Gravity);
+        this->Entity::applyImpulse({0.0, -Constants::PLAYER_JUMP});
+        // this->addForce(ForceType::Jump);
+    }
 }

@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <memory>
 #include <vector>
+#include <algorithm>
 #include "entity.hpp"
 #include "constants.hpp"
 
@@ -25,32 +26,52 @@ const SDL_Rect Entity::getBoundingBox() const
     SDL_Rect boundingBox;
     boundingBox.x = static_cast<int>(_position.x);
     boundingBox.y = static_cast<int>(_position.y);
-    boundingBox.w = _size.x;
-    boundingBox.h = _size.y;
+    boundingBox.w = static_cast<int>(_size.x);
+    boundingBox.h = static_cast<int>(_size.y);
     return boundingBox;
 }
 
-
 void Entity::update(float deltaTime)
 {       
+    // Apply accumulated forces
+    for (const auto& forcePair : _forces) {
+        const SDL_FPoint& force = forcePair.second;
+        _acceleration.x += force.x / _mass;
+        _acceleration.y += force.y / _mass;
+    }
+    // _forces.clear();
+
     _velocity.x += _acceleration.x * deltaTime;
     _velocity.y += _acceleration.y * deltaTime;
     _position.x += _velocity.x * deltaTime;
     _position.y += _velocity.y * deltaTime;
+
 }
 
-void Entity::applyForce(const SDL_FPoint& force)
+void Entity::addForce(ForceType forceType)
 {
-    _acceleration.x += force.x / _mass;
-    _acceleration.y += force.y / _mass;
+    switch (forceType)
+    {
+        case ForceType::Gravity:
+            _forces[forceType] = { 0.0f, Constants::GRAVITY };
+            break;
+        case ForceType::Jump:
+            _forces[forceType] = { 0.0f, -Constants::PLAYER_SPEED };
+            break;
+        default:
+            break;
+    }
 }
 
-void Entity::applyImpulse(const SDL_FPoint& impulse) {
-    _velocity.x += impulse.x / _mass;
-    _velocity.y += impulse.y / _mass;
+
+void Entity::removeForce(ForceType forceType)
+{
+    this->_forces.erase(forceType);
 }
 
-void Entity::applyGravity() {
-    SDL_FPoint gravityForce = {0.0f, Constants::GRAVITY * _mass};
-    applyForce(gravityForce);
+
+void Entity::applyImpulse(const SDL_FPoint& impulse)
+{
+    this->_velocity.x += impulse.x / this->_mass;
+    this->_velocity.y += impulse.y / this->_mass;
 }

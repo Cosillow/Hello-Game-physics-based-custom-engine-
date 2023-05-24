@@ -10,25 +10,25 @@
 
 void App::handleInputs(Player& player1, Player& player2) const {
 	_inputManager->update();
-	if (_inputManager->isKeyDown(SDL_SCANCODE_W)) 
-	{
-		player1.moveUp(true);
-	}
+	// if (_inputManager->isKeyDown(SDL_SCANCODE_W)) 
+	// {
+	// 	player1.moveUp(true);
+	// }
 
-	if (_inputManager->isKeyUp(SDL_SCANCODE_W))
-	{
-		player1.moveUp(false);
-	}
+	// if (_inputManager->isKeyUp(SDL_SCANCODE_W))
+	// {
+	// 	player1.moveUp(false);
+	// }
 
-	if (_inputManager->isKeyDown(SDL_SCANCODE_S)) 
-	{
-		player1.moveDown(true);
-	}
+	// if (_inputManager->isKeyDown(SDL_SCANCODE_S)) 
+	// {
+	// 	player1.moveDown(true);
+	// }
 
-	if (_inputManager->isKeyUp(SDL_SCANCODE_S))
-	{
-		player1.moveDown(false);
-	}
+	// if (_inputManager->isKeyUp(SDL_SCANCODE_S))
+	// {
+	// 	player1.moveDown(false);
+	// }
 
 	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
 	{
@@ -51,25 +51,25 @@ void App::handleInputs(Player& player1, Player& player2) const {
 	}
 
 	// player 2
-	if (_inputManager->isKeyDown(SDL_SCANCODE_UP)) 
-	{
-		player2.moveUp(true);
-	}
+	// if (_inputManager->isKeyDown(SDL_SCANCODE_UP)) 
+	// {
+	// 	player2.moveUp(true);
+	// }
 
-	if (_inputManager->isKeyUp(SDL_SCANCODE_UP))
-	{
-		player2.moveUp(false);
-	}
+	// if (_inputManager->isKeyUp(SDL_SCANCODE_UP))
+	// {
+	// 	player2.moveUp(false);
+	// }
 	
-	if (_inputManager->isKeyDown(SDL_SCANCODE_DOWN)) 
-	{
-		player2.moveDown(true);
-	}
+	// if (_inputManager->isKeyDown(SDL_SCANCODE_DOWN)) 
+	// {
+	// 	player2.moveDown(true);
+	// }
 
-	if (_inputManager->isKeyUp(SDL_SCANCODE_DOWN))
-	{
-		player2.moveDown(false);
-	}
+	// if (_inputManager->isKeyUp(SDL_SCANCODE_DOWN))
+	// {
+	// 	player2.moveDown(false);
+	// }
 
 	if (_inputManager->isKeyDown(SDL_SCANCODE_LEFT)) 
 	{
@@ -90,6 +90,12 @@ void App::handleInputs(Player& player1, Player& player2) const {
 	{
 		player2.moveRight(false);
 	}
+
+	if (_inputManager->isKeyDown(SDL_SCANCODE_SPACE))
+	{
+		player1.jump();
+		player2.jump();
+	}
 }
 
 void App::run() const {
@@ -97,14 +103,14 @@ void App::run() const {
 	Texture swordTex(_window.getRenderer(), "res/sword.png");
 
 	
-	Player wilson({100, 55}, spaceDoritoTex);
+	Player wilson({-100, 55}, spaceDoritoTex);
 	Player spilson({200, 55}, spaceDoritoTex);
 
 	wilson.setPosition({0, 0});
 	spilson.setPosition({500,500});
 
-	Sword doriSword({-100, 200}, swordTex, wilson);
-	Sword spillySword({100, 200}, swordTex, spilson);
+	Sword doriSword({100, -200}, swordTex, wilson);
+	Sword spillySword({-100, -200}, swordTex, spilson);
 
 	spilson.equipWeapon(&spillySword);
 	wilson.equipWeapon(&doriSword);
@@ -139,7 +145,7 @@ void App::run() const {
 		wilson.update(deltaTime);
 		spilson.update(deltaTime);
 
-		_collisionManager->checkAndResolve(wilson, spilson);
+		// _collisionManager->checkAndResolve(wilson, spilson);
 		_collisionManager->resolveBounds(wilson);
 		_collisionManager->resolveBounds(spilson);
 
