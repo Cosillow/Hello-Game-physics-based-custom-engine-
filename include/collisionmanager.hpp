@@ -8,5 +8,6 @@
 class CollisionManager
 {
 public:
-    static bool checkCollision(const Entity& entity1, const Entity& entity2);
+    bool checkAndResolve(Entity& entity1, Entity& entity2) const;
+    bool resolveBounds(Entity& entity) const;
 };

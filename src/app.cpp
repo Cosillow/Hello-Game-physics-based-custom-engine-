@@ -97,8 +97,11 @@ void App::run() const {
 	Texture swordTex(_window.getRenderer(), "res/sword.png");
 
 	
-	Player wilson({100, 55}, spaceDoritoTex, 1);
-	Player spilson({200, 55}, spaceDoritoTex, 2); 
+	Player wilson({100, 55}, spaceDoritoTex);
+	Player spilson({200, 55}, spaceDoritoTex);
+
+	wilson.setPosition({0, 0});
+	spilson.setPosition({500,500});
 
 	Sword doriSword({-100, 200}, swordTex, wilson);
 	Sword spillySword({100, 200}, swordTex, spilson);
@@ -136,17 +139,10 @@ void App::run() const {
 		wilson.update(deltaTime);
 		spilson.update(deltaTime);
 
-		bool collision = false;
-		// check collisions
-		if (_collisionManager->checkCollision(spillySword, wilson)) {
-			std::cout << "wilson has been touched by spillySword" << std::endl;
-			collision = true;
-		}
-		if (_collisionManager->checkCollision(doriSword, spilson)) {
-			std::cout << "spilson has been touched by doriSword" << std::endl;
-			collision = true;
-		}
-		if (!collision) std::cout << "no collision" << std::endl;
+		_collisionManager->checkAndResolve(wilson, spilson);
+		_collisionManager->resolveBounds(wilson);
+		_collisionManager->resolveBounds(spilson);
+
 
 		// render
 		_window.render(wilson);

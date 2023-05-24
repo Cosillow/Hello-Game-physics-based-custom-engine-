@@ -6,8 +6,7 @@
 class Player : public Entity
 {
 public:
-    Player(SDL_FPoint pos, Texture& tex, int playerID): Entity(pos, tex), 
-    _id(playerID),
+    Player(SDL_FPoint pos, Texture& tex): Entity(pos, tex), 
     _isMovingUp(false), 
     _isMovingDown(false), 
     _isMovingLeft(false), 
@@ -18,15 +17,13 @@ public:
     void moveDown(bool start);
     void moveLeft(bool start);
     void moveRight(bool start);
-    int getId() { return _id; }
 
     void equipWeapon(Weapon* weapon) { _weapon = weapon; }
     Weapon* getWeapon() const { return _weapon; }
 
     void update(float deltaTime) override;
-
+    inline void setPosition(const SDL_FPoint& pos) override { this->Entity::setPosition(pos); if (_weapon) this->_weapon->update(0); }
 private:
-    int _id;
     bool _isMovingUp;
     bool _isMovingDown;
     bool _isMovingLeft;

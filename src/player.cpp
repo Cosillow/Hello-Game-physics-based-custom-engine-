@@ -27,6 +27,8 @@ void Player::moveLeft(bool start) {
 void Player::update(float deltaTime) {
     Entity::update(deltaTime);
 
+    Entity::applyGravity();
+
     const float speed = Constants::PLAYER_SPEED * deltaTime;
 
     SDL_FPoint playerPosition = Entity::getPosition();

@@ -3,12 +3,14 @@
 #include <memory>
 #include <vector>
 #include "entity.hpp"
+#include "constants.hpp"
 
 Entity::Entity(SDL_FPoint pos, Texture& tex):
     _position(pos),
     _tex(tex),
     _acceleration({0,0}),
     _velocity({0,0}),
+    _mass(20.0f),
     _size({0,0})
 {
     int roundedWidth = 0;
@@ -46,4 +48,9 @@ void Entity::applyForce(const SDL_FPoint& force)
 void Entity::applyImpulse(const SDL_FPoint& impulse) {
     _velocity.x += impulse.x / _mass;
     _velocity.y += impulse.y / _mass;
+}
+
+void Entity::applyGravity() {
+    SDL_FPoint gravityForce = {0.0f, Constants::GRAVITY * _mass};
+    applyForce(gravityForce);
 }
