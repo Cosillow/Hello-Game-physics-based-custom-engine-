@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include "entity.hpp"
-#include "weapon.hpp"
+#include "item.hpp"
 
 class Player : public Entity
 {
@@ -11,12 +11,13 @@ public:
         FreeFall,
         TouchingGround
     };
-    Player(SDL_FPoint pos, Texture& tex): Entity(pos, tex), 
+    Player(SDL_FPoint pos): Entity(pos), 
+    _lookAngle(0),
     _isMovingUp(false), 
     _isMovingDown(false), 
     _isMovingLeft(false), 
     _isMovingRight(false),
-    _weapon(nullptr),
+    _equippedItem(nullptr),
     _currentState(State::FreeFall) { Entity::addForce(Entity::ForceType::Gravity); }
 
     void moveUp(bool start);
@@ -25,18 +26,22 @@ public:
     void moveRight(bool start);
     void jump();
 
-    void equipWeapon(Weapon* weapon) { _weapon = weapon; }
-    Weapon* getWeapon() const { return _weapon; }
+    void equipItem(Item* item) { _equippedItem = item; }
+    Item* getEquippedItem() const { return _equippedItem; }
     State getState() const { return _currentState; }
+    int getLookAngle() const { return _lookAngle; }
 
+    void lookDirection(int mouseX, int mouseY);
+    void attack() { this->_equippedItem->use(); }
     void update(float deltaTime) override;
-    inline void setPosition(const SDL_FPoint& pos) override { this->Entity::setPosition(pos); if (_weapon) this->_weapon->update(0); }
+    inline void setPosition(const SDL_FPoint& pos) override { this->Entity::setPosition(pos); if (_equippedItem) this->_equippedItem->update(0); }
     void setState(State state) { _currentState = state; }
 private:
+    int _lookAngle;
     bool _isMovingUp;
     bool _isMovingDown;
     bool _isMovingLeft;
     bool _isMovingRight;
-    Weapon* _weapon;
+    Item* _equippedItem;
     State _currentState;
 };

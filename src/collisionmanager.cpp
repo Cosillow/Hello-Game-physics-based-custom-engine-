@@ -60,12 +60,8 @@ bool CollisionManager::resolveBounds(Player& player) const
     const int windowWidth = 1280;
     const int windowHeight = 720;
 
-    SDL_Rect windowRect = { 0, 0, windowWidth, windowHeight };
-
     if (rect.x < 0 || rect.y < 0 || rect.x + rect.w > windowWidth || rect.y + rect.h > windowHeight)
-    {
-        // rect.x < 0 || rect.x + rect.w > windowWidth
-        
+    {        
         // Adjust the player's position to stay within the window bounds
         float x = player.getPosition().x;
         float y = player.getPosition().y;
@@ -86,7 +82,7 @@ bool CollisionManager::resolveBounds(Player& player) const
         
 
         if ((rect.y + rect.h > windowHeight) && player.getState() == Player::State::FreeFall) {
-            // player hit floot after free fall for first time
+            // player hit floor after free fall for first time
             player.removeForce(Entity::ForceType::Gravity);
             player.setState(Player::State::TouchingGround);
             player.setVelocity({ 0.0f, 0.0f });
@@ -95,10 +91,5 @@ bool CollisionManager::resolveBounds(Player& player) const
         
         return true;
     }
-    else
-    {
-        return false; // No collision with walls
-    }
-
-    
+    else return false; // No collision with walls 
 }

@@ -2,7 +2,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "renderwindow.hpp"
-#include "app.hpp"
+#include "game.hpp"
 
 // NON-preventable leaks
 // ==24356== HEAP SUMMARY:
@@ -31,9 +31,9 @@ int main(int argc, char* args[])
 		// Ensures order --> ~Textures(), ~RenderWindow(), SDL_Quit()
 		RenderWindow window("THE GAME", 1280, 720);
 
-		App app(window);
+		Game game(window);
 
-		app.run();
+		game.run();
 	}
 
 	

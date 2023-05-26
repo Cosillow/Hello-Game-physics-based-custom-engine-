@@ -9,6 +9,7 @@ $
     ./buildRun.sh
 
 
+TODO: make the grappling hook pull the player to the wall with a consistant force over time so that the player can release from the tension when they choose. This means I need to finilize my force system
 
 bool CirclevsCircleOptimized( Circle a, Circle b )
 {

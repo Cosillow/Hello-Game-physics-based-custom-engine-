@@ -6,20 +6,12 @@
 #include "entity.hpp"
 #include "constants.hpp"
 
-Entity::Entity(SDL_FPoint pos, Texture& tex):
+Entity::Entity(SDL_FPoint pos):
     _position(pos),
-    _tex(tex),
     _acceleration({0,0}),
     _velocity({0,0}),
     _mass(20.0f),
-    _size({0,0})
-{
-    int roundedWidth = 0;
-    int roundedHeight = 0;
-    SDL_QueryTexture(_tex.get(), nullptr, nullptr, &roundedWidth, &roundedHeight);
-    _size.x = static_cast<float>(roundedWidth);
-    _size.y = static_cast<float>(roundedHeight);
-}
+    _size({200, 50}) {}
 
 const SDL_Rect Entity::getBoundingBox() const
 {
@@ -74,4 +66,12 @@ void Entity::applyImpulse(const SDL_FPoint& impulse)
 {
     this->_velocity.x += impulse.x / this->_mass;
     this->_velocity.y += impulse.y / this->_mass;
+}
+
+SDL_FPoint Entity::getBoundingBoxCenter() const
+{
+    const SDL_Rect& boundingBox = getBoundingBox();
+    float centerX = static_cast<float>(boundingBox.x + boundingBox.w / 2);
+    float centerY = static_cast<float>(boundingBox.y + boundingBox.h / 2);
+    return { centerX, centerY };
 }

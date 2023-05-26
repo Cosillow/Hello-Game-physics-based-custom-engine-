@@ -42,7 +42,7 @@ void Player::update(float deltaTime) {
     }
     Entity::setPosition(playerPosition);
 
-    if (_weapon) _weapon->update(deltaTime);
+    if (_equippedItem) _equippedItem->update(deltaTime);
 }
 
 void Player::jump() {
@@ -53,3 +53,21 @@ void Player::jump() {
         // this->addForce(ForceType::Jump);
     }
 }
+
+void Player::lookDirection(int mouseX, int mouseY)
+{
+    // Calculate the center position of the player's rectangle
+    int centerX = this->getPosition().x + this->getBoundingBox().w / 2;
+    int centerY = this->getPosition().y + this->getBoundingBox().h / 2;
+
+    // Calculate the offset between the mouse position and the center of the player's rectangle
+    float dx = static_cast<float>(mouseX) - static_cast<float>(centerX);
+    float dy = static_cast<float>(mouseY) - static_cast<float>(centerY);
+
+    // Calculate the angle between the player's position and the mouse position
+    float angle = std::atan2(dy, dx);
+
+    // Store as degree value
+    _lookAngle = static_cast<int>(angle * 180.0f / M_PI);
+}
+

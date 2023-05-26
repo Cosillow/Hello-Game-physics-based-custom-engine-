@@ -1,23 +1,19 @@
 #pragma once
-#include "weapon.hpp"
+#include "item.hpp"
 #include "player.hpp"
+#include "renderwindow.hpp"
 
-class Sword : public Weapon
+class Sword : public Item
 {
 public:
-    Sword(SDL_FPoint offset, Texture& tex, Player& player): Weapon(player.getPosition(), tex), 
-    _offset(offset),
-    _player(player), 
-    _swingTime(0.5f), 
-    _swingTimer(0.0f) {}
+    Sword(SDL_FPoint offset, Player& player): Item(player), 
+    _offset(offset) {}
 
-    void attack() override;
-    void block() override;
-    void update(float deltaTime) override;
+    virtual void use(bool endUse=false);
+    virtual void useSecondary(bool endUse=false);
+    virtual void update(float deltaTime);
+    virtual void renderItem(RenderWindow& renderWindow) { renderWindow.render(*this); }
 
 private:
     SDL_FPoint _offset;
-    Player& _player;
-    float _swingTime;
-    float _swingTimer;
 };
