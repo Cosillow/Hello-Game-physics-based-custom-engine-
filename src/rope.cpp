@@ -4,7 +4,7 @@
 #include "entity.hpp"
 
 
-Rope::Rope(SDL_FPoint pos, int numLinks) : Entity(pos), _startAnchor(pos), _endAnchor(pos)
+Rope::Rope(Vector2 pos, int numLinks) : Entity(pos), _startAnchor(pos), _endAnchor(pos)
 {
     // Create and initialize the links of the rope
     _links.resize(numLinks);
@@ -24,8 +24,8 @@ void Rope::update(float deltaTime)
     for (int i = 0; i < numLinks; ++i) {
         Entity& currentLink = _links[i];
 
-        const SDL_FPoint& currentPosition = currentLink.getPosition();
-        const SDL_FPoint& currentVelocity = currentLink.getVelocity();
+        const Vector2& currentPosition = currentLink.getPosition();
+        const Vector2& currentVelocity = currentLink.getVelocity();
 
         float X_Vector1 = _links[(i - 1 + numLinks) % numLinks].getPosition().x - currentPosition.x;
         float Y_Vector1 = _links[(i - 1 + numLinks) % numLinks].getPosition().y - currentPosition.y;
@@ -53,20 +53,20 @@ void Rope::update(float deltaTime)
 }
 
 
-void Rope::setAnchorPoints(const SDL_FPoint& startAnchor, const SDL_FPoint& endAnchor)
+void Rope::setAnchorPoints(const Vector2& startAnchor, const Vector2& endAnchor)
 {
     _startAnchor = startAnchor;
     _endAnchor = endAnchor;
 }
 
-// void Rope::setLinkPosition(int index, const SDL_FPoint& position)
+// void Rope::setLinkPosition(int index, const Vector2& position)
 // {
 //     if (index >= 0 && index < _links.size()) {
 //         _links[index].position = position;
 //     }
 // }
 
-// void Rope::setLinkVelocity(int index, const SDL_FPoint& velocity)
+// void Rope::setLinkVelocity(int index, const Vector2& velocity)
 // {
 //     if (index >= 0 && index < _links.size()) {
 //         _links[index].velocity = velocity;

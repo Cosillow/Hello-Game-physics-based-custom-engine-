@@ -7,8 +7,8 @@ void Sword::useSecondary(bool endUse) { }
 
 void Sword::update(float deltaTime)
 {
-    SDL_FPoint swordPos = getPosition();
-    SDL_FPoint playerPos = _player.getPosition();
+    Vector2 swordPos = getPosition();
+    Vector2 playerPos = _player.getPosition();
 
     // Sword is not swinging, update position
     swordPos.x = playerPos.x + _offset.x;

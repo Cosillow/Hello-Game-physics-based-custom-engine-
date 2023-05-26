@@ -97,7 +97,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
     const Player& player = grapplingHook.getPlayer();
 
     if (grapplingHook.getState() == GrapplingHook::State::Idle) {
-        SDL_FPoint center = player.getBoundingBoxCenter();
+        Vector2 center = player.getBoundingBoxCenter();
 
         // Calculate the line endpoints based on the look angle
         double angleRadians = player.getLookAngle() * M_PI / 180.0;
@@ -116,7 +116,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
 
         // Render the grappling hook as a square
-        SDL_FPoint hookPosition = grapplingHook.getPosition();
+        Vector2 hookPosition = grapplingHook.getPosition();
         int hookSize = 50;
         SDL_Rect hookRect;
         hookRect.x = static_cast<int>(hookPosition.x - hookSize / 2);

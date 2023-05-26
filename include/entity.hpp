@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include "texture.hpp"
+#include "2dphysics.hpp"
 
 class Entity
 {
@@ -16,28 +17,28 @@ public:
     };
 
     
-    Entity(SDL_FPoint pos);
+    Entity(Vector2 pos);
     Entity() { Entity({0,0}); }
     virtual ~Entity() {}
-    const SDL_FPoint& getPosition() const { return _position; }
+    const Vector2& getPosition() const { return _position; }
     float getMass() const { return _mass; }
-    SDL_FPoint getVelocity() const { return _velocity; }
+    Vector2 getVelocity() const { return _velocity; }
     void addForce(ForceType forceType);
     void removeForce(ForceType forceType);
-    void applyImpulse(const SDL_FPoint& impulse);
-    virtual void setPosition(const SDL_FPoint& pos) { _position = pos; }
-    void setVelocity(const SDL_FPoint& vel) { _velocity = vel; }
-    void setAcceleration(const SDL_FPoint& acc) { _acceleration = acc; }
-    SDL_FPoint getBoundingBoxCenter() const;
+    void applyImpulse(const Vector2& impulse);
+    virtual void setPosition(const Vector2& pos) { _position = pos; }
+    void setVelocity(const Vector2& vel) { _velocity = vel; }
+    void setAcceleration(const Vector2& acc) { _acceleration = acc; }
+    Vector2 getBoundingBoxCenter() const;
 
     const SDL_Rect getBoundingBox() const;
     virtual void update(float deltaTime);
 private:
-    using ForcesMap = std::unordered_map<ForceType, SDL_FPoint>;
+    using ForcesMap = std::unordered_map<ForceType, Vector2>;
     ForcesMap _forces;
-    SDL_FPoint _position;
-    SDL_FPoint _acceleration;
-    SDL_FPoint _velocity;
+    Vector2 _position;
+    Vector2 _acceleration;
+    Vector2 _velocity;
     float _mass;
-    SDL_FPoint _size;
+    Vector2 _size;
 };

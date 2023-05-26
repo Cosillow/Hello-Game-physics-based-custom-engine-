@@ -11,7 +11,7 @@ public:
         FreeFall,
         TouchingGround
     };
-    Player(SDL_FPoint pos): Entity(pos), 
+    Player(Vector2 pos): Entity(pos), 
     _lookAngle(0),
     _isMovingUp(false), 
     _isMovingDown(false), 
@@ -32,9 +32,9 @@ public:
     int getLookAngle() const { return _lookAngle; }
 
     void lookDirection(int mouseX, int mouseY);
-    void attack() { this->_equippedItem->use(); }
+    void attack() { if (this->_equippedItem) this->_equippedItem->use(); }
     void update(float deltaTime) override;
-    inline void setPosition(const SDL_FPoint& pos) override { this->Entity::setPosition(pos); if (_equippedItem) this->_equippedItem->update(0); }
+    inline void setPosition(const Vector2& pos) override { this->Entity::setPosition(pos); if (_equippedItem) this->_equippedItem->update(0); }
     void setState(State state) { _currentState = state; }
 private:
     int _lookAngle;

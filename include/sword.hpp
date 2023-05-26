@@ -6,7 +6,7 @@
 class Sword : public Item
 {
 public:
-    Sword(SDL_FPoint offset, Player& player): Item(player), 
+    Sword(Vector2 offset, Player& player): Item(player), 
     _offset(offset) {}
 
     virtual void use(bool endUse=false);
@@ -15,5 +15,5 @@ public:
     virtual void renderItem(RenderWindow& renderWindow) { renderWindow.render(*this); }
 
 private:
-    SDL_FPoint _offset;
+    Vector2 _offset;
 };

@@ -6,7 +6,7 @@
 #include "entity.hpp"
 #include "constants.hpp"
 
-Entity::Entity(SDL_FPoint pos):
+Entity::Entity(Vector2 pos):
     _position(pos),
     _acceleration({0,0}),
     _velocity({0,0}),
@@ -27,7 +27,7 @@ void Entity::update(float deltaTime)
 {       
     // Apply accumulated forces
     for (const auto& forcePair : _forces) {
-        const SDL_FPoint& force = forcePair.second;
+        const Vector2& force = forcePair.second;
         _acceleration.x += force.x / _mass;
         _acceleration.y += force.y / _mass;
     }
@@ -62,13 +62,13 @@ void Entity::removeForce(ForceType forceType)
 }
 
 
-void Entity::applyImpulse(const SDL_FPoint& impulse)
+void Entity::applyImpulse(const Vector2& impulse)
 {
     this->_velocity.x += impulse.x / this->_mass;
     this->_velocity.y += impulse.y / this->_mass;
 }
 
-SDL_FPoint Entity::getBoundingBoxCenter() const
+Vector2 Entity::getBoundingBoxCenter() const
 {
     const SDL_Rect& boundingBox = getBoundingBox();
     float centerX = static_cast<float>(boundingBox.x + boundingBox.w / 2);

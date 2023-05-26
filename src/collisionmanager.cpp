@@ -37,8 +37,8 @@
 //         float ratio1 = entity2.getMass() / massSum;
 //         float ratio2 = entity1.getMass() / massSum;
 
-//         SDL_FPoint separation1 = { mtvX * ratio1, mtvY * ratio1 };
-//         SDL_FPoint separation2 = { mtvX * -ratio2, mtvY * -ratio2 };
+//         Vector2 separation1 = { mtvX * ratio1, mtvY * ratio1 };
+//         Vector2 separation2 = { mtvX * -ratio2, mtvY * -ratio2 };
 
 //         entity1.applyImpulse(separation1);
 //         entity2.applyImpulse(separation2);

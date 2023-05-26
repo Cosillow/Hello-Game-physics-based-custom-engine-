@@ -29,7 +29,7 @@ void Player::update(float deltaTime) {
 
     const float speed = Constants::PLAYER_SPEED * deltaTime;
 
-    SDL_FPoint playerPosition = Entity::getPosition();
+    Vector2 playerPosition = Entity::getPosition();
     
     if (_isMovingUp) {
         playerPosition.y -= speed;
@@ -70,4 +70,3 @@ void Player::lookDirection(int mouseX, int mouseY)
     // Store as degree value
     _lookAngle = static_cast<int>(angle * 180.0f / M_PI);
 }
-
