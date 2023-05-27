@@ -3,12 +3,15 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <memory>
-#include "entity.hpp"
+#include "2dphysics.hpp"
 #include "player.hpp"
+
+class Circle;
+class Rectangle;
+class Triangle;
 
 class CollisionManager
 {
 public:
-    // bool checkAndResolve(Entity& entity1, Entity& entity2) const;
-    bool resolveBounds(Player& player) const;
+    void resolveBounds(Player& player) const;
 };

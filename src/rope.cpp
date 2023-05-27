@@ -1,55 +1,49 @@
 #include <SDL2/SDL.h>
+#include <vector>
 #include "rope.hpp"
 #include "constants.hpp"
-#include "entity.hpp"
+#include "2dphysics.hpp"
 
 
-Rope::Rope(Vector2 pos, int numLinks) : Entity(pos), _startAnchor(pos), _endAnchor(pos)
+Rope::Rope(Vector2 startPoint, Vector2 endPoint, int numLinks): UpdateableI(),
+_links({}),
+_startAnchor(startPoint), 
+_endAnchor(endPoint)
 {
     // Create and initialize the links of the rope
-    _links.resize(numLinks);
+    // make the endpoints static bodies
+    Vector2 direction = (_endAnchor - _startAnchor).normalize();
+    float totalLength = (_endAnchor - _startAnchor).magnitude();
     for (int i = 0; i < numLinks; ++i) {
-        Entity& currentLink = _links[i];
+        float t = i / static_cast<float>(numLinks - 1);
+        Vector2 position = _startAnchor + direction * (t * totalLength);
+        Body currentLink(position, Constants::ROPE_MASS, (i == 0 || i == numLinks - 1));      
 
-        // Initialize position, velocity, and other properties of each link
-        currentLink.setPosition({0.0f, i * Constants::RESTING_ROPE_LENGTH});
-        currentLink.setVelocity({0.0f, 0.0f});
+        this->_links.push_back(currentLink);
     }
 }
+
+Rope::Rope(Vector2 pos, int numLinks): Rope(pos, pos, numLinks) {}
 
 void Rope::update(float deltaTime)
 {
     int numLinks = _links.size();
-
     for (int i = 0; i < numLinks; ++i) {
-        Entity& currentLink = _links[i];
+        Body& currentLink = _links[i];
 
-        const Vector2& currentPosition = currentLink.getPosition();
-        const Vector2& currentVelocity = currentLink.getVelocity();
+        currentLink.applyForce(Constants::GRAVITY);
+        Vector2 lastPosition = this->_links[(i - 1 + numLinks) % numLinks].getPosition() - currentLink.getPosition();
+        float extension1 = lastPosition.magnitude() - Constants::RESTING_ROPE_LENGTH;
+        Vector2 nextPosition = this->_links[(i + 1) % numLinks].getPosition() - currentLink.getPosition();
+        float extension2 = nextPosition.magnitude() - Constants::RESTING_ROPE_LENGTH;
+        Vector2 newVelocity = (lastPosition / lastPosition.magnitude() * extension1) + (nextPosition / nextPosition.magnitude() * extension2);
 
-        float X_Vector1 = _links[(i - 1 + numLinks) % numLinks].getPosition().x - currentPosition.x;
-        float Y_Vector1 = _links[(i - 1 + numLinks) % numLinks].getPosition().y - currentPosition.y;
-        float Magnitude1 = SDL_sqrt(X_Vector1 * X_Vector1 + Y_Vector1 * Y_Vector1);
-        float Extension1 = Magnitude1 - Constants::RESTING_ROPE_LENGTH;
+        currentLink.setVelocity(currentLink.getVelocity() * Constants::DAMPING + (newVelocity ));
+        currentLink.setPosition(currentLink.getPosition() + currentLink.getVelocity() * deltaTime);
 
-        float X_Vector2 = _links[(i + 1) % numLinks].getPosition().x - currentPosition.x;
-        float Y_Vector2 = _links[(i + 1) % numLinks].getPosition().y - currentPosition.y;
-        float Magnitude2 = SDL_sqrt(X_Vector2 * X_Vector2 + Y_Vector2 * Y_Vector2);
-        float Extension2 = Magnitude2 - Constants::RESTING_ROPE_LENGTH;
 
-        float xv = (X_Vector1 / Magnitude1 * Extension1) + (X_Vector2 / Magnitude2 * Extension2);
-        float yv = (Y_Vector1 / Magnitude1 * Extension1) + (Y_Vector2 / Magnitude2 * Extension2) + Constants::GRAVITY;
-
-        currentLink.setVelocity({currentVelocity.x * Constants::DAMPING + (xv * 0.001f),
-                                 currentVelocity.y * Constants::DAMPING + (yv * 0.001f)});
-
-        currentLink.setPosition({currentPosition.x + currentVelocity.x * deltaTime,
-                                 currentPosition.y + currentVelocity.y * deltaTime});
+        currentLink.update(deltaTime);
     }
-
-    // Update anchor positions based on entity position
-    // _startAnchor = getPosition();
-    // _endAnchor = getPosition(); // Modify this to set the end anchor position as needed
 }
 
 

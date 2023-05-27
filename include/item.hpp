@@ -1,14 +1,15 @@
 #pragma once
 
-#include "entity.hpp"
+#include "2dphysics.hpp"
+#include "constants.hpp"
 
 class Player;
 class RenderWindow;
 
-class Item : public Entity
+class Item : public Body
 {
 public:
-    Item(Player& player): Entity(),
+    Item(Player& player): Body(Constants::PLAYER_MASS),
     _player(player) {};
     virtual void use(bool endUse=false) = 0;
     virtual void useSecondary(bool endUse=false) = 0;

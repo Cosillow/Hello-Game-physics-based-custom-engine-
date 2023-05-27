@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stack>
 
-#include "entity.hpp"
+#include "2dphysics.hpp"
 
 class Rope;
 class Player;
@@ -19,7 +19,7 @@ public:
 	SDL_Renderer* getRenderer() const { return _renderer; }
 
 	// method overrides: render()
-	void render(Entity& entity);
+	void render(Body& Body);
 	void render(Player& player);
 	void render(Item& item);
 	void render(GrapplingHook& player);

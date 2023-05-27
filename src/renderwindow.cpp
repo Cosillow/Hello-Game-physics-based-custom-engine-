@@ -4,7 +4,7 @@
 #include <string.h>
 #include <algorithm>
 #include "renderwindow.hpp"
-#include "entity.hpp"
+#include "2dphysics.hpp"
 #include "texture.hpp"
 #include "player.hpp"
 #include "grapplinghook.hpp"
@@ -49,7 +49,7 @@ void RenderWindow::clear()
 	SDL_RenderClear(_renderer);
 }
 
-void RenderWindow::render(Entity& entity)
+void RenderWindow::render(Body& Body)
 {
     this->saveRenderingColor();
 
@@ -58,8 +58,8 @@ void RenderWindow::render(Entity& entity)
 
     // Create a rectangle with a size of 200x50
     SDL_Rect rect;
-    rect.x = static_cast<int>(entity.getPosition().x);
-    rect.y = static_cast<int>(entity.getPosition().y);
+    rect.x = static_cast<int>(Body.getPosition().x);
+    rect.y = static_cast<int>(Body.getPosition().y);
     rect.w = 200;
     rect.h = 50;
 
@@ -73,14 +73,13 @@ void RenderWindow::render(Entity& entity)
 void RenderWindow::render(Player& player)
 {
     this->saveRenderingColor();
-    this->render(static_cast<Entity&>(player));
+    this->render(static_cast<Body&>(player));
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem)
     {
         this->render(*equippedItem);
     }
     // TODO render player sprite
-    
 
     this->restoreRenderingColor();
 }
@@ -97,7 +96,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
     const Player& player = grapplingHook.getPlayer();
 
     if (grapplingHook.getState() == GrapplingHook::State::Idle) {
-        Vector2 center = player.getBoundingBoxCenter();
+        Vector2 center = player.getPosition();
 
         // Calculate the line endpoints based on the look angle
         double angleRadians = player.getLookAngle() * M_PI / 180.0;
@@ -110,7 +109,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
         SDL_RenderDrawLine(_renderer, static_cast<int>(center.x), static_cast<int>(center.y), lineX, lineY);
     } else if (grapplingHook.getState() == GrapplingHook::State::Extending) {
 
-        this->render(static_cast<Entity&>(grapplingHook));
+        this->render(static_cast<Body&>(grapplingHook));
 
         // Set the rendering color to red
         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
@@ -136,7 +135,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
 void RenderWindow::render(Rope& rope)
 {
     this->saveRenderingColor();
-    const std::vector<Entity>& links = rope.getLinks();
+    const std::vector<Body>& links = rope.getLinks();
 
     // Set the rendering color to brown
     SDL_SetRenderDrawColor(_renderer, 139, 69, 19, 255);
@@ -144,8 +143,8 @@ void RenderWindow::render(Rope& rope)
     // Render each link of the rope as a line
     for (int i = 0; i < rope.getNumLinks() - 1; ++i)
     {
-        const Entity& currentLink = links[i];
-        const Entity& nextLink = links[i + 1];
+        const Body& currentLink = links[i];
+        const Body& nextLink = links[i + 1];
 
         // Render the line between the current link and the next link
         SDL_RenderDrawLine(_renderer, static_cast<int>(currentLink.getPosition().x), static_cast<int>(currentLink.getPosition().y),
@@ -153,7 +152,7 @@ void RenderWindow::render(Rope& rope)
     }
 
     // Render the last link to the end anchor point
-    const Entity& lastLink = links.back();
+    const Body& lastLink = links.back();
     SDL_RenderDrawLine(_renderer, static_cast<int>(lastLink.getPosition().x), static_cast<int>(lastLink.getPosition().y),
                        static_cast<int>(rope.getEndAnchor().x), static_cast<int>(rope.getEndAnchor().y));
 

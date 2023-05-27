@@ -6,7 +6,8 @@ void GrapplingHook::update(float deltaTime) {
     if (_currentState != GrapplingHook::State::Idle)
     {
         // animate the rope
-        this->_rope->setAnchorPoints(this->_player.getPosition(), GrapplingHook::Entity::getPosition());
+        this->Body::applyForce(Constants::GRAVITY);
+        this->_rope->setAnchorPoints(this->_player.getPosition(), GrapplingHook::Body::getPosition());
         std::cout << "anchor points: (" << this->_rope->getEndAnchor().x << ", " << this->_rope->getEndAnchor().y << ") | (" << this->_rope->getStartAnchor().x << ", " << this->_rope->getStartAnchor().y << ")" << std::endl;
     }
 
@@ -26,10 +27,10 @@ void GrapplingHook::update(float deltaTime) {
     }
     else if (_currentState == GrapplingHook::State::Idle) 
     {
-        Entity::setPosition(this->_player.getBoundingBoxCenter());
+        Body::setPosition(this->_player.getPosition());
     }
 
-    Entity::update(deltaTime);
+    Body::update(deltaTime);
 }
 
 void GrapplingHook::use(bool endUse)
@@ -47,10 +48,7 @@ void GrapplingHook::use(bool endUse)
         float run = std::sqrt((Constants::GRAPPLING_HOOK_SPEED * Constants::GRAPPLING_HOOK_SPEED) / (1.0f + (ratio * ratio)));
         float rise = ratio * run;
 
-
-
-        Entity::addForce(Entity::ForceType::Gravity);
-        Entity::applyImpulse({run, rise});
+        Body::applyImpulse({run, rise});
 
         std::cout << "shooting grappling hook: (" << run << ", " << rise << ")" << std::endl;
     } else if (endUse) {
