@@ -3,15 +3,13 @@
 #include "constants.hpp"
 
 void GrapplingHook::update(float deltaTime) {
-    if (_currentState != GrapplingHook::State::Idle)
+    if (this->_currentState != GrapplingHook::State::Idle)
     {
         // animate the rope
         this->Body::applyForce(Constants::GRAVITY);
-        this->_rope->setAnchorPoints(this->_player.getPosition(), GrapplingHook::Body::getPosition());
-        std::cout << "anchor points: (" << this->_rope->getEndAnchor().x << ", " << this->_rope->getEndAnchor().y << ") | (" << this->_rope->getStartAnchor().x << ", " << this->_rope->getStartAnchor().y << ")" << std::endl;
     }
 
-    else if (_currentState == GrapplingHook::State::Retracting)
+    else if (this->_currentState == GrapplingHook::State::Retracting)
     {
         if (this->_isGrabbingSurface)
         {
@@ -21,11 +19,11 @@ void GrapplingHook::update(float deltaTime) {
             // pull grappling hook towards player while rope retracts
         }
     }
-    else if (_currentState == GrapplingHook::State::Extending)
+    else if (this->_currentState == GrapplingHook::State::Extending)
     {
 
     }
-    else if (_currentState == GrapplingHook::State::Idle) 
+    else if (this->_currentState == GrapplingHook::State::Idle) 
     {
         Body::setPosition(this->_player.getPosition());
     }

@@ -66,8 +66,8 @@ void Game::run() {
 	// spilson.equipItem(&spillySword);
 	// wilson.equipItem(&hook);
 
-	Rope rope({0, 200}, {1000, 200}, 15);
-	
+	Rope rope({0, 200}, {1000, 200}, 8);
+	// rope.setStartLink(&wilson);
 	
 
 
@@ -91,7 +91,6 @@ void Game::run() {
 		// spilson.update(deltaTime);
 		rope.update(deltaTime);
 
-		rope.setEndAnchor(wilson.getPosition());
 
 		std::cout << rope << std::endl;
 		
@@ -99,7 +98,6 @@ void Game::run() {
 		_collisionManager->resolveBounds(wilson);
 		// _collisionManager->resolveBounds(spilson);
 		
-
 		// render
 		_window.render(wilson);
 		_window.render(rope);

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
+#include <memory>
+
 #include "2dphysics.hpp"
 
 
@@ -9,29 +12,31 @@ class Rope : public UpdateableI
 public:
     virtual ~Rope() { }
     Rope(Vector2 startPoint, Vector2 endPoint, int numLinks);
-    Rope(Vector2 pos, int numLinks);
+    Rope(Vector2 pos, int numLinks): Rope(pos, pos, numLinks) {}
     Rope(): Rope({0,0}, 0) { }
 
     virtual void update(float deltaTime);
 
     int getNumLinks() const { return _links.size(); }
-    const std::vector<Body>& getLinks() const { return this->_links; }
-    const Body& getLink(int index) const { return this->_links[index]; }
+    const std::vector<std::shared_ptr<Body>>& getLinks() const { return this->_links; }
+    Body& getLink(int index) const { return *(this->_links[index]); }
 
-    void setAnchorPoints(const Vector2& startAnchor, const Vector2& endAnchor);
-    void setEndAnchor(const Vector2& anchor) { this->_endAnchor = anchor; }
-    void setStartAnchor(const Vector2& anchor) { this->_startAnchor = anchor; }
+    void setEnds(Body& startLink, Body& endLink);
+    void setEnds(const Vector2& startPoint, const Vector2& endPoint);
+    
+    void setEndLink(Body* link) { this->_links[this->_links.size()-1] =  std::shared_ptr<Body>(link, [](Body* ptr) {delete ptr;}); }
+    void setEndLink(const Vector2& position) { this->_links[this->_links.size()-1]->setPosition(position); }
+    void setStartLink(Body* link) { this->_links[0] = std::shared_ptr<Body>(link, [](Body* ptr) {delete ptr;});; }
+    void setStartLink(const Vector2& position) { this->_links[0]->setPosition(position); }
 
-    Vector2 getEndAnchor() const { return this->_endAnchor; }
-    Vector2 getStartAnchor() const { return this->_startAnchor; }
+    Body getEndLink() const { return *(this->_links[0]); }
+    Body getStartLink() const { return *(this->_links[this->_links.size()-1]); }
 
     friend std::ostream& operator<<(std::ostream& os, const Rope& rope) {
-        os << "number links: " << rope.getLinks().size() << "start: " << rope.getStartAnchor() << ", end: " << rope.getEndAnchor() << std::endl;
+        os << "number links: " << rope.getLinks().size() << " start: " << rope.getStartLink() << ", end: " << rope.getEndLink() << std::endl;
         return os;
     }
 
 private:
-    std::vector<Body> _links;
-    Vector2 _startAnchor;
-    Vector2 _endAnchor;
+    std::vector<std::shared_ptr<Body>> _links;
 };

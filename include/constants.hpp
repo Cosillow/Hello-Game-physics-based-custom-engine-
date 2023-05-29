@@ -11,5 +11,5 @@ namespace Constants {
     const float WINDOW_HEIGHT = 720;
     const float WINDOW_WIDTH = 1280;
     const float PLAYER_MASS = 200;
-    const float ROPE_MASS = 300;
+    const float ROPE_MASS = 10;
 }

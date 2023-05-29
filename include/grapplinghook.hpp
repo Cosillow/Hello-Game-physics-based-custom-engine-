@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "item.hpp"
 #include "player.hpp"
 #include "rope.hpp"
@@ -14,11 +15,15 @@ public:
         Retracting
     };
     GrapplingHook(Player& player): Item(player),
+    _hook(Body(player.getPosition(), 50.0)),
     _rope(new Rope(player.getPosition(), 20)),
     _currentState(State::Idle),
-    _isGrabbingSurface(false) {}
+    _isGrabbingSurface(false)
+    {
+        this->_rope->setEnds(player, this->_hook);
+    }
 
-    ~GrapplingHook() { if (_rope) delete _rope; }
+    ~GrapplingHook() { if (_rope) delete this->_rope; }
 
     virtual void use(bool endUse=false);
     virtual void useSecondary(bool endUse=false);
@@ -27,10 +32,11 @@ public:
 
     Rope& getRope() const { return *_rope; }
     
-    State getState() const { return _currentState; }
+    State getState() const { return this->_currentState; }
     void setState(State state) { _currentState = state; }
 
 private:
+    Body _hook;
     Rope* _rope;
     State _currentState;
     float _currentRopeLength;

@@ -130,12 +130,10 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
     this->restoreRenderingColor();
 }
 
-
-
 void RenderWindow::render(Rope& rope)
 {
     this->saveRenderingColor();
-    const std::vector<Body>& links = rope.getLinks();
+    const std::vector<std::shared_ptr<Body>>& links = rope.getLinks();
 
     // Set the rendering color to brown
     SDL_SetRenderDrawColor(_renderer, 139, 69, 19, 255);
@@ -143,25 +141,15 @@ void RenderWindow::render(Rope& rope)
     // Render each link of the rope as a line
     for (int i = 0; i < rope.getNumLinks() - 1; ++i)
     {
-        const Body& currentLink = links[i];
-        const Body& nextLink = links[i + 1];
+        const Body& currentLink = *(links[i]);
+        const Body& nextLink = *(links[i + 1]);
 
         // Render the line between the current link and the next link
         SDL_RenderDrawLine(_renderer, static_cast<int>(currentLink.getPosition().x), static_cast<int>(currentLink.getPosition().y),
                            static_cast<int>(nextLink.getPosition().x), static_cast<int>(nextLink.getPosition().y));
     }
-
-    // Render the last link to the end anchor point
-    const Body& lastLink = links.back();
-    SDL_RenderDrawLine(_renderer, static_cast<int>(lastLink.getPosition().x), static_cast<int>(lastLink.getPosition().y),
-                       static_cast<int>(rope.getEndAnchor().x), static_cast<int>(rope.getEndAnchor().y));
-
     this->restoreRenderingColor();
 }
-
-
-
-
 
 void RenderWindow::display()
 {

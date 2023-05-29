@@ -1,43 +1,52 @@
 #include <SDL2/SDL.h>
 #include <vector>
+#include <memory>
 #include "rope.hpp"
 #include "constants.hpp"
 #include "2dphysics.hpp"
 
 
 Rope::Rope(Vector2 startPoint, Vector2 endPoint, int numLinks): UpdateableI(),
-_links({}),
-_startAnchor(startPoint), 
-_endAnchor(endPoint)
+_links({})
 {
     // Create and initialize the links of the rope
     // make the endpoints static bodies
-    Vector2 direction = (_endAnchor - _startAnchor).normalize();
-    float totalLength = (_endAnchor - _startAnchor).magnitude();
+    Vector2 direction = (endPoint - startPoint).normalize();
+    float totalLength = (endPoint - startPoint).magnitude();
     for (int i = 0; i < numLinks; ++i) {
         float t = i / static_cast<float>(numLinks - 1);
-        Vector2 position = _startAnchor + direction * (t * totalLength);
-        Body currentLink(position, Constants::ROPE_MASS, (i == 0 || i == numLinks - 1));      
+        Vector2 position = startPoint + direction * (t * totalLength);
 
-        this->_links.push_back(currentLink);
+        // set the two endpoints as static
+        this->_links.push_back( std::make_shared<Body>(position, Constants::ROPE_MASS, (i == 0 || i == numLinks - 1)));
     }
 }
-
-Rope::Rope(Vector2 pos, int numLinks): Rope(pos, pos, numLinks) {}
 
 void Rope::update(float deltaTime)
 {
     int numLinks = _links.size();
     for (int i = 0; i < numLinks; ++i) {
-        Body& currentLink = _links[i];
+        Body& currentLink = *(this->_links[i]);
 
-        currentLink.applyForce(Constants::GRAVITY);
-        Vector2 lastPosition = this->_links[(i - 1 + numLinks) % numLinks].getPosition() - currentLink.getPosition();
+
+        // Vector2 lastPosition = this->_links[(i - 1 + numLinks) % numLinks]->getPosition() - currentLink.getPosition();
+        // Vector2 nextPosition = this->_links[(i + 1) % numLinks]->getPosition() - currentLink.getPosition();
+
+        // float extension1 = (lastPosition.magnitude() - Constants::RESTING_ROPE_LENGTH) / lastPosition.magnitude();
+        // float extension2 = (nextPosition.magnitude() - Constants::RESTING_ROPE_LENGTH) / nextPosition.magnitude();
+
+
+        // Vector2 newVelocity = (lastPosition.normalize() * extension1) + (nextPosition.normalize() * extension2);
+
+        
+        Vector2 lastPosition = this->_links[(i - 1 + numLinks) % numLinks]->getPosition() - currentLink.getPosition();
         float extension1 = lastPosition.magnitude() - Constants::RESTING_ROPE_LENGTH;
-        Vector2 nextPosition = this->_links[(i + 1) % numLinks].getPosition() - currentLink.getPosition();
+        Vector2 nextPosition = this->_links[(i + 1) % numLinks]->getPosition() - currentLink.getPosition();
         float extension2 = nextPosition.magnitude() - Constants::RESTING_ROPE_LENGTH;
         Vector2 newVelocity = (lastPosition / lastPosition.magnitude() * extension1) + (nextPosition / nextPosition.magnitude() * extension2);
 
+
+        currentLink.applyForce(Constants::GRAVITY);
         currentLink.setVelocity(currentLink.getVelocity() * Constants::DAMPING + (newVelocity ));
         currentLink.setPosition(currentLink.getPosition() + currentLink.getVelocity() * deltaTime);
 
@@ -47,10 +56,15 @@ void Rope::update(float deltaTime)
 }
 
 
-void Rope::setAnchorPoints(const Vector2& startAnchor, const Vector2& endAnchor)
+void Rope::setEnds(const Vector2& startPoint, const Vector2& endPoint)
 {
-    _startAnchor = startAnchor;
-    _endAnchor = endAnchor;
+    this->setEndLink(startPoint);
+    this->setEndLink(endPoint);
+}   
+
+void Rope::setEnds(Body& startLink, Body& endLink) {
+    this->setStartLink(&startLink);
+    this->setEndLink(&endLink);
 }
 
 // void Rope::setLinkPosition(int index, const Vector2& position)
