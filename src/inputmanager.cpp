@@ -3,16 +3,18 @@
 
 InputManager::InputManager()
 {
-    _keyState = SDL_GetKeyboardState(&_keyLength);
-    _mouseX = 0;
-    _mouseY = 0;
+    _keyState = SDL_GetKeyboardState(&_keyLength),
+    _mousePosition = {0,0};
     _mouseState = 0;
 }
 
 void InputManager::update(Game& game)
 {
     SDL_Event event;
-    _mouseState = SDL_GetMouseState(&_mouseX, &_mouseY); // Update mouse state and position
+    int x;
+    int y;
+    _mouseState = SDL_GetMouseState(&x, &y); // Update mouse state and position
+    this->_mousePosition = {static_cast<float>(x), static_cast<float>(y)};
 
     while (SDL_PollEvent(&event))
     {
@@ -47,14 +49,4 @@ bool InputManager::isMouseButtonDown(Uint8 button)
 bool InputManager::isMouseButtonUp(Uint8 button)
 {
     return (_mouseState & SDL_BUTTON(button)) == 0;
-}
-
-int InputManager::getMouseX()
-{
-    return _mouseX;
-}
-
-int InputManager::getMouseY()
-{
-    return _mouseY;
 }

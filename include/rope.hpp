@@ -11,8 +11,7 @@ class Rope : public UpdateableI
 {
 public:
     virtual ~Rope() { }
-    Rope(Vector2 startPoint, Vector2 endPoint, int numLinks);
-    Rope(Vector2 pos, int numLinks): Rope(pos, pos, numLinks) {}
+    Rope(Vector2 startPoint, float ropeSize);
     Rope(): Rope({0,0}, 0) { }
 
     virtual void update(float deltaTime);

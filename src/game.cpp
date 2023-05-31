@@ -14,7 +14,7 @@ void Game::handleInputs(Player& player1) {
 	_inputManager->update(*this);
 	
 	// player 1
-	player1.setLookAngle({ static_cast<float>(_inputManager->getMouseX()), static_cast<float>(_inputManager->getMouseY())});
+	player1.setLookAngle(_inputManager->getMousePosition());
 	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
 	{
 		player1.moveLeft(true);
@@ -42,7 +42,7 @@ void Game::handleInputs(Player& player1) {
 
     if (_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
     {
-		player1.attack();
+		// rope.setStartLink(_inputManager->getMousePosition());
     }
 
 }
@@ -66,7 +66,7 @@ void Game::run() {
 	// spilson.equipItem(&spillySword);
 	// wilson.equipItem(&hook);
 
-	Rope rope({0, 200}, {1000, 200}, 8);
+	// Rope rope({500, 200}, 20);
 	// rope.setStartLink(&wilson);
 	
 
@@ -89,10 +89,10 @@ void Game::run() {
 		// update
 		wilson.update(deltaTime);
 		// spilson.update(deltaTime);
-		rope.update(deltaTime);
+		// rope.update(deltaTime);
 
 
-		std::cout << rope << std::endl;
+		// std::cout << rope << std::endl;
 		
 		// _collisionManager->checkAndResolve(wilson, spilson);
 		_collisionManager->resolveBounds(wilson);
@@ -100,7 +100,7 @@ void Game::run() {
 		
 		// render
 		_window.render(wilson);
-		_window.render(rope);
+		// _window.render(rope);
 		
 		// display
 		_window.display();

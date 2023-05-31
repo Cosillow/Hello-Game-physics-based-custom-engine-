@@ -28,6 +28,12 @@ struct Vector2 {
         return point;
     }
 
+    float distance(const Vector2& other) const {
+    Vector2 d = other - *this;
+    return std::sqrt((d.x * d.x) + (d.y * d.y));
+}
+
+
     float calculateAngle(const Vector2& to) const {
         return std::atan2(to.y - this->y, to.x - this->x);
     }
@@ -264,10 +270,10 @@ public:
 
     // getters
     Hitbox* getHitbox() const { return this->_hitbox; }
-    Vector2 getPosition() const {
+    const Vector2 getPosition() const {
         return this->_position;
     }
-    Vector2 getVelocity() const {
+    const Vector2 getVelocity() const {
         return this->_velocity;
     }
     Vector2 getAcceleration() const {
