@@ -9,8 +9,7 @@ class RenderWindow;
 class Item : public Body
 {
 public:
-    Item(Player& player): Body(Constants::PLAYER_MASS),
-    _player(player) {};
+    Item(Player& player);
     virtual void use(bool endUse=false) = 0;
     virtual void useSecondary(bool endUse=false) = 0;
     virtual void update(float deltaTime) {};

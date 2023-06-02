@@ -9,6 +9,9 @@ void CollisionManager::resolveBounds(Player& player) const
     if (player.getHitbox()->getBottomY() >= Constants::WINDOW_HEIGHT) {
         // player hit floor after free fall for first time
         player.setState(Player::State::TouchingGround);
-        player.setPosition(player.getVelocity() * Vector2(1, 0));
+
+        Vector2 newPosition(player.getPosition().x, Constants::WINDOW_HEIGHT - (player.getHitbox()->_size.y / 2));
+        player.setOldPosition(newPosition);
+        player.setPosition(newPosition);
     }
 }

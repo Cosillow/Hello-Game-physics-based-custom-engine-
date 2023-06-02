@@ -6,7 +6,6 @@ void GrapplingHook::update(float deltaTime) {
     if (this->_currentState != GrapplingHook::State::Idle)
     {
         // animate the rope
-        this->Body::applyForce(Constants::GRAVITY);
     }
 
     else if (this->_currentState == GrapplingHook::State::Retracting)

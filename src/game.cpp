@@ -4,7 +4,6 @@
 
 #include "game.hpp"
 #include "2dphysics.hpp"
-#include "texture.hpp"
 #include "player.hpp"
 #include "sword.hpp"
 #include "grapplinghook.hpp"
@@ -14,7 +13,7 @@ void Game::handleInputs(Player& player1) {
 	_inputManager->update(*this);
 	
 	// player 1
-	player1.setLookAngle(_inputManager->getMousePosition());
+	// player1.setLookAngle(_inputManager->getMousePosition());
 	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
 	{
 		player1.moveLeft(true);
@@ -52,10 +51,9 @@ void Game::run() {
 	// Texture swordTex(_window.getRenderer(), "res/sword.png");
 
 	
-	Player wilson({-100, 55});
+	Player wilson({400, 200});
 	// Player spilson({200, 55});
 
-	wilson.setPosition({0, 0});
 	// spilson.setPosition({500,500});
 
 	Sword doriSword({100, -200}, wilson);
@@ -91,6 +89,7 @@ void Game::run() {
 		// spilson.update(deltaTime);
 		// rope.update(deltaTime);
 
+		std::cout << wilson << std::endl;
 
 		// std::cout << rope << std::endl;
 		

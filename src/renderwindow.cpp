@@ -5,7 +5,6 @@
 #include <algorithm>
 #include "renderwindow.hpp"
 #include "2dphysics.hpp"
-#include "texture.hpp"
 #include "player.hpp"
 #include "grapplinghook.hpp"
 #include "constants.hpp"
@@ -49,7 +48,7 @@ void RenderWindow::clear()
 	SDL_RenderClear(_renderer);
 }
 
-void RenderWindow::render(Body& Body)
+void RenderWindow::render(Body& body)
 {
     this->saveRenderingColor();
 
@@ -57,14 +56,11 @@ void RenderWindow::render(Body& Body)
     SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255);
 
     // Create a rectangle with a size of 200x50
-    SDL_Rect rect;
-    rect.x = static_cast<int>(Body.getPosition().x);
-    rect.y = static_cast<int>(Body.getPosition().y);
-    rect.w = 200;
-    rect.h = 50;
-
+    Hitbox * hitbox = body.getHitbox();
+    if (!hitbox) return;
+    
     // Render the rectangle
-    SDL_RenderFillRect(_renderer, &rect);
+    SDL_RenderFillRect(_renderer, &hitbox->getSDLRect());
 
     this->restoreRenderingColor();
 }

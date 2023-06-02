@@ -26,18 +26,17 @@ void Player::moveLeft(bool start) {
 
 void Player::update(float deltaTime) {
     if (this->_currentState == State::FreeFall) {
-        Body::applyForce(Constants::GRAVITY);
     }
 
     
 
     Body::update(deltaTime);
 
-    if (_isMovingLeft) {
-        this->Body::setPosition(this->getPosition() - Vector2(Constants::PLAYER_SPEED, 0));
-    } if (_isMovingRight) {
-        this->Body::setPosition(this->getPosition() + Vector2(Constants::PLAYER_SPEED, 0));
-    }
+    // if (_isMovingLeft) {
+    //     this->Body::setPosition(this->getPosition() - Vector2(Constants::PLAYER_SPEED, 0));
+    // } if (_isMovingRight) {
+    //     this->Body::setPosition(this->getPosition() + Vector2(Constants::PLAYER_SPEED, 0));
+    // }
     
     if (_equippedItem) _equippedItem->update(deltaTime);
     

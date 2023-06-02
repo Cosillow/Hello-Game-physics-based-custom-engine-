@@ -12,7 +12,7 @@ public:
         FreeFall,
         TouchingGround
     };
-    Player(Vector2 pos): Body(pos, Constants::PLAYER_MASS), 
+    Player(Vector2 pos): Body(pos), 
     _lookAngle(0),
     _isMovingUp(false), 
     _isMovingDown(false), 

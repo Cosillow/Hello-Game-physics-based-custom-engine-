@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "constants.hpp"
 
 struct UpdateableI {
     UpdateableI() {}
@@ -29,10 +30,9 @@ struct Vector2 {
     }
 
     float distance(const Vector2& other) const {
-    Vector2 d = other - *this;
-    return std::sqrt((d.x * d.x) + (d.y * d.y));
-}
-
+        Vector2 d = other - *this;
+        return std::sqrt((d.x * d.x) + (d.y * d.y));
+    }
 
     float calculateAngle(const Vector2& to) const {
         return std::atan2(to.y - this->y, to.x - this->x);
@@ -50,9 +50,9 @@ struct Vector2 {
         return Vector2(this->x * scalar, this->y * scalar);
     }
 
-    Vector2 operator*(Vector2 other) const {
-        return Vector2(this->x * other.x, this->y * other.y);
-    }
+    // Vector2 operator*(Vector2 other) const {
+    //     return Vector2(this->x * other.x, this->y * other.y);
+    // }
 
     Vector2 operator/(float scalar) const {
         if (scalar != 0.0f) {
@@ -110,9 +110,9 @@ struct Vector2 {
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Vector2& vec) {
-    os << "(" << vec.x << ", " << vec.y << ")";
-    return os;
-}
+        os << "(" << vec.x << ", " << vec.y << ")";
+        return os;
+    }
 };
 
 // ********************************************************************************************************
@@ -173,7 +173,7 @@ struct Hitbox
         {
             return this->_center.x - this->_circleRadius;
         } else {
-            return this->_center.x - this->_size.x;
+            return this->_center.x - (this->_size.x / 2);
         }
     }
 
@@ -182,7 +182,7 @@ struct Hitbox
         {
             return this->_center.x + this->_circleRadius;
         } else {
-            return this->_center.x + this->_size.x;
+            return this->_center.x + (this->_size.x / 2);
         }
     }
 
@@ -191,7 +191,7 @@ struct Hitbox
         {
             return this->_center.y - this->_circleRadius;
         } else {
-            return this->_center.y - this->_size.y;
+            return this->_center.y - (this->_size.y / 2);
         }
     }
 
@@ -200,8 +200,18 @@ struct Hitbox
         {
             return this->_center.y + this->_circleRadius;
         } else {
-            return this->_center.y + this->_size.y;
+            return this->_center.y + (this->_size.y / 2);
         }
+    }
+
+    SDL_Rect& getSDLRect() const
+    {
+        static SDL_Rect rect;
+        rect.x = static_cast<int>(_center.x - (_size.x / 2));
+        rect.y = static_cast<int>(_center.y - (_size.y / 2));
+        rect.w = static_cast<int>(_size.x);
+        rect.h = static_cast<int>(_size.y);
+        return rect;
     }
 };
 
@@ -217,15 +227,14 @@ private:
     Hitbox* _hitbox;
 
 public:
-    
-    Body(Vector2 position, float a_mass, bool a_isStatic = false): UpdateableI(),
+    Body(Vector2 position, bool a_isStatic = false): UpdateableI(),
     _position(position),
     _oldPosition(position),
     _acceleration(Vector2()),
     _isStatic(a_isStatic),
     _hitbox(nullptr) {}
 
-    Body(bool isStatic = false): Body({0,0}, isStatic) { }
+    Body(bool isStatic): Body({0,0}, isStatic) { }
     Body(): Body(0.0) {}
 
     virtual ~Body() { this->cleanup(); }
@@ -252,12 +261,14 @@ public:
     }
     virtual void update(float deltaTime) {
         if (!this->_isStatic) {
-            Vector2 newPosition = this->_position * 2.0f - this->_oldPosition + this->_acceleration * (deltaTime * deltaTime);
-        
+            Vector2 newPosition = this->_position * 2.0f - this->_oldPosition + (this->_acceleration + Vector2(0, Constants::GRAVITY)) * (deltaTime * deltaTime);
+            
+            Vector2 velocity = (newPosition - this->_oldPosition) / (2.0f * deltaTime);
+
             this->_oldPosition = this->_position;
             this->_position = newPosition;
 
-            // update hitbox
+            // Update hitbox
             if (this->_hitbox) this->_hitbox->setCenter(this->_position);
         }
     }
@@ -291,7 +302,7 @@ public:
     }
     void setPosition(const Vector2& position) {
         this->_position = position;
-    }
+    } 
     void setOldPosition(const Vector2& position) {
         this->_oldPosition = position;
     }
