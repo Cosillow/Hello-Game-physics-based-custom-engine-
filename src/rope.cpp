@@ -18,7 +18,7 @@ _links({})
         Vector2 position = startPoint + (Vector2(0, Constants::RESTING_ROPE_LENGTH) * i);
 
         std::shared_ptr<Body> link = std::make_shared<Body>(position, 0);
-        link->setVelocity(position); // set old position
+        link->setOldPosition(position); 
         this->_links.push_back(link);
     }
 }
@@ -33,7 +33,7 @@ void Rope::update(float deltaTime)
     // float distance = firstLink.getPosition().distance(lastLink.getPosition());
     // if (distance > 0 && distance > numLinks * Constants::RESTING_ROPE_LENGTH) {
     //     Vector2 dir = (lastLink.getPosition() - firstLink.getPosition()).normalize();
-    //     lastLink.setVelocity(firstLink.getPosition()); // set old position
+    //     lastLink.setOldPosition(firstLink.getPosition()); 
     //     lastLink.setPosition(firstLink.getPosition() + (dir * numLinks * Constants::RESTING_ROPE_LENGTH));
     // }
 
@@ -46,7 +46,7 @@ void Rope::update(float deltaTime)
         Vector2 oldPosition = currentLink.getVelocity();
 
         currentLink.setPosition(currentLink.getPosition() + (currentPosition - oldPosition) + Constants::GRAVITY * (deltaTime * deltaTime));
-        currentLink.setVelocity(currentPosition); // set old position
+        currentLink.setOldPosition(currentPosition); 
     }
 
     // apply constraints
@@ -61,7 +61,7 @@ void Rope::update(float deltaTime)
             { // && last link probably too ?
                 // todo: set position to moving object or static location
                 currentLink.setPosition({100, 200});
-                currentLink.setVelocity({100, 200}); // set old position
+                currentLink.setOldPosition({100, 200}); 
             }
 
             // Current distance between rope nodes.

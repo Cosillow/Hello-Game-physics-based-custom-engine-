@@ -141,6 +141,8 @@ struct Hitbox
     _size({0, 0}),
     _circleRadius(radius) {/* create circle */} 
 
+    ~Hitbox() {};
+
     Type getType() const {
         if (this->_circleRadius) return Type::Circle;
         else return Type::BoundingBox; 
@@ -209,22 +211,21 @@ struct Hitbox
 class Body : public UpdateableI {
 private:
     Vector2 _position;
-    Vector2 _velocity;
-    Vector2 _totalForce;
-    float _mass;
+    Vector2 _oldPosition;
+    Vector2 _acceleration;
     bool _isStatic;
     Hitbox* _hitbox;
 
 public:
     
-    Body(Vector2 a_position, float a_mass, bool a_isStatic = false): UpdateableI(),
-    _position(a_position), 
-    _velocity(Vector2()), 
-    _totalForce(Vector2()),
-    _mass(a_mass),
+    Body(Vector2 position, float a_mass, bool a_isStatic = false): UpdateableI(),
+    _position(position),
+    _oldPosition(position),
+    _acceleration(Vector2()),
     _isStatic(a_isStatic),
     _hitbox(nullptr) {}
-    Body(float mass, bool a_isStatic = false): Body({0,0}, mass, a_isStatic) { }
+
+    Body(bool isStatic = false): Body({0,0}, isStatic) { }
     Body(): Body(0.0) {}
 
     virtual ~Body() { this->cleanup(); }
@@ -246,17 +247,15 @@ public:
     }
     void applyForce(const Vector2& force) {
         if (!this->_isStatic) {
-            this->_totalForce += force;
+            this->_acceleration += force;
         }
     }
     virtual void update(float deltaTime) {
         if (!this->_isStatic) {
-            Vector2 acceleration = this->_totalForce / this->_mass;
-            this->_velocity += acceleration * deltaTime;
-            this->_position += this->_velocity * deltaTime;
-
-            // Reset the total force for the next update
-            this->_totalForce = Vector2();
+            Vector2 newPosition = this->_position * 2.0f - this->_oldPosition + this->_acceleration * (deltaTime * deltaTime);
+        
+            this->_oldPosition = this->_position;
+            this->_position = newPosition;
 
             // update hitbox
             if (this->_hitbox) this->_hitbox->setCenter(this->_position);
@@ -264,7 +263,11 @@ public:
     }
     void applyImpulse(const Vector2 impulse) {
         if (!_isStatic) {
-            this->_velocity += impulse / this->_mass;
+             // Calculate the new velocity based on the impulse and mass
+            Vector2 newVelocity = getVelocity() + impulse;
+
+            // Update the old position based on the new velocity
+            this->_oldPosition = this->_position - newVelocity;
         }
     }
 
@@ -273,45 +276,30 @@ public:
     const Vector2 getPosition() const {
         return this->_position;
     }
-    const Vector2 getVelocity() const {
-        return this->_velocity;
+    Vector2 getVelocity() const {
+        return (this->_oldPosition - this->_position);
     }
-    Vector2 getAcceleration() const {
-        if (!this->_isStatic) {
-            return this->_totalForce / this->_mass;
-        }
-        // If the body is static, return a zero acceleration
-        return Vector2();
+    const Vector2 getAcceleration() const {
+        return this->_acceleration;
     }
     bool isStaticBody() const {
         return this->_isStatic;
     }
     // setters
-   void setVelocity(const Vector2& velocity) {
-        if (!this->_isStatic) {
-            this->_velocity = velocity;
-        }
-    }
-    float getMass() const {
-        return this->_mass;
-    }
-    void setMass(float mass) {
-        this->_mass = mass;
-    }
     void setStatic(bool isStatic) {
         this->_isStatic = isStatic;
     }
     void setPosition(const Vector2& position) {
         this->_position = position;
     }
+    void setOldPosition(const Vector2& position) {
+        this->_oldPosition = position;
+    }
 
     friend std::ostream& operator<<(std::ostream& os, const Body& body) {
-        if (body.isStaticBody()) os << "STATIC _position: " << body.getPosition() << ", _mass: " << body.getMass();
+        if (body.isStaticBody()) os << "STATIC _position: " << body.getPosition();
         else os << "_position: " << body.getPosition() << ", _velocity: " << body.getVelocity() << 
-        ", Acceleration: " << body.getAcceleration() << ", _mass: " << body.getMass();
+        ", Acceleration: " << body.getAcceleration();
         return os;
     }
 };
-
-
-
