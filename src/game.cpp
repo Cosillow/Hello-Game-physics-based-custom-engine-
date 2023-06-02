@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include <iostream>
 
 #include "game.hpp"
@@ -8,6 +9,7 @@
 #include "sword.hpp"
 #include "grapplinghook.hpp"
 #include "rope.hpp"
+#include "resourcemanager.hpp"
 
 void Game::handleInputs(Player& player1) {
 	_inputManager->update(*this);
@@ -57,6 +59,8 @@ void Game::run() {
 	// spilson.setPosition({500,500});
 
 	Sword doriSword({100, -200}, wilson);
+
+	ResourceManager resourceManager(_window.getRenderer(), std::vector<std::string>{"./res/monkey.png"});
 	// Sword spillySword({-100, -200}, spilson);
 
 	// GrapplingHook hook(wilson);
@@ -89,9 +93,6 @@ void Game::run() {
 		// spilson.update(deltaTime);
 		// rope.update(deltaTime);
 
-		std::cout << wilson << std::endl;
-
-		// std::cout << rope << std::endl;
 		
 		// _collisionManager->checkAndResolve(wilson, spilson);
 		_collisionManager->resolveBounds(wilson);

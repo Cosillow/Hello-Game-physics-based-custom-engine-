@@ -16,7 +16,7 @@ class RenderWindow
 public:
 	RenderWindow(const std::string& title, int w, int h);
 	~RenderWindow() { cleanUp(); }
-	SDL_Renderer* getRenderer() const { return _renderer; }
+	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
 
 	// method overrides: render()
 	void render(Body& Body);
