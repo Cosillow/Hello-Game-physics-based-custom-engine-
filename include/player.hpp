@@ -2,7 +2,8 @@
 #include <SDL2/SDL.h>
 #include "2dphysics.hpp"
 #include "item.hpp"
-
+#include "resourcemanager.hpp"
+#include "sprite.hpp"
 
 class Player : public Body
 {
@@ -19,7 +20,8 @@ public:
     _isMovingLeft(false), 
     _isMovingRight(false),
     _equippedItem(nullptr),
-    _currentState(State::FreeFall) { this->addHitboxBB(50, 200); }
+    _currentState(State::FreeFall),
+    _sprite(Sprite(ResourceManager::getInstance().getTexture("monkey"))) { this->addHitboxBB(50, 200); }
 
     void moveUp(bool start);
     void moveDown(bool start);
@@ -45,4 +47,5 @@ private:
     bool _isMovingRight;
     Item* _equippedItem;
     State _currentState;
+    Sprite _sprite;
 };

@@ -17,3 +17,8 @@ bool CirclevsCircleOptimized( Circle a, Circle b )
   r *= r
   return r < (a.x + b.x)^2 + (a.y + b.y)^2
 }
+
+
+TODOODOD:
+
+- add interface for spriteContainer, animatedSpriteContainer

@@ -59,8 +59,9 @@ void Game::run() {
 	// spilson.setPosition({500,500});
 
 	Sword doriSword({100, -200}, wilson);
-
-	ResourceManager resourceManager(_window.getRenderer(), std::vector<std::string>{"./res/monkey.png"});
+	
+	ResourceManager::initialize(&(this->_window.getRenderer()), std::vector<std::string>{"./res/monkey.png"});
+	// ResourceManager resourceManager(this->_window.getRenderer(), std::vector<std::string>{"./res/monkey.png"});
 	// Sword spillySword({-100, -200}, spilson);
 
 	// GrapplingHook hook(wilson);

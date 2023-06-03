@@ -7,24 +7,15 @@
 class ResourceManager {
 private:
     std::unordered_map<std::string, SDL_Texture*> textures;
+    SDL_Renderer* renderer;
 
-    bool loadTexture(SDL_Renderer& renderer, const std::string& name, const std::string& filePath) {
-    SDL_Surface* surface = IMG_Load(filePath.c_str());
-    if (!surface) {
-        std::cerr << "Failed to load texture: " << filePath << ", " << IMG_GetError() << std::endl;
-        return false;
+    ResourceManager() : renderer(nullptr) {}
+
+    ~ResourceManager() {
+        for (auto& pair : textures) {
+            SDL_DestroyTexture(pair.second);
+        }
     }
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(&renderer, surface);
-    SDL_FreeSurface(surface);
-    if (!texture) {
-        std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
-        return false;
-    }
-
-    textures[name] = texture;
-    return true;
-}
 
     std::string getFileNameWithoutExtension(const std::string& filePath) const {
         size_t lastSlash = filePath.find_last_of("/\\");
@@ -37,33 +28,41 @@ private:
         return filePath.substr(lastSlash + 1, lastDot - lastSlash - 1);
     }
 
-public:
-    ResourceManager(SDL_Renderer& renderer, const std::vector<std::string>& texturePaths) {
-        for (const auto& path : texturePaths) {
-            // strip the path to the file name and file path
-            const std::string& name = this->getFileNameWithoutExtension(path);
-            std::cout << "name: " << name << " path: "<< path << std::endl;
-            const bool texLoaded = this->loadTexture(renderer, name, path);
-            if (!texLoaded) textures[name] = nullptr;
+    bool loadTexture(const std::string& name, const std::string& filePath) {
+        SDL_Surface* surface = IMG_Load(filePath.c_str());
+        if (!surface) {
+            std::cerr << "Failed to load texture: " << filePath << ", " << IMG_GetError() << std::endl;
+            return false;
         }
+
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_FreeSurface(surface);
+        if (!texture) {
+            std::cerr << "Failed to create texture from surface: " << SDL_GetError() << std::endl;
+            return false;
+        }
+
+        textures[name] = texture;
+        return true;
     }
 
-    ~ResourceManager() {
-        for (auto& pair : textures) {
-            SDL_DestroyTexture(pair.second);
+public:
+    static ResourceManager& getInstance() {
+        static ResourceManager instance;
+        return instance;
+    }
+
+    static void initialize(SDL_Renderer* renderer, const std::vector<std::string>& texturePaths) {
+        ResourceManager& instance = getInstance();
+        instance.renderer = renderer;
+
+        for (const auto& path : texturePaths) {
+            const std::string& name = instance.getFileNameWithoutExtension(path);
+            std::cout << "name: " << name << " path: " << path << std::endl;
+            const bool texLoaded = instance.loadTexture(name, path);
+            if (!texLoaded) instance.textures[name] = nullptr;
         }
-    }    
-
-    // std::vector<std::string> getTextureNames() const {
-    //     std::vector<std::string> names;
-    //     names.reserve(textures.size());
-
-    //     for (const auto& pair : textures) {
-    //         names.push_back(pair.first);
-    //     }
-
-    //     return names;
-    // }
+    }
 
     SDL_Texture* getTexture(const std::string& name) const {
         auto it = textures.find(name);
