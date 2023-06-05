@@ -10,6 +10,7 @@
 #include "constants.hpp"
 #include "rope.hpp"
 #include "item.hpp"
+#include "sprite.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
     : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
@@ -48,7 +49,7 @@ void RenderWindow::clear()
 	SDL_RenderClear(_renderer);
 }
 
-void RenderWindow::render(Body& body)
+void RenderWindow::render(const Body& body)
 {
     this->saveRenderingColor();
 
@@ -65,27 +66,41 @@ void RenderWindow::render(Body& body)
     this->restoreRenderingColor();
 }
 
-
-void RenderWindow::render(Player& player)
+void RenderWindow::render(const Player& player)
 {
     this->saveRenderingColor();
-    this->render(static_cast<Body&>(player));
+    this->render(static_cast<Body>(player));
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem)
     {
         this->render(*equippedItem);
     }
-    // TODO render player sprite
+    this->render(player.getSprite());
 
     this->restoreRenderingColor();
 }
 
-void RenderWindow::render(Item& item)
+void RenderWindow::render(const Sprite& sprite)
+{
+    this->saveRenderingColor();
+
+    // Get the SDL_Texture and SDL_Rect from the sprite
+    SDL_Texture* texture = sprite.getTexture();
+    SDL_Rect rect = sprite.getRect();
+
+    // Render the texture at the specified position and size
+    SDL_RenderCopy(_renderer, texture, nullptr, &rect);
+
+    this->restoreRenderingColor();
+}
+
+
+void RenderWindow::render(const Item& item)
 {
     item.renderItem(*this);
 }
 
-void RenderWindow::render(GrapplingHook& grapplingHook)
+void RenderWindow::render(const GrapplingHook& grapplingHook)
 {
     this->saveRenderingColor();
 
@@ -105,7 +120,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
         SDL_RenderDrawLine(_renderer, static_cast<int>(center.x), static_cast<int>(center.y), lineX, lineY);
     } else if (grapplingHook.getState() == GrapplingHook::State::Extending) {
 
-        this->render(static_cast<Body&>(grapplingHook));
+        this->render(static_cast<Body>(grapplingHook));
 
         // Set the rendering color to red
         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
@@ -126,7 +141,7 @@ void RenderWindow::render(GrapplingHook& grapplingHook)
     this->restoreRenderingColor();
 }
 
-void RenderWindow::render(Rope& rope)
+void RenderWindow::render(const Rope& rope)
 {
     this->saveRenderingColor();
     const std::vector<std::shared_ptr<Body>>& links = rope.getLinks();

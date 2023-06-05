@@ -10,6 +10,8 @@ class Rope;
 class Player;
 class GrapplingHook;
 class Item;
+class SpriteContainer;
+class Sprite;
 
 class RenderWindow 
 {
@@ -19,11 +21,12 @@ public:
 	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
 
 	// method overrides: render()
-	void render(Body& Body);
-	void render(Player& player);
-	void render(Item& item);
-	void render(GrapplingHook& player);
-	void render(Rope& rope);
+	void render(const Body& Body);
+	void render(const Player& player);
+	void render(const Item& item);
+	void render(const GrapplingHook& player);
+	void render(const Rope& rope);
+	void render(const Sprite& sprite);
 
 	void saveRenderingColor();
     void restoreRenderingColor();

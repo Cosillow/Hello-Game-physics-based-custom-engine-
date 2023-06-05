@@ -10,6 +10,7 @@
 #include "grapplinghook.hpp"
 #include "rope.hpp"
 #include "resourcemanager.hpp"
+#include "sprite.hpp"
 
 void Game::handleInputs(Player& player1) {
 	_inputManager->update(*this);
@@ -94,6 +95,7 @@ void Game::run() {
 		// spilson.update(deltaTime);
 		// rope.update(deltaTime);
 
+		std::cout << wilson << std::endl;
 		
 		// _collisionManager->checkAndResolve(wilson, spilson);
 		_collisionManager->resolveBounds(wilson);
@@ -106,6 +108,4 @@ void Game::run() {
 		// display
 		_window.display();
 	}
-
-	
 }

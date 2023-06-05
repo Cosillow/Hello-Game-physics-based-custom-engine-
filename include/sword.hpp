@@ -12,7 +12,7 @@ public:
     virtual void use(bool endUse=false);
     virtual void useSecondary(bool endUse=false);
     virtual void update(float deltaTime);
-    virtual void renderItem(RenderWindow& renderWindow) { renderWindow.render(*this); }
+    virtual void renderItem(RenderWindow& renderWindow) const { renderWindow.render(*this); }
 
 private:
     Vector2 _offset;

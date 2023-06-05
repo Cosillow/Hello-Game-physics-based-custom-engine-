@@ -13,9 +13,9 @@ public:
     virtual void use(bool endUse=false) = 0;
     virtual void useSecondary(bool endUse=false) = 0;
     virtual void update(float deltaTime) {};
-    virtual void renderItem(RenderWindow& renderWindow) = 0;
+    virtual void renderItem(RenderWindow& renderWindow) const = 0;
 
-    Player& getPlayer() { return _player; }
+    Player& getPlayer() const { return _player; }
 protected:
     Player& _player;
 };
