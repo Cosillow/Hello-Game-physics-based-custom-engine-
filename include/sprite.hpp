@@ -6,7 +6,7 @@
 
 class Sprite {
 private:
-    SDL_Texture* _texture; // not in charge of memory
+    SDL_Texture* _texture;
     SDL_Rect _box;
 
 public:
@@ -18,6 +18,7 @@ public:
     Sprite(SDL_Texture* texture): 
     _texture(texture), 
     _box({0,0,0,0}) { this->setTexture(texture); }
+    ~Sprite() {} // not in charge of the texture
 
     void setTexture(SDL_Texture* texture, int x, int y, int width, int height)
     {

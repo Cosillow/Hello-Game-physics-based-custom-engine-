@@ -12,6 +12,7 @@ class GrapplingHook;
 class Item;
 class SpriteContainer;
 class Sprite;
+class Hitbox;
 
 class RenderWindow 
 {
@@ -26,7 +27,8 @@ public:
 	void render(const Item& item);
 	void render(const GrapplingHook& player);
 	void render(const Rope& rope);
-	void render(const Sprite& sprite);
+	void render(const Sprite& sprite, const Vector2 position);
+	void render(const Hitbox& hitbox);
 
 	void saveRenderingColor();
     void restoreRenderingColor();

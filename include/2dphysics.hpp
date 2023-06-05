@@ -130,7 +130,7 @@ struct Hitbox
     Vector2 _size;
     float _circleRadius;
 
-    Hitbox(float offsetX, float offsetY, float height, float width): 
+    Hitbox(float offsetX, float offsetY, float width, float height): 
     _offset({offsetX, offsetY}), 
     _center({0,0}),
     _size({width, height}),
@@ -242,13 +242,13 @@ public:
         if (this->_hitbox) delete this->_hitbox;
     }
 
-    void addHitboxBB(float offsetX, float offsetY, float height, float width) {
+    void addHitboxBB(float offsetX, float offsetY, float width, float height) {
         this->cleanup();
-        this->_hitbox = new Hitbox(offsetX, offsetY, height, width);
+        this->_hitbox = new Hitbox(offsetX, offsetY, width, height);
     }
-    void addHitboxBB(float height, float width) {
+    void addHitboxBB(float width, float height) {
         this->cleanup();
-        this->_hitbox = new Hitbox(0, 0, height, width);
+        this->_hitbox = new Hitbox(0, 0, width, height);
     }
     void addHitboxCircle(float offsetX, float offsetY, float radius) {
         this->cleanup();

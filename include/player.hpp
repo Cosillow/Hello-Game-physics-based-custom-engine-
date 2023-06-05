@@ -4,6 +4,7 @@
 #include "item.hpp"
 #include "resourcemanager.hpp"
 #include "sprite.hpp"
+#include "constants.hpp"
 
 class SpriteContainer;
 
@@ -22,7 +23,7 @@ public:
     _isMovingLeft(false), 
     _isMovingRight(false),
     _equippedItem(nullptr),
-    _currentState(State::FreeFall) { this->addHitboxBB(50, 200); }
+    _currentState(State::FreeFall) { this->addHitboxBB(16 * Constants::SPRITE_SCALE, 32 * Constants::SPRITE_SCALE); }
 
     void moveUp(bool start);
     void moveDown(bool start);

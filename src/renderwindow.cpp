@@ -52,16 +52,15 @@ void RenderWindow::clear()
 void RenderWindow::render(const Body& body)
 {
     this->saveRenderingColor();
+    // // Set the rendering color to grey
+    // SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255);
 
-    // Set the rendering color to grey
-    SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255);
-
-    // Create a rectangle with a size of 200x50
-    Hitbox * hitbox = body.getHitbox();
-    if (!hitbox) return;
+    // // Create a rectangle with a size of 200x50
+    // Hitbox * hitbox = body.getHitbox();
+    // if (!hitbox) return;
     
-    // Render the rectangle
-    SDL_RenderFillRect(_renderer, &hitbox->getSDLRect());
+    // // Render the rectangle
+    // SDL_RenderFillRect(_renderer, &hitbox->getSDLRect());
 
     this->restoreRenderingColor();
 }
@@ -69,27 +68,29 @@ void RenderWindow::render(const Body& body)
 void RenderWindow::render(const Player& player)
 {
     this->saveRenderingColor();
-    this->render(static_cast<Body>(player));
     Item* equippedItem = player.getEquippedItem();
-    if (equippedItem)
-    {
-        this->render(*equippedItem);
-    }
-    this->render(player.getSprite());
-
+    if (equippedItem) this->render(*equippedItem);
+    this->render(player.getSprite(), player.getPosition());
+    if (player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
 }
 
-void RenderWindow::render(const Sprite& sprite)
+void RenderWindow::render(const Sprite& sprite, const Vector2 position)
 {
     this->saveRenderingColor();
 
-    // Get the SDL_Texture and SDL_Rect from the sprite
     SDL_Texture* texture = sprite.getTexture();
-    SDL_Rect rect = sprite.getRect();
 
-    // Render the texture at the specified position and size
-    SDL_RenderCopy(_renderer, texture, nullptr, &rect);
+    const SDL_Rect& spriteRect = sprite.getRect();
+
+    SDL_Rect destRect;
+    
+    destRect.w = spriteRect.w * Constants::SPRITE_SCALE;
+    destRect.h = spriteRect.h * Constants::SPRITE_SCALE;
+    destRect.x = static_cast<int>(position.x - destRect.w / 2);
+    destRect.y = static_cast<int>(position.y - destRect.h / 2);
+
+    SDL_RenderCopy(_renderer, texture, &spriteRect, &destRect);
 
     this->restoreRenderingColor();
 }
@@ -183,3 +184,41 @@ void RenderWindow::restoreRenderingColor()
         SDL_SetRenderDrawColor(_renderer, previousColor.r, previousColor.g, previousColor.b, previousColor.a);
     }
 }
+
+void RenderWindow::render(const Hitbox& hitbox)
+{
+    this->saveRenderingColor();
+    Hitbox::Type hitboxType = hitbox.getType();
+    SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255); // Green
+    if (hitboxType == Hitbox::Type::BoundingBox)
+    {
+        // Render bounding box
+        const SDL_Rect& rect = hitbox.getSDLRect();
+        SDL_RenderDrawRect(_renderer, &rect);
+    }
+    else if (hitboxType == Hitbox::Type::Circle)
+    {
+        // Render circle
+        const Vector2& center = hitbox._center;
+        float radius = hitbox._circleRadius;
+        int centerX = static_cast<int>(center.x);
+        int centerY = static_cast<int>(center.y);
+
+        for (int x = centerX - radius; x <= centerX + radius; x++)
+        {
+            int yTop = centerY - static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
+            int yBottom = centerY + static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
+
+            SDL_RenderDrawLine(_renderer, x, yTop, x, yBottom);
+        }
+    }
+
+    SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255); // Gray
+    // Render the center dot
+    const Vector2& center = hitbox._center;
+    int centerX = static_cast<int>(center.x);
+    int centerY = static_cast<int>(center.y);
+    SDL_RenderDrawPoint(_renderer, centerX, centerY);
+    this->restoreRenderingColor();
+}
+

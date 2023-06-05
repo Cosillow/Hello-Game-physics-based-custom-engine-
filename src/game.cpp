@@ -52,7 +52,6 @@ void Game::handleInputs(Player& player1) {
 void Game::run() {
     // Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
 	// Texture swordTex(_window.getRenderer(), "res/sword.png");
-
 	
 	Player wilson({400, 200});
 	// Player spilson({200, 55});
@@ -61,7 +60,7 @@ void Game::run() {
 
 	Sword doriSword({100, -200}, wilson);
 	
-	ResourceManager::initialize(&(this->_window.getRenderer()), std::vector<std::string>{"./res/monkey.png"});
+	
 	// ResourceManager resourceManager(this->_window.getRenderer(), std::vector<std::string>{"./res/monkey.png"});
 	// Sword spillySword({-100, -200}, spilson);
 
@@ -91,19 +90,12 @@ void Game::run() {
 		_window.clear();
 
 		// update
-		wilson.update(deltaTime);
-		// spilson.update(deltaTime);
-		// rope.update(deltaTime);
-
-		std::cout << wilson << std::endl;
-		
-		// _collisionManager->checkAndResolve(wilson, spilson);
+		wilson.update(deltaTime);		
 		_collisionManager->resolveBounds(wilson);
-		// _collisionManager->resolveBounds(spilson);
 		
+		std::cout << wilson << std::endl;
 		// render
 		_window.render(wilson);
-		// _window.render(rope);
 		
 		// display
 		_window.display();
