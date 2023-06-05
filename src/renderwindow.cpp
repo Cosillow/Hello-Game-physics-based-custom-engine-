@@ -213,12 +213,6 @@ void RenderWindow::render(const Hitbox& hitbox)
         }
     }
 
-    SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255); // Gray
-    // Render the center dot
-    const Vector2& center = hitbox._center;
-    int centerX = static_cast<int>(center.x);
-    int centerY = static_cast<int>(center.y);
-    SDL_RenderDrawPoint(_renderer, centerX, centerY);
     this->restoreRenderingColor();
 }
 

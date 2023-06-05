@@ -7,36 +7,31 @@
 #include "inputmanager.hpp"
 #include "constants.hpp"
 
-
-void Player::moveUp(bool start) {
-    _isMovingUp = start;
-}
-
-void Player::moveDown(bool start) {
-    _isMovingDown = start;
-}
-
 void Player::moveRight(bool start) {
-    _isMovingRight = start;
+    if (!this->_isMovingRight && start) {
+        // player just started moving
+        this->applyForce(Vector2(Constants::PLAYER_SPEED, 0));
+    } else if (this->_isMovingRight && !start) {
+        // player stops moving
+        this->applyForce(Vector2(-Constants::PLAYER_SPEED, 0));
+    }
+    this->_isMovingRight = start;
 }
 
 void Player::moveLeft(bool start) {
-    _isMovingLeft = start;
+    if (!this->_isMovingLeft && start) {
+        // player just started moving
+        this->applyForce(Vector2(-Constants::PLAYER_SPEED, 0));
+    } else if (this->_isMovingLeft && !start) {
+        // player stops moving
+        this->applyForce(Vector2(Constants::PLAYER_SPEED, 0));
+    }
+    this->_isMovingLeft = start;
 }
 
 void Player::update(float deltaTime) {
-    if (this->_currentState == State::FreeFall) {
-    }
 
-    
-
-    Body::update(deltaTime);
-
-    // if (_isMovingLeft) {
-    //     this->Body::setPosition(this->getPosition() - Vector2(Constants::PLAYER_SPEED, 0));
-    // } if (_isMovingRight) {
-    //     this->Body::setPosition(this->getPosition() + Vector2(Constants::PLAYER_SPEED, 0));
-    // }
+    Body::update(deltaTime);    
     
     if (_equippedItem) _equippedItem->update(deltaTime);
     
@@ -44,8 +39,8 @@ void Player::update(float deltaTime) {
 }
 
 void Player::jump() {
-    if (this->_currentState == State::TouchingGround) {
-        this->_currentState = State::FreeFall;
+    if (this->isTouchingGround()) {
+        this->setIsTouchingGround(false);
         this->Body::applyImpulse({0.0, -Constants::PLAYER_JUMP});
     }
 }

@@ -91,6 +91,15 @@ struct Vector2 {
         return *this;
     }
 
+    friend bool operator<(const Vector2& lhs, const Vector2& rhs) {
+        return lhs.magnitude() < rhs.magnitude();
+    }
+
+    friend bool operator>(const Vector2& lhs, const Vector2& rhs) {
+        return lhs.magnitude() > rhs.magnitude();
+    }
+
+
     float dot(const Vector2& other) const {
         return this->x * other.x + this->y * other.y;
     }
@@ -168,7 +177,7 @@ struct Hitbox
         }
     }
 
-    float getLeftX() {
+    float getLeftX() const {
         if (this->getType() == Type::Circle)
         {
             return this->_center.x - this->_circleRadius;
@@ -177,7 +186,7 @@ struct Hitbox
         }
     }
 
-    float getRightX() {
+    float getRightX() const {
         if (this->getType() == Type::Circle)
         {
             return this->_center.x + this->_circleRadius;
@@ -186,7 +195,7 @@ struct Hitbox
         }
     }
 
-    float getTopY() {
+    float getTopY() const {
         if (this->getType() == Type::Circle)
         {
             return this->_center.y - this->_circleRadius;
@@ -195,7 +204,7 @@ struct Hitbox
         }
     }
 
-    float getBottomY() {
+    float getBottomY() const {
         if (this->getType() == Type::Circle)
         {
             return this->_center.y + this->_circleRadius;
@@ -225,6 +234,21 @@ private:
     Vector2 _acceleration;
     bool _isStatic;
     Hitbox* _hitbox;
+    bool _isTouchingGround;
+
+    Vector2 applyFriction(Vector2 acceleration, float deltaTime) {
+        Vector2 velocity = this->getVelocity();
+        const float THRESHOLD = 0.1f;
+        if (this->_isTouchingGround && std::abs(velocity.x) > THRESHOLD) {
+            const float frictionForceX = velocity.x * Constants::PLAYER_FRICTION * -1;
+            acceleration.x += frictionForceX;
+        } else if (this->_isTouchingGround && this->_acceleration.x == 0 && std::abs(velocity.x) <= THRESHOLD) {
+            return Vector2(0,0);
+        }
+        
+        return acceleration;
+    }
+
 
 public:
     Body(Vector2 position, bool a_isStatic = false): UpdateableI(),
@@ -232,7 +256,8 @@ public:
     _oldPosition(position),
     _acceleration(Vector2()),
     _isStatic(a_isStatic),
-    _hitbox(nullptr) {}
+    _hitbox(nullptr),
+    _isTouchingGround(false) {}
 
     Body(bool isStatic): Body({0,0}, isStatic) { }
     Body(): Body(0.0) {}
@@ -261,10 +286,9 @@ public:
     }
     virtual void update(float deltaTime) {
         if (!this->_isStatic) {
-            Vector2 newPosition = this->_position * 2.0f - this->_oldPosition + (this->_acceleration + Vector2(0, Constants::GRAVITY)) * (deltaTime * deltaTime);
+            const Vector2 finalAcceleration = this->applyFriction(this->getAcceleration(), deltaTime);
+            Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
             
-            Vector2 velocity = (newPosition - this->_oldPosition) / (2.0f * deltaTime);
-
             this->_oldPosition = this->_position;
             this->_position = newPosition;
 
@@ -274,8 +298,13 @@ public:
     }
     void applyImpulse(const Vector2 impulse) {
         if (!_isStatic) {
-             // Calculate the new velocity based on the impulse and mass
             Vector2 newVelocity = getVelocity() + impulse;
+
+            std::cout << "applyImpulse() velocity: " << getVelocity() << " newVelocity: " << newVelocity << std::endl;
+
+            // Update the position based on the average of old and new velocity
+            Vector2 averageVelocity = (getVelocity() + newVelocity) * 0.5f;
+            this->_position = this->_position + averageVelocity;
 
             // Update the old position based on the new velocity
             this->_oldPosition = this->_position - newVelocity;
@@ -287,18 +316,27 @@ public:
     const Vector2 getPosition() const {
         return this->_position;
     }
+    const Vector2 getOldPosition() const {
+        return this->_oldPosition;
+    }
     Vector2 getVelocity() const {
-        return (this->_oldPosition - this->_position);
+        return this->_position - this->_oldPosition;
     }
     const Vector2 getAcceleration() const {
-        return this->_acceleration;
+        return (this->_acceleration + Vector2(0, Constants::GRAVITY));
     }
     bool isStaticBody() const {
         return this->_isStatic;
     }
+    bool isTouchingGround() const {
+        return this->_isTouchingGround;
+    }
     // setters
     void setStatic(bool isStatic) {
         this->_isStatic = isStatic;
+    }
+    void setIsTouchingGround(bool isTouchingGround) {
+        this->_isTouchingGround = isTouchingGround;
     }
     void setPosition(const Vector2& position) {
         this->_position = position;
@@ -308,8 +346,8 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Body& body) {
-        if (body.isStaticBody()) os << "STATIC _position: " << body.getPosition();
-        else os << "_position: " << body.getPosition() << ", _velocity: " << body.getVelocity() << 
+        if (body.isStaticBody()) os << "STATIC Position: " << body.getPosition();
+        else os << "Position: " << body.getPosition() << ", Velocity: " << body.getVelocity() << 
         ", Acceleration: " << body.getAcceleration();
         return os;
     }

@@ -4,14 +4,21 @@
 
 void CollisionManager::resolveBounds(Player& player) const
 {
-    if (!player.getHitbox()) return;
+    Hitbox* hitbox = player.getHitbox();
+    if (!hitbox) return;
 
-    if (player.getHitbox()->getBottomY() >= Constants::WINDOW_HEIGHT) {
-        // player hit floor after free fall for first time
-        player.setState(Player::State::TouchingGround);
+    if (hitbox->getBottomY() >= Constants::WINDOW_HEIGHT) {
+        // player hit the bottom of the window
+        player.setIsTouchingGround(true);
 
-        Vector2 newPosition(player.getPosition().x, Constants::WINDOW_HEIGHT - (player.getHitbox()->_size.y / 2));
-        player.setOldPosition(newPosition);
-        player.setPosition(newPosition);
+        const float newYPosition = Constants::WINDOW_HEIGHT - (hitbox->_size.y / 2);
+        player.setOldPosition(Vector2(player.getOldPosition().x, newYPosition));
+        player.setPosition(Vector2(player.getPosition().x, newYPosition));
+
+        // Apply friction force in the opposite x-direction
+        // if (player.getVelocity().x != 0.0f) {
+        //     const Vector2 frictionForce = player.getVelocity().normalize() * Constants::PLAYER_FRICTION * -1;
+        //     player.applyForce(frictionForce);
+        // }
     }
 }

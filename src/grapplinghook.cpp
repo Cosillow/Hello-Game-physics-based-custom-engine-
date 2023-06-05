@@ -60,6 +60,6 @@ void GrapplingHook::useSecondary(bool endUse)
     // release hook from the wall
     if (this->_isGrabbingSurface && this->_currentState == GrapplingHook::State::Idle) {
         this->_isGrabbingSurface = false;
-        this->_player.setState(Player::State::FreeFall);
+        this->_player.setIsTouchingGround(false);
     }
 }
