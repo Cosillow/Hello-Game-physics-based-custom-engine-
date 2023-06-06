@@ -93,7 +93,7 @@ void Game::run() {
 		wilson.update(deltaTime);		
 		_collisionManager->resolveBounds(wilson);
 		
-		std::cout << wilson << std::endl;
+		// std::cout << wilson << std::endl;
 		// render
 		_window.render(wilson);
 		

@@ -63,6 +63,15 @@ struct Vector2 {
         return Vector2();
     }
 
+    friend bool operator==(const Vector2& lhs, const Vector2& rhs) {
+        return lhs.x == rhs.x && lhs.y == rhs.y;
+    }
+
+    friend bool operator!=(const Vector2& lhs, const Vector2& rhs) {
+        return !(lhs == rhs);
+    }
+
+
     Vector2& operator+=(const Vector2& other) {
         this->x += other.x;
         this->y += other.y;
@@ -149,7 +158,7 @@ struct Hitbox
     _center({0,0}),
     _size({0, 0}),
     _circleRadius(radius) {/* create circle */} 
-
+    Hitbox(): Hitbox(0,0,0,0) {/* create a default bounding box */}
     ~Hitbox() {};
 
     Type getType() const {
@@ -162,9 +171,10 @@ struct Hitbox
     bool checkCollisions(const Hitbox& other) const {
         if (this->getType() == Hitbox::Type::Circle && other.getType() == Hitbox::Type::Circle)
         {
-            float distance = (this->_center - other._center).magnitude();
-
-            return distance < (this->_size.x + other._size.x) / 2;
+            // optimized without the sqrt function
+            float r = this->_circleRadius + other._circleRadius;
+            r *= r;
+            return r < std::pow(this->_center.x + other._center.x, 2) + std::pow(this->_center.y + other._center.y, 2);
         } else if (this->getType() == Type::BoundingBox && other.getType() == Type::BoundingBox)
         {
             Vector2 topLeft = this->_center - this->_size / 2;
@@ -236,20 +246,6 @@ private:
     Hitbox* _hitbox;
     bool _isTouchingGround;
 
-    Vector2 applyFriction(Vector2 acceleration, float deltaTime) {
-        Vector2 velocity = this->getVelocity();
-        const float THRESHOLD = 0.1f;
-        if (this->_isTouchingGround && std::abs(velocity.x) > THRESHOLD) {
-            const float frictionForceX = velocity.x * Constants::PLAYER_FRICTION * -1;
-            acceleration.x += frictionForceX;
-        } else if (this->_isTouchingGround && this->_acceleration.x == 0 && std::abs(velocity.x) <= THRESHOLD) {
-            return Vector2(0,0);
-        }
-        
-        return acceleration;
-    }
-
-
 public:
     Body(Vector2 position, bool a_isStatic = false): UpdateableI(),
     _position(position),
@@ -286,12 +282,25 @@ public:
     }
     virtual void update(float deltaTime) {
         if (!this->_isStatic) {
-            const Vector2 finalAcceleration = this->applyFriction(this->getAcceleration(), deltaTime);
-            Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
-            
-            this->_oldPosition = this->_position;
-            this->_position = newPosition;
+            Vector2 finalAcceleration = this->getAcceleration();
+            Vector2 velocity = this->getVelocity();
 
+            if (this->_isTouchingGround && this->getAcceleration().x == 0) {
+                // apply friction
+                const float frictionForceX = velocity.x * Constants::PLAYER_FRICTION * -1;
+                finalAcceleration.x += frictionForceX;
+            }
+            
+            if (this->_isTouchingGround && this->_acceleration.x == 0 && std::abs(velocity.x) <= Constants::MINIMUM_VELOCITY) {
+                // body is stopping
+                this->_oldPosition = this->_position;
+            } else {
+                // body is moving
+                Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
+                this->_oldPosition = this->_position;
+                this->_position = newPosition;
+            }
+            
             // Update hitbox
             if (this->_hitbox) this->_hitbox->setCenter(this->_position);
         }

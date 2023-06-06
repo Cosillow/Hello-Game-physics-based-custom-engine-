@@ -90,7 +90,8 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     destRect.x = static_cast<int>(position.x - destRect.w / 2);
     destRect.y = static_cast<int>(position.y - destRect.h / 2);
 
-    SDL_RenderCopy(_renderer, texture, &spriteRect, &destRect);
+    SDL_RendererFlip flip = sprite.getMirrorX() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+    SDL_RenderCopyEx(_renderer, texture, &spriteRect, &destRect, 0.0, nullptr, flip);
 
     this->restoreRenderingColor();
 }

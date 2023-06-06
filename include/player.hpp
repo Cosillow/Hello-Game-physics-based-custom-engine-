@@ -13,8 +13,8 @@ class Player : public Body, public SpriteContainer
 public:
     Player(Vector2 pos): Body(pos), SpriteContainer(Sprite(ResourceManager::getInstance().getTexture("monkey"))),
     _lookAngle(0),
-    _isMovingLeft(false), 
-    _isMovingRight(false),
+    _movingLeft(Vector2()), 
+    _movingRight(Vector2()),
     _equippedItem(nullptr) { this->addHitboxBB(16 * Constants::SPRITE_SCALE, 32 * Constants::SPRITE_SCALE); }
 
     void moveLeft(bool start);
@@ -22,17 +22,21 @@ public:
     void jump();
 
     void equipItem(Item* item) { _equippedItem = item; }
-    Item* getEquippedItem() const { return _equippedItem; }
-    int getLookAngle() const { return _lookAngle; }
+
 
     void setLookAngle(const Vector2& mousePosition);
     void attack() { if (this->_equippedItem) this->_equippedItem->use(); }
     virtual void update(float deltaTime);
     virtual inline void setPosition(const Vector2& pos) { this->Body::setPosition(pos); if (_equippedItem) this->_equippedItem->update(0); }
+
+    // getters
+    Item* getEquippedItem() const { return _equippedItem; }
+    int getLookAngle() const { return _lookAngle; }
+    bool isMovingLeft() const { return this->_movingLeft != Vector2(); }
+    bool isMovingRight() const { return this->_movingRight != Vector2(); }
 private:
     int _lookAngle;
-    bool _isMovingLeft;
-    bool _isMovingRight;
+    Vector2 _movingLeft;
+    Vector2 _movingRight;
     Item* _equippedItem;
-    Sprite _sprite;
 };

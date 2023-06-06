@@ -8,26 +8,45 @@
 #include "constants.hpp"
 
 void Player::moveRight(bool start) {
-    if (!this->_isMovingRight && start) {
-        // player just started moving
-        this->applyForce(Vector2(Constants::PLAYER_SPEED, 0));
-    } else if (this->_isMovingRight && !start) {
-        // player stops moving
-        this->applyForce(Vector2(-Constants::PLAYER_SPEED, 0));
+    // get through with nothing happening:
+    // (isMovingRight && start) || (!isMovingRight && !start) || ()
+
+    if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) { this->applyForce(this->_movingRight * -1); // cancel previous force
+        this->_movingRight = Vector2();std::cout<< "max speed" << std::endl;   return; }
+    Vector2 force = Vector2(Constants::PLAYER_SPEED, 0);
+
+    if (!this->isMovingRight() && start) {
+        // player just started moving right
+        this->_sprite.setMirrorX(false);
+        this->_movingRight = force;
+        this->applyForce(force);
+    } else if (this->isMovingRight() && !start) {
+        // player stops moving right
+        this->applyForce(this->_movingRight * -1); // cancel previous force
+        this->_movingRight = Vector2();
     }
-    this->_isMovingRight = start;
 }
 
 void Player::moveLeft(bool start) {
-    if (!this->_isMovingLeft && start) {
-        // player just started moving
-        this->applyForce(Vector2(-Constants::PLAYER_SPEED, 0));
-    } else if (this->_isMovingLeft && !start) {
-        // player stops moving
-        this->applyForce(Vector2(Constants::PLAYER_SPEED, 0));
+    if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {this->applyForce(this->_movingLeft * -1); // cancel previous force
+        this->_movingLeft = Vector2();std::cout<< "max speed" << std::endl;  return; }
+    Vector2 force = Vector2(-Constants::PLAYER_SPEED, 0);
+
+    if (!this->isMovingLeft() && start) {
+        // player just started moving left
+        this->_sprite.setMirrorX(true);
+        this->_movingLeft = force;
+        this->applyForce(force);
+    } else if (this->isMovingLeft() && !start) {
+        // player stops moving left
+        this->applyForce(this->_movingLeft * -1); // cancel previous force
+        this->_movingLeft = Vector2();
     }
-    this->_isMovingLeft = start;
 }
+
+
+
+
 
 void Player::update(float deltaTime) {
 
