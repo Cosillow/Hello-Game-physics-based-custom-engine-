@@ -70,7 +70,7 @@ void RenderWindow::render(const Player& player)
     this->saveRenderingColor();
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem) this->render(*equippedItem);
-    this->render(player.getSprite(), player.getPosition());
+    this->render(player.getAnimatedSprite(), player.getPosition());
     if (player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
 }

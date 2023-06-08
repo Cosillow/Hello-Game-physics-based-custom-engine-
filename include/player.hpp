@@ -3,19 +3,17 @@
 #include "2dphysics.hpp"
 #include "item.hpp"
 #include "resourcemanager.hpp"
-#include "sprite.hpp"
+#include "animatedsprite.hpp"
 #include "constants.hpp"
 
-class SpriteContainer;
-
-class Player : public Body, public SpriteContainer
+class Player : public Body, public AnimatedSpriteContainer
 {
 public:
-    Player(Vector2 pos): Body(pos), SpriteContainer(Sprite(ResourceManager::getInstance().getTexture("monkey"))),
+    Player(Vector2 pos): Body(pos), AnimatedSpriteContainer(AnimatedSprite(ResourceManager::getInstance().getTexture("chimpsheet"), 64, 64, 7)),
     _lookAngle(0),
     _movingLeft(Vector2()), 
     _movingRight(Vector2()),
-    _equippedItem(nullptr) { this->addHitboxBB(16 * Constants::SPRITE_SCALE, 32 * Constants::SPRITE_SCALE); }
+    _equippedItem(nullptr) { this->addHitboxBB(64 * Constants::SPRITE_SCALE, 64 * Constants::SPRITE_SCALE); }
 
     void moveLeft(bool start);
     void moveRight(bool start);

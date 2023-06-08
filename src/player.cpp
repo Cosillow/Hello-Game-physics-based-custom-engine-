@@ -17,7 +17,7 @@ void Player::moveRight(bool start) {
 
     if (!this->isMovingRight() && start) {
         // player just started moving right
-        this->_sprite.setMirrorX(false);
+        this->_animatedSprite.setMirrorX(false);
         this->_movingRight = force;
         this->applyForce(force);
     } else if (this->isMovingRight() && !start) {
@@ -34,7 +34,7 @@ void Player::moveLeft(bool start) {
 
     if (!this->isMovingLeft() && start) {
         // player just started moving left
-        this->_sprite.setMirrorX(true);
+        this->_animatedSprite.setMirrorX(true);
         this->_movingLeft = force;
         this->applyForce(force);
     } else if (this->isMovingLeft() && !start) {
@@ -50,7 +50,8 @@ void Player::moveLeft(bool start) {
 
 void Player::update(float deltaTime) {
 
-    Body::update(deltaTime);    
+    this->Body::update(deltaTime);
+    this->_animatedSprite.update(deltaTime);
     
     if (_equippedItem) _equippedItem->update(deltaTime);
     

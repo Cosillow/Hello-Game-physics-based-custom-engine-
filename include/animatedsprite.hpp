@@ -20,10 +20,10 @@ public:
     {
         _timeLeftUntilFrameChange -= deltaTime;
 
-        // Check if it's time to switch to the next frame
         if (_timeLeftUntilFrameChange <= 0.0f)
         {
-            _currentFrame = (_currentFrame + 1) % _totalFrames;
+            // it's time to switch to the next frame
+            _currentFrame = (_currentFrame + 1) % _totalFrames; // looping
             this->setCurrentFrame();
             _timeLeftUntilFrameChange += Constants::FRAME_DURATION;
         }
@@ -34,4 +34,14 @@ public:
     // setters
     void setCurrentFrame(int currentFrame) { this->_currentFrame = currentFrame; }
     void setCurrentFrame() { this->_box.x = this->_box.w * this->_currentFrame; }
+};
+
+class AnimatedSpriteContainer {
+protected:
+    AnimatedSprite _animatedSprite;
+public:
+    AnimatedSpriteContainer(): _animatedSprite(AnimatedSprite()) {};
+    AnimatedSpriteContainer(const AnimatedSprite& animatedSprite): _animatedSprite(animatedSprite) {};
+    ~AnimatedSpriteContainer() {};
+    const AnimatedSprite& getAnimatedSprite() const { return this->_animatedSprite; };
 };
