@@ -79,7 +79,8 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
 {
     this->saveRenderingColor();
 
-    SDL_Texture* texture = sprite.getTexture();
+    SDL_Texture* spritesheet = sprite.getSpritesheet();
+    if (!spritesheet) return;
 
     const SDL_Rect& spriteRect = sprite.getRect();
 
@@ -91,7 +92,7 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     destRect.y = static_cast<int>(position.y - destRect.h / 2);
 
     SDL_RendererFlip flip = sprite.getMirrorX() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    SDL_RenderCopyEx(_renderer, texture, &spriteRect, &destRect, 0.0, nullptr, flip);
+    SDL_RenderCopyEx(_renderer, spritesheet, &spriteRect, &destRect, 0.0, nullptr, flip);
 
     this->restoreRenderingColor();
 }

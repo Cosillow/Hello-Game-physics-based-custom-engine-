@@ -12,7 +12,7 @@ void Player::moveRight(bool start) {
     // (isMovingRight && start) || (!isMovingRight && !start) || ()
 
     if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) { this->applyForce(this->_movingRight * -1); // cancel previous force
-        this->_movingRight = Vector2();std::cout<< "max speed" << std::endl;   return; }
+        this->_movingRight = Vector2(); return; }
     Vector2 force = Vector2(Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingRight() && start) {
@@ -29,7 +29,7 @@ void Player::moveRight(bool start) {
 
 void Player::moveLeft(bool start) {
     if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {this->applyForce(this->_movingLeft * -1); // cancel previous force
-        this->_movingLeft = Vector2();std::cout<< "max speed" << std::endl;  return; }
+        this->_movingLeft = Vector2(); return; }
     Vector2 force = Vector2(-Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingLeft() && start) {

@@ -5,68 +5,53 @@
 
 
 class Sprite {
-private:
-    SDL_Texture* _texture;
+protected:
+    SDL_Texture* _spriteSheet;
     SDL_Rect _box;
     bool _mirrorX;
     bool _mirrorY;
 
 public:
-    Sprite() : _texture(nullptr), _box({0, 0, 0, 0}) {}
+    Sprite() : _spriteSheet(nullptr), _box({0, 0, 0, 0}) {}
 
-    Sprite(SDL_Texture* texture, int x, int y, int width, int height): 
-    _texture(texture), 
+    Sprite(SDL_Texture* spritesheet, int x, int y, int width, int height): 
+    _spriteSheet(spritesheet), 
     _box({x, y, width, height}),
     _mirrorX(false),
     _mirrorY(false) {}
-    Sprite(SDL_Texture* texture): 
-    _texture(texture), 
+    Sprite(SDL_Texture* sprite): // constructor for single sprite, assumes (x,y) as canvas
+    _spriteSheet(sprite), 
     _box({0,0,0,0}),
     _mirrorX(false),
-    _mirrorY(false) { this->setTexture(texture); }
-    ~Sprite() {} // not in charge of the texture
+    _mirrorY(false) { this->setSpritesheet(sprite); }
+    ~Sprite() {/*ResourceManager is in charge of the texture*/}
 
-    void setTexture(SDL_Texture* texture, int x, int y, int width, int height)
+    // getters
+    bool getMirrorX() const { return this->_mirrorX; }
+    bool getMirrorY() const { return this->_mirrorY; }
+    const SDL_Rect& getRect() const { return this->_box; }
+    SDL_Texture* getSpritesheet() const { return this->_spriteSheet; }
+
+    // setters
+    void setMirrorX(bool mirror) { this->_mirrorX = mirror; }
+    void setMirrorY(bool mirror) { this->_mirrorY = mirror; }
+    void setSpritesheet(SDL_Texture* spritesheet, int x, int y, int width, int height)
     {
-        this->_texture = texture;
+        this->_spriteSheet = spritesheet;
         this->_box.x = x;
         this->_box.y = y;
         this->_box.w = width;
         this->_box.h = height;
     }
-    void setTexture(SDL_Texture* texture)
+    void setSpritesheet(SDL_Texture* spritesheet)
     {
-        this->_texture = texture;
-        SDL_QueryTexture(texture, nullptr, nullptr, &_box.w, &_box.h);
+        this->_spriteSheet = spritesheet;
+        SDL_QueryTexture(spritesheet, nullptr, nullptr, &_box.w, &_box.h);
     }
-    SDL_Texture* getTexture() const
+    void setFrame(int x, int y)
     {
-        return this->_texture;
-    }
-
-    const SDL_Rect& getRect() const
-    {
-        return this->_box;
-    }
-
-    void setMirrorX(bool mirror)
-    {
-        this->_mirrorX = mirror;
-    }
-
-    bool getMirrorX() const
-    {
-        return this->_mirrorX;
-    }
-
-    void setMirrorY(bool mirror)
-    {
-        this->_mirrorY = mirror;
-    }
-
-    bool getMirrorY() const
-    {
-        return this->_mirrorY;
+        this->_box.x = x;
+        this->_box.y = y;
     }
 };
 
@@ -76,7 +61,6 @@ protected:
 public:
     SpriteContainer(): _sprite(Sprite()) {};
     SpriteContainer(const Sprite& sprite): _sprite(sprite) {};
-    virtual ~SpriteContainer() {};
+    ~SpriteContainer() {};
     const Sprite& getSprite() const { return this->_sprite; };
 };
-

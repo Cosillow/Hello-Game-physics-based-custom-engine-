@@ -10,4 +10,4 @@ Alex and Connor's first C++ game
 ## TODO
 * make private methods for startMove(bool right) and stopMove(left)
   ^^ do this so you can clean up the guard for max speed repeating code
-* some things
+
