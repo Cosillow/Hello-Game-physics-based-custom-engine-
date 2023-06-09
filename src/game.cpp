@@ -37,10 +37,7 @@ void Game::handleInputs(Player& player1, Canvas& canvas) {
 	{
 		player1.jump();
 	}
-    if (_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
-    {
-		// rope.setStartLink(_inputManager->getMousePosition());
-    }
+    
 
 
 	// canvas
@@ -65,6 +62,11 @@ void Game::handleInputs(Player& player1, Canvas& canvas) {
     // Zoom canvas with scroll wheel
     int scrollDelta = _inputManager->getMouseScrollDelta();
     if (scrollDelta) canvas.zoom(scrollDelta * zoomSpeed);
+
+	// selection box
+	if (_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT)) { canvas.drawBox(this->_inputManager->getMousePosition()); }
+	if (canvas.isSelecting() && this->_inputManager->isMouseButtonUp(SDL_BUTTON_LEFT)) { canvas.completeBox(this->_inputManager->getMousePosition()); }
+
 }
 
 void Game::run() {

@@ -5,19 +5,29 @@ class Canvas : public UpdateableI {
 private:
     SDL_Texture* _photo;
     SDL_Rect _box;
-    SDL_Rect _selection;
+    std::pair<Vector2, Vector2> _selection;
+    bool _isSelecting;
     float _zoomPercent;
 
-
 public:
-    Canvas() : _photo(nullptr), _box({0,0,0,0}), _selection({0,0,0,0}), _zoomPercent(100) {}
+    Canvas() : _photo(nullptr), _box({0,0,0,0}), _selection(std::make_pair(Vector2(0,0), Vector2(0,0))), _isSelecting(false), _zoomPercent(100) {}
     ~Canvas() { this->cleanup(); }
 
     bool setPhoto(const std::string& path) {
         this->cleanup();
         this->_photo = ResourceManager::openTexture(path);
         if (!this->_photo) { this->_photo = nullptr; return false; }
-        SDL_QueryTexture(this->_photo, nullptr, nullptr, &_box.w, &_box.h);
+        SDL_QueryTexture(this->_photo, nullptr, nullptr, &this->_box.w, &this->_box.h);
+
+        // Calculate the zoom factor to fit the photo width to the screen width minus padding
+        int padding = 20;  // Adjust the padding value as desired
+        float zoomFactor = (Constants::WINDOW_WIDTH - padding) / static_cast<float>(this->_box.w);
+
+        // Set the box size and position
+        _box.w = static_cast<int>(this->_box.w * zoomFactor);
+        _box.h = static_cast<int>(this->_box.h * zoomFactor);
+        _box.x = 0;
+        _box.y = 0;
         return true;
     }
 
@@ -30,16 +40,34 @@ public:
     }
 
     void zoom(float increment) {
-        this->_zoomPercent += increment;
+        // adjustment factor based on the current zoom percentage
+        float adjustment = _zoomPercent / 100.0f;
+        _zoomPercent += increment * adjustment;
     }
 
-    void drawBox(const SDL_Rect& box) {
-        this->_selection = box;
+    void drawBox(Vector2 position) {
+        if (this->_isSelecting) {
+            // still drawing
+            this->_selection.second = position;
+        } else {
+            // just started drawing
+            this->_isSelecting = true;
+            this->_selection.first = position;
+            this->_selection.second = position;
+        }
+    }
+
+    void completeBox(Vector2 position) {
+        if (!this->_isSelecting) return;
+        this->_isSelecting = false;
+        // TODO: splicing logic
     }
 
     void update(float deltaTime) override { }
 
     // getters
+    bool isSelecting() const { return this->_isSelecting; }
+
     int getZoom() const { return this->_zoomPercent; }
 
     SDL_Texture* getPhoto() const {
@@ -50,9 +78,15 @@ public:
         return this->_box;
     }
 
-    const SDL_Rect& getSelection() const {
-        return _selection;
+    const SDL_Rect getSelection() const {
+        SDL_Rect selectionRect;
+        selectionRect.x = static_cast<int>((std::min(this->_selection.first.x, this->_selection.second.x)));
+        selectionRect.y = static_cast<int>((std::min(this->_selection.first.y, this->_selection.second.y)));
+        selectionRect.w = static_cast<int>(std::abs(this->_selection.second.x - this->_selection.first.x));
+        selectionRect.h = static_cast<int>(std::abs(this->_selection.second.y - this->_selection.first.y));
+        return selectionRect;
     }
+
 private:
     void cleanup() { if (this->_photo) SDL_DestroyTexture(this->_photo); }
 };
