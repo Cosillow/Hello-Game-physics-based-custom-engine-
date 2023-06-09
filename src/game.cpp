@@ -11,93 +11,93 @@
 #include "rope.hpp"
 #include "resourcemanager.hpp"
 #include "sprite.hpp"
+#include "canvas.hpp"
 
-void Game::handleInputs(Player& player1) {
+void Game::handleInputs(Player& player1, Canvas& canvas) {
 	_inputManager->update(*this);
 	
 	// player 1
-	// player1.setLookAngle(_inputManager->getMousePosition());
 	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
 	{
 		player1.moveLeft(true);
 	}
-
 	if (_inputManager->isKeyUp(SDL_SCANCODE_A))
 	{
 		player1.moveLeft(false);
 	}
-
 	if (_inputManager->isKeyDown(SDL_SCANCODE_D)) 
 	{
 		player1.moveRight(true);
 	}
-
 	if (_inputManager->isKeyUp(SDL_SCANCODE_D))
 	{
 		player1.moveRight(false);
 	}
-
 	if (_inputManager->isKeyDown(SDL_SCANCODE_SPACE))
 	{
 		player1.jump();
 	}
-
     if (_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
     {
 		// rope.setStartLink(_inputManager->getMousePosition());
     }
 
+
+	// canvas
+    const float panSpeed = 1.0f;
+    const float zoomSpeed = 6.0f;
+
+    // Pan canvas with middle mouse button
+    if (_inputManager->isMouseButtonDown(SDL_BUTTON_MIDDLE)) {
+        float mouseX = _inputManager->getMousePosition().x;
+        float mouseY = _inputManager->getMousePosition().y;
+
+        float prevMouseX = _inputManager->getPreviousMousePosition().x;
+        float prevMouseY = _inputManager->getPreviousMousePosition().y;
+
+        float deltaMouseX = mouseX - prevMouseX;
+        float deltaMouseY = mouseY - prevMouseY;
+
+		canvas.panX(deltaMouseX * panSpeed);
+		canvas.panY(deltaMouseY * panSpeed);
+    }
+
+    // Zoom canvas with scroll wheel
+    int scrollDelta = _inputManager->getMouseScrollDelta();
+    if (scrollDelta) canvas.zoom(scrollDelta * zoomSpeed);
 }
 
 void Game::run() {
-    // Texture spaceDoritoTex(_window.getRenderer(), "res/spaceDorito.png");
-	// Texture swordTex(_window.getRenderer(), "res/sword.png");
-	
+
 	Player wilson({400, 200});
-	// Player spilson({200, 55});
-
-	// spilson.setPosition({500,500});
-
 	Sword doriSword({100, -200}, wilson);
-	
-	
-	// ResourceManager resourceManager(this->_window.getRenderer(), std::vector<std::string>{"./res/monkey.png"});
-	// Sword spillySword({-100, -200}, spilson);
-
-	// GrapplingHook hook(wilson);
-
-	// spilson.equipItem(&spillySword);
-	// wilson.equipItem(&hook);
-
-	// Rope rope({500, 200}, 20);
-	// rope.setStartLink(&wilson);
-	
+	Canvas spriteTool;
+	spriteTool.setPhoto("./res/chimpsheet.png");
 
 
 	Uint32 prevTime = SDL_GetTicks();
 	float deltaTime = 0;
-
-
 	while (this->_gameRunning)
 	{
 		Uint32 currentTime = SDL_GetTicks();
         deltaTime = (currentTime - prevTime) / 1000.0f; // Convert to seconds
         prevTime = currentTime;
         
-		handleInputs(wilson);
+		handleInputs(wilson, spriteTool);
 
 		// clear
-		_window.clear();
+		this->_window.clear();
 
 		// update
 		wilson.update(deltaTime);		
-		_collisionManager->resolveBounds(wilson);
+		this->_collisionManager->resolveBounds(wilson);
 		
 		// std::cout << wilson << std::endl;
 		// render
-		_window.render(wilson);
+		this->_window.render(wilson);
+		this->_window.render(spriteTool);
 		
 		// display
-		_window.display();
+		this->_window.display();
 	}
 }

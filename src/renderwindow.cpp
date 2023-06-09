@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string.h>
 #include <algorithm>
+#include <cmath>
 #include "renderwindow.hpp"
 #include "2dphysics.hpp"
 #include "player.hpp"
@@ -11,6 +12,7 @@
 #include "rope.hpp"
 #include "item.hpp"
 #include "sprite.hpp"
+#include "canvas.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
     : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
@@ -217,4 +219,65 @@ void RenderWindow::render(const Hitbox& hitbox)
 
     this->restoreRenderingColor();
 }
+
+
+void RenderWindow::render(const Canvas& canvas) {
+    this->saveRenderingColor();
+
+    // Render the checkered background
+    int gridSize = 50;  // Size of each grid box
+    int numColumns = std::ceil(static_cast<float>(Constants::WINDOW_WIDTH) / gridSize);
+    int numRows = std::ceil(static_cast<float>(Constants::WINDOW_HEIGHT) / gridSize);
+
+    for (int row = 0; row < numRows; ++row) {
+        for (int col = 0; col < numColumns; ++col) {
+            SDL_Rect gridRect;
+            gridRect.x = col * gridSize;
+            gridRect.y = row * gridSize;
+            gridRect.w = gridSize;
+            gridRect.h = gridSize;
+
+            if ((row + col) % 2 == 0) {
+                // White box
+                SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+            } else {
+                // Grey box
+                SDL_SetRenderDrawColor(_renderer, 200, 200, 200, 255);
+            }
+
+            SDL_RenderFillRect(_renderer, &gridRect);
+        }
+    }
+
+    // Render the sprite photo and selection box
+    SDL_Texture* photo = canvas.getPhoto();
+    if (!photo) return;
+
+    const SDL_Rect& box = canvas.getBox();
+
+    SDL_Rect destRect;
+    destRect.w = static_cast<int>(box.w * canvas.getZoom() / 100.0f);
+    destRect.h = static_cast<int>(box.h * canvas.getZoom() / 100.0f);
+    destRect.x = static_cast<int>(box.x);
+    destRect.y = static_cast<int>(box.y);
+
+    SDL_RenderCopy(_renderer, photo, nullptr, &destRect);
+
+    // Render the selection box
+    const SDL_Rect& selectionBox = canvas.getSelection();
+
+    SDL_Rect selectionRect;
+    selectionRect.x = static_cast<int>((selectionBox.x - box.x) * canvas.getZoom() / 100.0f + destRect.x);
+    selectionRect.y = static_cast<int>((selectionBox.y - box.y) * canvas.getZoom() / 100.0f + destRect.y);
+    selectionRect.w = static_cast<int>(selectionBox.w * canvas.getZoom() / 100.0f);
+    selectionRect.h = static_cast<int>(selectionBox.h * canvas.getZoom() / 100.0f);
+
+    SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
+    SDL_RenderDrawRect(_renderer, &selectionRect);
+
+    this->restoreRenderingColor();
+}
+
+
+
 

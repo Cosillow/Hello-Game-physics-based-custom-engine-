@@ -14,21 +14,23 @@ void InputManager::update(Game& game)
     int x;
     int y;
     _mouseState = SDL_GetMouseState(&x, &y); // Update mouse state and position
-    this->_mousePosition = {static_cast<float>(x), static_cast<float>(y)};
-
+    _previousMousePosition = _mousePosition;
+    _mousePosition = { static_cast<float>(x), static_cast<float>(y) };
+    _mouseScrollDelta = 0;
     while (SDL_PollEvent(&event))
     {
         if (event.type == SDL_QUIT)
         {
             game.quit();
         }
-        // else if (event.type == SDL_MOUSEMOTION)
-        // {
-        //     _mouseX = event.motion.x;
-        //     _mouseY = event.motion.y;
-        // }
+        else if (event.type == SDL_MOUSEWHEEL)
+        {
+            this->_mouseScrollDelta = event.wheel.y;
+        }
     }
+
 }
+
 
 
 bool InputManager::isKeyDown(SDL_Scancode key)

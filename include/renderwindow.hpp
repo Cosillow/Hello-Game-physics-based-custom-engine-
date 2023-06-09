@@ -13,6 +13,7 @@ class Item;
 class SpriteContainer;
 class Sprite;
 class Hitbox;
+class Canvas;
 
 class RenderWindow 
 {
@@ -29,6 +30,7 @@ public:
 	void render(const Rope& rope);
 	void render(const Sprite& sprite, const Vector2 position);
 	void render(const Hitbox& hitbox);
+	void render(const Canvas& canvas);
 
 	void saveRenderingColor();
     void restoreRenderingColor();
