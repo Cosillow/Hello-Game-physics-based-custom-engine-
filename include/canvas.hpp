@@ -1,6 +1,9 @@
 #include "2dphysics.hpp"
 #include "resourcemanager.hpp"
 
+// TODO: box selection barely works because of panning the canvas and zooming
+//              not sure if it is the render method or something here
+
 class Canvas : public UpdateableI {
 private:
     SDL_Texture* _photo;

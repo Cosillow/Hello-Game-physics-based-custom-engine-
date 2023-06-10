@@ -5,8 +5,6 @@
 #include "player.hpp"
 #include "collisionmanager.hpp"
 
-class Canvas;
-
 class Game
 {
 public:
@@ -17,7 +15,7 @@ public:
     _collisionManager(std::make_unique<CollisionManager>()) {};
 
     void run();
-    void handleInputs(Player& player1, Canvas& canvas);
+    void handleInputs(Player& player1);
     void quit() { _gameRunning = false; }
 private:
     bool _gameRunning;

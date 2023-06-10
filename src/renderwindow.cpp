@@ -73,7 +73,7 @@ void RenderWindow::render(const Player& player)
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem) this->render(*equippedItem);
     this->render(player.getAnimatedSprite(), player.getPosition());
-    if (player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
+    // if (player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
 }
 
@@ -283,33 +283,3 @@ void RenderWindow::render(const Canvas& canvas) {
 
     this->restoreRenderingColor();
 }
-
-// // Render the selection box
-//     const std::pair<Vector2, Vector2>& selectionBox = canvas.getSelection();
-//     if (selectionBox.w && selectionBox.h) {
-//         // only draw a box if it isn't empty
-//         SDL_Rect selectionRect;
-//         selectionRect.x = static_cast<int>((selectionBox.x - box.x) * zoomFactor + destRect.x);
-//         selectionRect.y = static_cast<int>((selectionBox.y - box.y) * zoomFactor + destRect.y);
-//         selectionRect.w = static_cast<int>(selectionBox.w * zoomFactor);
-//         selectionRect.h = static_cast<int>(selectionBox.h * zoomFactor);
-//         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
-//         SDL_RenderDrawRect(_renderer, &selectionRect);
-//     }
-
-
-// if (selectionBox.first != selectionBox.second) {
-//         // Only draw a box if it isn't empty
-
-//         const SDL_Rect destRect = canvas.getBox();
-
-//         // Calculate the selection rectangle
-//         SDL_Rect selectionRect;
-//         selectionRect.x = static_cast<int>((std::min(selectionBox.first.x, selectionBox.second.x) - canvas.getBox().x) * zoomFactor + destRect.x);
-//         selectionRect.y = static_cast<int>((std::min(selectionBox.first.y, selectionBox.second.y) - canvas.getBox().y) * zoomFactor + destRect.y);
-//         selectionRect.w = static_cast<int>(std::abs(selectionBox.second.x - selectionBox.first.x) * zoomFactor);
-//         selectionRect.h = static_cast<int>(std::abs(selectionBox.second.y - selectionBox.first.y) * zoomFactor);
-
-//         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
-//         SDL_RenderDrawRect(_renderer, &selectionRect);
-//     }
