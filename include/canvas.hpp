@@ -45,15 +45,16 @@ public:
         _zoomPercent += increment * adjustment;
     }
 
-    void drawBox(Vector2 position) {
+    void drawBox(Vector2 screenPosition) {
+        Vector2 canvasPosition = getSpriteOffset(screenPosition);
         if (this->_isSelecting) {
             // still drawing
-            this->_selection.second = position;
+            this->_selection.second = screenPosition;
         } else {
             // just started drawing
             this->_isSelecting = true;
-            this->_selection.first = position;
-            this->_selection.second = position;
+            this->_selection.first = screenPosition;
+            this->_selection.second = screenPosition;
         }
     }
 
@@ -79,14 +80,27 @@ public:
     }
 
     const SDL_Rect getSelection() const {
+        int offsetX = _box.x;
+        int offsetY = _box.y;
+
+        const float zoomFactor = this->_zoomPercent / 100;
+
         SDL_Rect selectionRect;
-        selectionRect.x = static_cast<int>((std::min(this->_selection.first.x, this->_selection.second.x)));
-        selectionRect.y = static_cast<int>((std::min(this->_selection.first.y, this->_selection.second.y)));
-        selectionRect.w = static_cast<int>(std::abs(this->_selection.second.x - this->_selection.first.x));
-        selectionRect.h = static_cast<int>(std::abs(this->_selection.second.y - this->_selection.first.y));
+        selectionRect.x = static_cast<int>((std::min(this->_selection.first.x, this->_selection.second.x) - offsetX));
+        selectionRect.y = static_cast<int>((std::min(this->_selection.first.y, this->_selection.second.y) - offsetY));
+        selectionRect.w = static_cast<int>(std::abs(this->_selection.second.x - this->_selection.first.x) * zoomFactor);
+        selectionRect.h = static_cast<int>(std::abs(this->_selection.second.y - this->_selection.first.y) * zoomFactor);
         return selectionRect;
     }
 
 private:
     void cleanup() { if (this->_photo) SDL_DestroyTexture(this->_photo); }
+    Vector2 getSpriteOffset(Vector2 screenPosition) const {
+        // Calculate the offset based on the zoom percentage
+        const float zoomFactor = this->_zoomPercent / 100;
+        int offsetX = static_cast<int>(std::abs(this->_box.x - screenPosition.x) * zoomFactor);
+        int offsetY = static_cast<int>(std::abs(this->_box.y - screenPosition.y) * zoomFactor);
+
+        return Vector2(offsetX, offsetY);
+    }
 };

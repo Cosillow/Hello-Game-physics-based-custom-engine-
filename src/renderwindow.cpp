@@ -261,8 +261,8 @@ void RenderWindow::render(const Canvas& canvas) {
     SDL_Rect destRect;
     destRect.w = static_cast<int>(box.w * zoomFactor);
     destRect.h = static_cast<int>(box.h * zoomFactor);
-    destRect.x = static_cast<int>(box.x + (Constants::WINDOW_WIDTH - destRect.w) / 2.0f);
-    destRect.y = static_cast<int>(box.y + (Constants::WINDOW_HEIGHT - destRect.h) / 2.0f);
+    destRect.x = static_cast<int>(box.x);
+    destRect.y = static_cast<int>(box.y);
 
     SDL_RenderCopy(_renderer, spriteSheet, nullptr, &destRect);
 
@@ -272,8 +272,8 @@ void RenderWindow::render(const Canvas& canvas) {
     if (selectionBox.w && selectionBox.h) {
         // only draw a box if it isn't empty
         SDL_Rect selectionRect;
-        selectionRect.x = static_cast<int>(selectionBox.x + destRect.x);
-        selectionRect.y = static_cast<int>(selectionBox.y + destRect.y);
+        selectionRect.x = static_cast<int>(selectionBox.x * zoomFactor);
+        selectionRect.y = static_cast<int>(selectionBox.y * zoomFactor);
         selectionRect.w = static_cast<int>(selectionBox.w);
         selectionRect.h = static_cast<int>(selectionBox.h);
         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
