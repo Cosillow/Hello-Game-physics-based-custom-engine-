@@ -1,6 +1,7 @@
 #include "collisionmanager.hpp"
 #include "player.hpp"
 #include "constants.hpp"
+#include "platform.hpp"
 
 void CollisionManager::resolveBounds(Player& player) const
 {
@@ -14,11 +15,21 @@ void CollisionManager::resolveBounds(Player& player) const
         const float newYPosition = Constants::WINDOW_HEIGHT - (hitbox->_size.y / 2);
         player.setOldPosition(Vector2(player.getOldPosition().x, newYPosition));
         player.setPosition(Vector2(player.getPosition().x, newYPosition));
+    }
+}
 
-        // Apply friction force in the opposite x-direction
-        // if (player.getVelocity().x != 0.0f) {
-        //     const Vector2 frictionForce = player.getVelocity().normalize() * Constants::PLAYER_FRICTION * -1;
-        //     player.applyForce(frictionForce);
-        // }
+void CollisionManager::resolveBounds(Player& player, Platform& platform) const
+{
+    Hitbox* playerHitbox = player.getHitbox();
+    Hitbox* platformHitbox = platform.getHitbox();
+
+    if (!playerHitbox || !platformHitbox) return;
+    
+    if (playerHitbox->checkCollisions(*platformHitbox))
+    {
+        player.setIsTouchingGround(true);
+        const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2);
+        player.setOldPosition(Vector2(player.getOldPosition().x, newYPosition));
+        player.setPosition(Vector2(player.getPosition().x, newYPosition));
     }
 }

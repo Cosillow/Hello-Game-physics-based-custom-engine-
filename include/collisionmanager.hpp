@@ -9,9 +9,11 @@
 class Circle;
 class Rectangle;
 class Triangle;
+class Platform;
 
 class CollisionManager
 {
 public:
     void resolveBounds(Player& player) const;
+    void resolveBounds(Player& player, Platform& platform) const;
 };

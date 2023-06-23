@@ -14,6 +14,7 @@ class SpriteContainer;
 class Sprite;
 class Hitbox;
 class Canvas;
+class Platform;
 
 class RenderWindow 
 {
@@ -31,6 +32,7 @@ public:
 	void render(const Sprite& sprite, const Vector2 position);
 	void render(const Hitbox& hitbox);
 	void render(const Canvas& canvas);
+	void render(const Platform& platform);
 
 	void saveRenderingColor();
     void restoreRenderingColor();

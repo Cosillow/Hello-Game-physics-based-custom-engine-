@@ -15,5 +15,7 @@ namespace Constants {
     const float PLAYER_FRICTION = 500.0f;
     const float FRICTION_COEFFICIENT = 0.1f;
     const float MINIMUM_VELOCITY = 0.3f;
-    const int FRAME_DURATION = 1;
+    const float FRAME_DURATION = .1;
+    const int TILE_SIZE = 16; // (px x px)
+    const int CHUNK_SIZE = 16; // (tile x tile)
 }

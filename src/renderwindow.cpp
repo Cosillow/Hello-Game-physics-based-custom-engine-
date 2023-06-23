@@ -13,6 +13,7 @@
 #include "item.hpp"
 #include "sprite.hpp"
 #include "canvas.hpp"
+#include "platform.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
     : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
@@ -279,6 +280,19 @@ void RenderWindow::render(const Canvas& canvas) {
         SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
         SDL_RenderDrawRect(_renderer, &selectionRect);
     }
+
+
+    this->restoreRenderingColor();
+}
+
+void RenderWindow::render(const Platform& platform)
+{
+    this->saveRenderingColor();
+    const Hitbox* hitbox = platform.getHitbox();
+
+    if (!hitbox) return;
+    
+    this->render(static_cast<Hitbox>(*hitbox));
 
 
     this->restoreRenderingColor();

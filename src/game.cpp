@@ -12,6 +12,7 @@
 #include "resourcemanager.hpp"
 #include "sprite.hpp"
 #include "canvas.hpp"
+#include "platform.hpp"
 
 void Game::handleInputs(Player& player1) {
 	_inputManager->update(*this);
@@ -72,9 +73,10 @@ void Game::handleInputs(Player& player1) {
 void Game::run() {
 
 	Player wilson({400, 200});
-	Sword doriSword({100, -200}, wilson);
+	Platform testForm({800,700}, 3);
+	
 	// Canvas spriteTool;
-	// spriteTool.setPhoto("./res/chimpsheet.png");
+	// spriteTool.setPhoto("./res/first-run-animation-Sheet.png");
 
 
 	Uint32 prevTime = SDL_GetTicks();
@@ -93,10 +95,12 @@ void Game::run() {
 		// update
 		wilson.update(deltaTime);		
 		this->_collisionManager->resolveBounds(wilson);
+		this->_collisionManager->resolveBounds(wilson, testForm);
 		
-		// std::cout << wilson << std::endl;
+		std::cout << testForm << std::endl;
 		// render
 		this->_window.render(wilson);
+		this->_window.render(testForm);
 		
 		// display
 		this->_window.display();

@@ -71,7 +71,6 @@ struct Vector2 {
         return !(lhs == rhs);
     }
 
-
     Vector2& operator+=(const Vector2& other) {
         this->x += other.x;
         this->y += other.y;
@@ -130,6 +129,16 @@ struct Vector2 {
     friend std::ostream& operator<<(std::ostream& os, const Vector2& vec) {
         os << "(" << vec.x << ", " << vec.y << ")";
         return os;
+    }
+};
+
+struct Vector2Hash
+{
+    std::size_t operator()(const Vector2& v) const
+    {
+        std::size_t h1 = std::hash<float>{}(v.x);
+        std::size_t h2 = std::hash<float>{}(v.y);
+        return h1 ^ (h2 << 1);
     }
 };
 
@@ -266,14 +275,15 @@ public:
     void addHitboxBB(float offsetX, float offsetY, float width, float height) {
         this->cleanup();
         this->_hitbox = new Hitbox(offsetX, offsetY, width, height);
+        this->_hitbox->setCenter(this->_position);
     }
     void addHitboxBB(float width, float height) {
-        this->cleanup();
-        this->_hitbox = new Hitbox(0, 0, width, height);
+        this->addHitboxBB(0, 0, width, height);
     }
     void addHitboxCircle(float offsetX, float offsetY, float radius) {
         this->cleanup();
         this->_hitbox = new Hitbox(offsetX, offsetY, radius);
+        this->_hitbox->setCenter(this->_position);
     }
     void applyForce(const Vector2& force) {
         if (!this->_isStatic) {
@@ -347,7 +357,7 @@ public:
     void setIsTouchingGround(bool isTouchingGround) {
         this->_isTouchingGround = isTouchingGround;
     }
-    void setPosition(const Vector2& position) {
+    virtual void setPosition(const Vector2& position) {
         this->_position = position;
     } 
     void setOldPosition(const Vector2& position) {

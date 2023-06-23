@@ -30,7 +30,7 @@ int main(int argc, char* args[])
 		// Create a new scope for `RenderWindow` and `App` deconstructors to be called
 		// Ensures order --> ~Textures(), ~RenderWindow(), SDL_Quit()
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
-		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/monkey.png", "./res/chimpsheet.png"});
+		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/monkey.png", "./res/first-run-animation-Sheet.png"});
 
 		Game game(window);
 
