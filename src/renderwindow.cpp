@@ -14,6 +14,7 @@
 #include "sprite.hpp"
 #include "canvas.hpp"
 #include "platform.hpp"
+#include "globals.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
     : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
@@ -25,8 +26,8 @@ RenderWindow::RenderWindow(const std::string& title, int w, int h)
         // Handle the error accordingly (e.g., throw an exception, clean up resources, etc.)
     }
 
-    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (!_renderer)
+    this->_renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!this->_renderer)
     {
         std::cout << "Renderer failed to init. Error: " << SDL_GetError() << std::endl;
         // Handle the error accordingly (e.g., throw an exception, clean up resources, etc.)
@@ -36,9 +37,9 @@ RenderWindow::RenderWindow(const std::string& title, int w, int h)
 
 void RenderWindow::cleanUp()
 {
-    if (_renderer) {
-        SDL_DestroyRenderer(_renderer);
-        _renderer = nullptr;
+    if (this->_renderer) {
+        SDL_DestroyRenderer(this->_renderer);
+        this->_renderer = nullptr;
     }
     if (_window) {
         SDL_DestroyWindow(_window);
@@ -49,21 +50,24 @@ void RenderWindow::cleanUp()
 
 void RenderWindow::clear()
 {
-	SDL_RenderClear(_renderer);
+	SDL_RenderClear(this->_renderer);
 }
 
 void RenderWindow::render(const Body& body)
 {
     this->saveRenderingColor();
-    // // Set the rendering color to grey
-    // SDL_SetRenderDrawColor(_renderer, 128, 128, 128, 255);
+    // Set the rendering color to grey
+    SDL_SetRenderDrawColor(this->_renderer, 128, 128, 128, 255);
 
-    // // Create a rectangle with a size of 200x50
-    // Hitbox * hitbox = body.getHitbox();
-    // if (!hitbox) return;
+    // Create a rectangle with a size of 200x50
+    Hitbox * hitbox = body.getHitbox();
+    if (!hitbox) {
+        this->restoreRenderingColor();
+        return;
+    }
     
-    // // Render the rectangle
-    // SDL_RenderFillRect(_renderer, &hitbox->getSDLRect());
+    // Render the rectangle
+    SDL_RenderFillRect(this->_renderer, &hitbox->getSDLRect());
 
     this->restoreRenderingColor();
 }
@@ -74,7 +78,7 @@ void RenderWindow::render(const Player& player)
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem) this->render(*equippedItem);
     this->render(player.getAnimatedSprite(), player.getPosition());
-    // if (player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
+    if (GLOB_debugMode && player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
 }
 
@@ -83,7 +87,10 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     this->saveRenderingColor();
 
     SDL_Texture* spritesheet = sprite.getSpritesheet();
-    if (!spritesheet) return;
+    if (!spritesheet) {
+        this->restoreRenderingColor();
+        return;
+    }
 
     const SDL_Rect& spriteRect = sprite.getRect();
 
@@ -95,7 +102,7 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     destRect.y = static_cast<int>(position.y - destRect.h / 2);
 
     SDL_RendererFlip flip = sprite.getMirrorX() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    SDL_RenderCopyEx(_renderer, spritesheet, &spriteRect, &destRect, 0.0, nullptr, flip);
+    SDL_RenderCopyEx(this->_renderer, spritesheet, &spriteRect, &destRect, 0.0, nullptr, flip);
 
     this->restoreRenderingColor();
 }
@@ -122,14 +129,14 @@ void RenderWindow::render(const GrapplingHook& grapplingHook)
         int lineY = static_cast<int>(center.y + lineLength * sin(angleRadians));
 
         // Draw a bright green line
-        SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
-        SDL_RenderDrawLine(_renderer, static_cast<int>(center.x), static_cast<int>(center.y), lineX, lineY);
+        SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255);
+        SDL_RenderDrawLine(this->_renderer, static_cast<int>(center.x), static_cast<int>(center.y), lineX, lineY);
     } else if (grapplingHook.getState() == GrapplingHook::State::Extending) {
 
         this->render(static_cast<Body>(grapplingHook));
 
         // Set the rendering color to red
-        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
+        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);
 
         // Render the grappling hook as a square
         Vector2 hookPosition = grapplingHook.getPosition();
@@ -139,7 +146,7 @@ void RenderWindow::render(const GrapplingHook& grapplingHook)
         hookRect.y = static_cast<int>(hookPosition.y - hookSize / 2);
         hookRect.w = hookSize;
         hookRect.h = hookSize;
-        SDL_RenderFillRect(_renderer, &hookRect);
+        SDL_RenderFillRect(this->_renderer, &hookRect);
     }
 
     if (grapplingHook.getState() != GrapplingHook::State::Idle) this->render(grapplingHook.getRope());    
@@ -153,7 +160,7 @@ void RenderWindow::render(const Rope& rope)
     const std::vector<std::shared_ptr<Body>>& links = rope.getLinks();
 
     // Set the rendering color to brown
-    SDL_SetRenderDrawColor(_renderer, 139, 69, 19, 255);
+    SDL_SetRenderDrawColor(this->_renderer, 139, 69, 19, 255);
 
     // Render each link of the rope as a line
     for (int i = 0; i < rope.getNumLinks() - 1; ++i)
@@ -162,7 +169,7 @@ void RenderWindow::render(const Rope& rope)
         const Body& nextLink = *(links[i + 1]);
 
         // Render the line between the current link and the next link
-        SDL_RenderDrawLine(_renderer, static_cast<int>(currentLink.getPosition().x), static_cast<int>(currentLink.getPosition().y),
+        SDL_RenderDrawLine(this->_renderer, static_cast<int>(currentLink.getPosition().x), static_cast<int>(currentLink.getPosition().y),
                            static_cast<int>(nextLink.getPosition().x), static_cast<int>(nextLink.getPosition().y));
     }
     this->restoreRenderingColor();
@@ -170,13 +177,13 @@ void RenderWindow::render(const Rope& rope)
 
 void RenderWindow::display()
 {
-	SDL_RenderPresent(_renderer);
+	SDL_RenderPresent(this->_renderer);
 }
 
 void RenderWindow::saveRenderingColor()
     {
         SDL_Color currentColor;
-        SDL_GetRenderDrawColor(_renderer, &currentColor.r, &currentColor.g, &currentColor.b, &currentColor.a);
+        SDL_GetRenderDrawColor(this->_renderer, &currentColor.r, &currentColor.g, &currentColor.b, &currentColor.a);
         _colorStack.push(currentColor);
     }
 
@@ -186,7 +193,7 @@ void RenderWindow::restoreRenderingColor()
     {
         SDL_Color previousColor = _colorStack.top();
         _colorStack.pop();
-        SDL_SetRenderDrawColor(_renderer, previousColor.r, previousColor.g, previousColor.b, previousColor.a);
+        SDL_SetRenderDrawColor(this->_renderer, previousColor.r, previousColor.g, previousColor.b, previousColor.a);
     }
 }
 
@@ -194,12 +201,12 @@ void RenderWindow::render(const Hitbox& hitbox)
 {
     this->saveRenderingColor();
     Hitbox::Type hitboxType = hitbox.getType();
-    SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255); // Green
+    SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255); // Green
     if (hitboxType == Hitbox::Type::BoundingBox)
     {
         // Render bounding box
         const SDL_Rect& rect = hitbox.getSDLRect();
-        SDL_RenderDrawRect(_renderer, &rect);
+        SDL_RenderDrawRect(this->_renderer, &rect);
     }
     else if (hitboxType == Hitbox::Type::Circle)
     {
@@ -214,7 +221,7 @@ void RenderWindow::render(const Hitbox& hitbox)
             int yTop = centerY - static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
             int yBottom = centerY + static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
 
-            SDL_RenderDrawLine(_renderer, x, yTop, x, yBottom);
+            SDL_RenderDrawLine(this->_renderer, x, yTop, x, yBottom);
         }
     }
 
@@ -240,19 +247,22 @@ void RenderWindow::render(const Canvas& canvas) {
 
             if ((row + col) % 2 == 0) {
                 // White box
-                SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+                SDL_SetRenderDrawColor(this->_renderer, 255, 255, 255, 255);
             } else {
                 // Grey box
-                SDL_SetRenderDrawColor(_renderer, 200, 200, 200, 255);
+                SDL_SetRenderDrawColor(this->_renderer, 200, 200, 200, 255);
             }
 
-            SDL_RenderFillRect(_renderer, &gridRect);
+            SDL_RenderFillRect(this->_renderer, &gridRect);
         }
     }
 
     // Render the sprite sheet
     SDL_Texture* spriteSheet = canvas.getPhoto();
-    if (!spriteSheet) return;
+    if (!spriteSheet) {
+        this->restoreRenderingColor();
+        return;
+    }
 
     const SDL_Rect& box = canvas.getBox();
 
@@ -265,7 +275,7 @@ void RenderWindow::render(const Canvas& canvas) {
     destRect.x = static_cast<int>(box.x);
     destRect.y = static_cast<int>(box.y);
 
-    SDL_RenderCopy(_renderer, spriteSheet, nullptr, &destRect);
+    SDL_RenderCopy(this->_renderer, spriteSheet, nullptr, &destRect);
 
     // Render the selection box
     const SDL_Rect& selectionBox = canvas.getSelection();
@@ -277,8 +287,8 @@ void RenderWindow::render(const Canvas& canvas) {
         selectionRect.y = static_cast<int>(selectionBox.y * zoomFactor);
         selectionRect.w = static_cast<int>(selectionBox.w);
         selectionRect.h = static_cast<int>(selectionBox.h);
-        SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
-        SDL_RenderDrawRect(_renderer, &selectionRect);
+        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
+        SDL_RenderDrawRect(this->_renderer, &selectionRect);
     }
 
 
@@ -290,7 +300,10 @@ void RenderWindow::render(const Platform& platform)
     this->saveRenderingColor();
     const Hitbox* hitbox = platform.getHitbox();
 
-    if (!hitbox) return;
+    if (!hitbox) {
+        this->restoreRenderingColor();
+        return;
+    }
     
     this->render(static_cast<Hitbox>(*hitbox));
 

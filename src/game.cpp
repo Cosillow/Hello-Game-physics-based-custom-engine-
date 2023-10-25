@@ -74,6 +74,7 @@ void Game::run() {
 
 	Player wilson({400, 200});
 	Platform testForm({800,700}, 3);
+	Platform testForm2({500,600}, 4);
 	
 	// Canvas spriteTool;
 	// spriteTool.setPhoto("./res/first-run-animation-Sheet.png");
@@ -96,11 +97,13 @@ void Game::run() {
 		wilson.update(deltaTime);		
 		this->_collisionManager->resolveBounds(wilson);
 		this->_collisionManager->resolveBounds(wilson, testForm);
+		this->_collisionManager->resolveBounds(wilson, testForm2);
+
 		
-		std::cout << testForm << std::endl;
 		// render
 		this->_window.render(wilson);
 		this->_window.render(testForm);
+		this->_window.render(testForm2);
 		
 		// display
 		this->_window.display();

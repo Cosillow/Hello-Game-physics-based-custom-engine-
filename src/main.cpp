@@ -3,6 +3,7 @@
 
 #include "renderwindow.hpp"
 #include "game.hpp"
+#include "globals.hpp"
 
 // NON-preventable leaks
 // ==24356== HEAP SUMMARY:
@@ -17,7 +18,7 @@
 // ==24356==         suppressed: 0 bytes in 0 blocks
 // ==24356== Rerun with --leak-check=full to see details of leaked memory
 
-int main(int argc, char* args[])
+int main(int argc, char* argv[])
 {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) > 0)
@@ -29,6 +30,13 @@ int main(int argc, char* args[])
 	{
 		// Create a new scope for `RenderWindow` and `App` deconstructors to be called
 		// Ensures order --> ~Textures(), ~RenderWindow(), SDL_Quit()
+
+		for (int i = 1; i < argc; ++i) {
+			std::string arg = argv[i];
+			if (arg == "--debug") {
+				GLOB_debugMode = 1;
+			}
+		}
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/monkey.png", "./res/first-run-animation-Sheet.png"});
 
