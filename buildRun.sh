@@ -1,7 +1,5 @@
 #!/bin/bash
 
-rm game.exe
-
 # Check if the --debug flag is present
 if [[ "$*" == *--debug* ]]; then
     DEBUG_FLAG="--debug"
@@ -9,7 +7,8 @@ else
     DEBUG_FLAG=""
 fi
 
-g++ src/*.cpp -m64 -g -Wall -I include -lSDL2 -lSDL2_image -o game.exe
+# Build the C++ program using the Makefile
+make
 
-# run with debug flag if present
-./game.exe $DEBUG_FLAG
+# Run the executable with or without the debug flag
+./*.exe $DEBUG_FLAG

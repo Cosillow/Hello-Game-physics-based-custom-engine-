@@ -1,5 +1,8 @@
 #include "inputmanager.hpp"
 #include "game.hpp"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 
 InputManager::InputManager()
 {
@@ -19,6 +22,7 @@ void InputManager::update(Game& game)
     _mouseScrollDelta = 0;
     while (SDL_PollEvent(&event))
     {
+        ImGui_ImplSDL2_ProcessEvent(&event);
         if (event.type == SDL_QUIT)
         {
             game.quit();
@@ -28,7 +32,6 @@ void InputManager::update(Game& game)
             this->_mouseScrollDelta = event.wheel.y;
         }
     }
-
 }
 
 

@@ -1,1 +1,7 @@
-game.exe
+# .gitignore
+
+# Ignore build directory
+/build/
+
+# Ignore executables
+*.exe

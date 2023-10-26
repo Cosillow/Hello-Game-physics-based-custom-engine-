@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/include/SDL2",
                 "/usr/include/",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/imgui"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

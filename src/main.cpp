@@ -1,6 +1,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include "renderwindow.hpp"
 #include "game.hpp"
 #include "globals.hpp"
@@ -40,6 +43,26 @@ int main(int argc, char* argv[])
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/monkey.png", "./res/first-run-animation-Sheet.png"});
 
+		// Setup Dear ImGui context
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+
+		// Set the location for imgui.ini
+		ImGui::GetIO().IniFilename = "build/imgui.ini";
+
+		// Setup Dear ImGui style
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsLight();
+		// Setup Platform/Renderer backends
+		ImGui_ImplSDL2_InitForSDLRenderer(&window.getWindow(), &window.getRenderer());
+		ImGui_ImplSDLRenderer2_Init(&window.getRenderer());
+
+		
+
 		Game game(window);
 
 		game.run();
@@ -47,6 +70,10 @@ int main(int argc, char* argv[])
 
 	
 	std::cout << "quit" << std::endl;
+
+	ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
 	IMG_Quit();
 	SDL_Quit();
 

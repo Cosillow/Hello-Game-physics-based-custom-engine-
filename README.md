@@ -1,6 +1,5 @@
 # Hello-Game
-Alex and Connor's first C++ game
-
+  Connor's first C++ game
 
 ## setup
   sudo apt-get install libsdl2-dev

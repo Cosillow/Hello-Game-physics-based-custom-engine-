@@ -21,7 +21,7 @@ class RenderWindow
 public:
 	RenderWindow(const std::string& title, int w, int h);
 	~RenderWindow() { cleanUp(); }
-	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
+	
 
 	// method overrides: render()
 	void render(const Body& Body);
@@ -33,6 +33,10 @@ public:
 	void render(const Hitbox& hitbox);
 	void render(const Canvas& canvas);
 	void render(const Platform& platform);
+
+	// getters
+	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
+	SDL_Window& getWindow() const { return *(this->_window); }
 
 	void saveRenderingColor();
     void restoreRenderingColor();

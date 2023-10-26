@@ -3,6 +3,9 @@
 #include <string>
 #include <iostream>
 
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #include "game.hpp"
 #include "2dphysics.hpp"
 #include "player.hpp"
@@ -77,8 +80,6 @@ void Game::run() {
 	Platform testForm2({500,600}, 4);
 	
 	// Canvas spriteTool;
-	// spriteTool.setPhoto("./res/first-run-animation-Sheet.png");
-
 
 	Uint32 prevTime = SDL_GetTicks();
 	float deltaTime = 0;
@@ -88,10 +89,14 @@ void Game::run() {
         deltaTime = (currentTime - prevTime) / 1000.0f; // Convert to seconds
         prevTime = currentTime;
         
-		handleInputs(wilson);
+		this->handleInputs(wilson);
+
 
 		// clear
 		this->_window.clear();
+		
+		
+
 
 		// update
 		wilson.update(deltaTime);		
@@ -99,11 +104,24 @@ void Game::run() {
 		this->_collisionManager->resolveBounds(wilson, testForm);
 		this->_collisionManager->resolveBounds(wilson, testForm2);
 
+
+		// Start the Dear ImGui frame
+        ImGui_ImplSDLRenderer2_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
+        ImGui::NewFrame();
 		
+
+		ImGui::ShowDemoWindow();
+
+
 		// render
+		
 		this->_window.render(wilson);
 		this->_window.render(testForm);
 		this->_window.render(testForm2);
+
+		ImGui::Render();
+		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 		
 		// display
 		this->_window.display();
