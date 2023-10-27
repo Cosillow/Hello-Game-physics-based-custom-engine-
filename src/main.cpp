@@ -6,7 +6,6 @@
 #include "imgui_impl_sdlrenderer2.h"
 #include "renderwindow.hpp"
 #include "game.hpp"
-#include "globals.hpp"
 
 // NON-preventable leaks
 // ==24356== HEAP SUMMARY:
@@ -37,7 +36,7 @@ int main(int argc, char* argv[])
 		for (int i = 1; i < argc; ++i) {
 			std::string arg = argv[i];
 			if (arg == "--debug") {
-				GLOB_debugMode = 1;
+				Constants::debugMode = true;
 			}
 		}
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);

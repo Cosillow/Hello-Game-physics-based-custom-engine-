@@ -156,17 +156,24 @@ struct Hitbox
     Vector2 _center;
     Vector2 _size;
     float _circleRadius;
+    bool _inCollision;
 
     Hitbox(float offsetX, float offsetY, float width, float height): 
     _offset({offsetX, offsetY}), 
     _center({0,0}),
     _size({width, height}),
-    _circleRadius(0) {/* create bounding box */}
+    _circleRadius(0),
+    _inCollision(0)
+    {/* create bounding box */}
+    
     Hitbox(float offsetX, float offsetY, float radius):  
     _offset({offsetX, offsetY}), 
     _center({0,0}),
     _size({0, 0}),
-    _circleRadius(radius) {/* create circle */} 
+    _circleRadius(radius),
+    _inCollision(0)
+    {/* create circle */}
+    
     Hitbox(): Hitbox(0,0,0,0) {/* create a default bounding box */}
     ~Hitbox() {};
 
@@ -176,6 +183,7 @@ struct Hitbox
     }
 
     void setCenter(Vector2& center) { this->_center = center; }
+    void setCollision(bool col) { this->_inCollision = col; }
 
     bool checkCollisions(const Hitbox& other) const {
         if (this->getType() == Hitbox::Type::Circle && other.getType() == Hitbox::Type::Circle)
@@ -292,8 +300,11 @@ public:
     }
     virtual void update(float deltaTime) {
         if (!this->_isStatic) {
+
             Vector2 finalAcceleration = this->getAcceleration();
             Vector2 velocity = this->getVelocity();
+            
+            if (this->_hitbox) this->_hitbox->setCollision(this->_isTouchingGround);
 
             if (this->_isTouchingGround && this->getAcceleration().x == 0) {
                 // apply friction
@@ -318,8 +329,6 @@ public:
     void applyImpulse(const Vector2 impulse) {
         if (!_isStatic) {
             Vector2 newVelocity = getVelocity() + impulse;
-
-            std::cout << "applyImpulse() velocity: " << getVelocity() << " newVelocity: " << newVelocity << std::endl;
 
             // Update the position based on the average of old and new velocity
             Vector2 averageVelocity = (getVelocity() + newVelocity) * 0.5f;

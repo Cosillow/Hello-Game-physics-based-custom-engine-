@@ -14,7 +14,6 @@
 #include "sprite.hpp"
 #include "canvas.hpp"
 #include "platform.hpp"
-#include "globals.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
     : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
@@ -78,7 +77,7 @@ void RenderWindow::render(const Player& player)
     Item* equippedItem = player.getEquippedItem();
     if (equippedItem) this->render(*equippedItem);
     this->render(player.getAnimatedSprite(), player.getPosition());
-    if (GLOB_debugMode && player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
+    if (Constants::debugMode && player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
 }
 
@@ -201,7 +200,15 @@ void RenderWindow::render(const Hitbox& hitbox)
 {
     this->saveRenderingColor();
     Hitbox::Type hitboxType = hitbox.getType();
-    SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255); // Green
+    
+
+    if (hitbox._inCollision)
+        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255); // Red
+    else
+        SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255); // Green
+
+
+
     if (hitboxType == Hitbox::Type::BoundingBox)
     {
         // Render bounding box

@@ -1,21 +1,21 @@
 #pragma once
-#include "2dphysics.hpp"
 
 namespace Constants {
-    const float PLAYER_SPEED = 1000;
-    const float PLAYER_MAX_SPEED = 8.0f;
-    const float GRAVITY = 1300.0; 
-    const float PLAYER_JUMP = 10;
-    const float DAMPING = 0.8;
-    const float RESTING_ROPE_LENGTH = 0.1;
-    const float GRAPPLING_HOOK_SPEED = 1000;
-    const float WINDOW_HEIGHT = 720;
-    const float WINDOW_WIDTH = 1280;
-    const int SPRITE_SCALE = 5;
-    const float PLAYER_FRICTION = 500.0f;
-    const float FRICTION_COEFFICIENT = 0.1f;
-    const float MINIMUM_VELOCITY = 0.3f;
-    const float FRAME_DURATION = .1;
-    const int TILE_SIZE = 16; // (px x px)
-    const int CHUNK_SIZE = 16; // (tile x tile)
+    extern bool debugMode;
+    extern float PLAYER_SPEED;
+    extern float PLAYER_MAX_SPEED;
+    extern float GRAVITY;
+    extern float PLAYER_JUMP;
+    extern float DAMPING;
+    extern float RESTING_ROPE_LENGTH;
+    extern float GRAPPLING_HOOK_SPEED;
+    extern float WINDOW_HEIGHT;
+    extern float WINDOW_WIDTH;
+    extern int SPRITE_SCALE;
+    extern float PLAYER_FRICTION;
+    extern float FRICTION_COEFFICIENT;
+    extern float MINIMUM_VELOCITY;
+    extern float FRAME_DURATION;
+    extern int TILE_SIZE;
+    extern int CHUNK_SIZE;
 }

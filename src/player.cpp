@@ -49,7 +49,7 @@ void Player::moveLeft(bool start) {
 
 
 void Player::update(float deltaTime) {
-
+    std::cout << "player update()" << std::endl;
     this->Body::update(deltaTime);
     this->_animatedSprite.update(deltaTime);
     
