@@ -16,6 +16,7 @@ namespace Constants {
     int SPRITE_SCALE = 5;
     float MINIMUM_VELOCITY = 0.3;
     float FRAME_DURATION = .1;
+    float COLLISION_BUFFER =  0.000046f;
     int TILE_SIZE = 16; // (px x px)
     int CHUNK_SIZE = 16; // (tile x tile)
 }

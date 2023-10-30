@@ -16,6 +16,7 @@ namespace Constants {
     extern float FRICTION_COEFFICIENT;
     extern float MINIMUM_VELOCITY;
     extern float FRAME_DURATION;
+    extern float COLLISION_BUFFER;
     extern int TILE_SIZE;
     extern int CHUNK_SIZE;
 }

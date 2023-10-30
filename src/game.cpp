@@ -95,11 +95,14 @@ void Game::run() {
 		this->_window.clear();
 		
 		// update
-		wilson.update(deltaTime);		
+		wilson.update(deltaTime);
+
+		// resolve collisions
 		this->_collisionManager->resolveBounds(wilson);
 		this->_collisionManager->resolveBounds(wilson, testForm);
 		this->_collisionManager->resolveBounds(wilson, testForm2);
 
+		std::cout << wilson.getPosition() << wilson.getHitbox()->_inCollision << wilson.getVelocity() << wilson.getAcceleration() << std::endl;
 
 		// Start the Dear ImGui frame
         ImGui_ImplSDLRenderer2_NewFrame();
@@ -115,6 +118,7 @@ void Game::run() {
 		ImGui::SliderFloat("max player speed", &Constants::PLAYER_MAX_SPEED, 0.0f, 50.0f, "m = %.3f");
 		ImGui::SliderFloat("jump force", &Constants::PLAYER_JUMP, 0.0f, 50.0f, "f = %.3f");
 		ImGui::SliderFloat("friction", &Constants::PLAYER_FRICTION, 0.0f, 10000.0f, "fr = %.3f");
+		ImGui::SliderFloat("collision buffer", &Constants::COLLISION_BUFFER, 0.0001f, 0.00001f, "b = %.9f");
 
 
 		// render

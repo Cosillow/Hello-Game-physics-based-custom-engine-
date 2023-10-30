@@ -303,9 +303,8 @@ public:
 
             Vector2 finalAcceleration = this->getAcceleration();
             Vector2 velocity = this->getVelocity();
-            
-            if (this->_hitbox) this->_hitbox->setCollision(this->_isTouchingGround);
 
+            
             if (this->_isTouchingGround && this->getAcceleration().x == 0) {
                 // apply friction
                 const float frictionForceX = velocity.x * Constants::PLAYER_FRICTION * -1;
@@ -324,6 +323,9 @@ public:
             
             // Update hitbox
             if (this->_hitbox) this->_hitbox->setCenter(this->_position);
+
+            // reset and allow collisions manager to set true
+            this->setIsTouchingGround(false);
         }
     }
     void applyImpulse(const Vector2 impulse) {
@@ -365,6 +367,7 @@ public:
     }
     void setIsTouchingGround(bool isTouchingGround) {
         this->_isTouchingGround = isTouchingGround;
+        if (this->_hitbox) this->_hitbox->setCollision(isTouchingGround);
     }
     virtual void setPosition(const Vector2& position) {
         this->_position = position;

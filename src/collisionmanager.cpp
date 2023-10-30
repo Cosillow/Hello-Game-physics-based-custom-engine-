@@ -12,7 +12,7 @@ void CollisionManager::resolveBounds(Player& player) const
         // player hit the bottom of the window
         player.setIsTouchingGround(true);
 
-        const float newYPosition = Constants::WINDOW_HEIGHT - (hitbox->_size.y / 2);
+        const float newYPosition = Constants::WINDOW_HEIGHT - (hitbox->_size.y / 2) + Constants::COLLISION_BUFFER;
         player.setOldPosition(Vector2(player.getOldPosition().x, newYPosition));
         player.setPosition(Vector2(player.getPosition().x, newYPosition));
     }
@@ -28,7 +28,7 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
     if (playerHitbox->checkCollisions(*platformHitbox))
     {
         player.setIsTouchingGround(true);
-        const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2);
+        const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2)+ Constants::COLLISION_BUFFER;
         player.setOldPosition(Vector2(player.getOldPosition().x, newYPosition));
         player.setPosition(Vector2(player.getPosition().x, newYPosition));
     }
