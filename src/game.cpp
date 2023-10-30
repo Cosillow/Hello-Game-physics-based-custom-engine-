@@ -18,26 +18,37 @@
 #include "platform.hpp"
 
 void Game::handleInputs(Player& player1) {
-	_inputManager->update(*this);
+	this->_inputManager->update(*this);
 	
+
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_P))
+	{
+		// toggle fullscreen
+		// TODO: this needs to be a button click and all be handled in the window 
+		// it needs to be a button click so it happens slower and can be called by imgui or something (easy)
+		const bool fullscreen = !this->_window.getFullscreen();
+		this->_window.setFullscreen(fullscreen);
+		SDL_SetWindowFullscreen(&this->_window.getWindow(), fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+	}
+
 	// player 1
-	if (_inputManager->isKeyDown(SDL_SCANCODE_A)) 
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_A)) 
 	{
 		player1.moveLeft(true);
 	}
-	if (_inputManager->isKeyUp(SDL_SCANCODE_A))
+	if (this->_inputManager->isKeyUp(SDL_SCANCODE_A))
 	{
 		player1.moveLeft(false);
 	}
-	if (_inputManager->isKeyDown(SDL_SCANCODE_D)) 
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_D)) 
 	{
 		player1.moveRight(true);
 	}
-	if (_inputManager->isKeyUp(SDL_SCANCODE_D))
+	if (this->_inputManager->isKeyUp(SDL_SCANCODE_D))
 	{
 		player1.moveRight(false);
 	}
-	if (_inputManager->isKeyDown(SDL_SCANCODE_SPACE))
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_SPACE))
 	{
 		player1.jump();
 	}

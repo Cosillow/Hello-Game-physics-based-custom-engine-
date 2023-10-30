@@ -13,23 +13,34 @@ InputManager::InputManager()
 
 void InputManager::update(Game& game)
 {
-    SDL_Event event;
+    SDL_Event e;
     int x;
     int y;
     _mouseState = SDL_GetMouseState(&x, &y); // Update mouse state and position
     _previousMousePosition = _mousePosition;
     _mousePosition = { static_cast<float>(x), static_cast<float>(y) };
     _mouseScrollDelta = 0;
-    while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&e))
     {
-        ImGui_ImplSDL2_ProcessEvent(&event);
-        if (event.type == SDL_QUIT)
+        ImGui_ImplSDL2_ProcessEvent(&e);
+
+        switch (e.type)
         {
-            game.quit();
-        }
-        else if (event.type == SDL_MOUSEWHEEL)
-        {
-            this->_mouseScrollDelta = event.wheel.y;
+            case SDL_QUIT:
+                game.quit();
+                break;
+
+            case SDL_WINDOWEVENT:
+                if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+                    // Handle window resize event
+                    int newWidth = e.window.data1;
+                    int newHeight = e.window.data2;
+                    // Update your rendering logic with the new width and height
+                }
+                break;
+            case SDL_MOUSEWHEEL:
+                this->_mouseScrollDelta = e.wheel.y;
+                break;
         }
     }
 }
