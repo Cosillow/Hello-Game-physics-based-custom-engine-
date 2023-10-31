@@ -124,13 +124,14 @@ void Game::run() {
 		ImGui::ShowDemoWindow();
 
 
+		ImGui::Checkbox("Debug mode", &Constants::debugMode);
 		ImGui::SliderFloat("gravity", &Constants::GRAVITY, 0.0f, 10000.0f, "g = %.3f");
 		ImGui::SliderFloat("player speed", &Constants::PLAYER_SPEED, 0.0f, 10000.0f, "s = %.3f");
 		ImGui::SliderFloat("max player speed", &Constants::PLAYER_MAX_SPEED, 0.0f, 50.0f, "m = %.3f");
 		ImGui::SliderFloat("jump force", &Constants::PLAYER_JUMP, 0.0f, 50.0f, "f = %.3f");
 		ImGui::SliderFloat("friction", &Constants::PLAYER_FRICTION, 0.0f, 10000.0f, "fr = %.3f");
 		ImGui::SliderFloat("collision buffer", &Constants::COLLISION_BUFFER, 0.0001f, 0.00001f, "b = %.9f");
-
+		
 
 		// render
 		

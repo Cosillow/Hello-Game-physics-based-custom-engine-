@@ -35,6 +35,10 @@ $(BUILD_DIR)/%.o: $(IMGUI_DIR)/%.cpp
 # Include automatically generated dependencies
 -include $(BUILD_DIR)/*.d
 
+# Target to build and run the executable
+build: $(TARGET)
+	./$(TARGET)
+
 # Clean target to remove generated files
 clean:
 	rm -f $(BUILD_DIR)/*.o $(BUILD_DIR)/*.d $(TARGET) $(BUILD_DIR)/imgui.ini
