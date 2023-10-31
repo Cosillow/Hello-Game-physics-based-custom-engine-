@@ -113,7 +113,8 @@ void Game::run() {
 		this->_collisionManager->resolveBounds(wilson, testForm);
 		this->_collisionManager->resolveBounds(wilson, testForm2);
 
-		std::cout << wilson.getPosition() << wilson.getHitbox()->_inCollision << wilson.getVelocity() << wilson.getAcceleration() << std::endl;
+		// std::cout << wilson.getPosition() << wilson.getHitbox()->_inCollision << wilson.getVelocity() << wilson.getAcceleration() << std::endl;
+		
 
 		// Start the Dear ImGui frame
         ImGui_ImplSDLRenderer2_NewFrame();

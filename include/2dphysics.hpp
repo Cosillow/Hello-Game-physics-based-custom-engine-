@@ -369,6 +369,14 @@ public:
         this->_isTouchingGround = isTouchingGround;
         if (this->_hitbox) this->_hitbox->setCollision(isTouchingGround);
     }
+    void setVelocity(const Vector2& velocity) {
+        // Update the old position based on the new velocity
+        this->_oldPosition = this->_position - velocity;
+
+        // Update the position based on the new velocity
+        this->_position = this->_oldPosition + velocity;
+    }
+
     virtual void setPosition(const Vector2& position) {
         this->_position = position;
     } 

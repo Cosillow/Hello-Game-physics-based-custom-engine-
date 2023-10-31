@@ -8,11 +8,13 @@
 #include "constants.hpp"
 
 void Player::moveRight(bool start) {
-    // get through with nothing happening:
-    // (isMovingRight && start) || (!isMovingRight && !start) || ()
 
-    if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) { this->applyForce(this->_movingRight * -1); // cancel previous force
-        this->_movingRight = Vector2(); return; }
+    // if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {
+    //     // cancel previous force
+    //     this->applyForce(this->_movingRight * -1); 
+    //     this->_movingRight = Vector2();
+    //     return;
+    // }
     Vector2 force = Vector2(Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingRight() && start) {
@@ -28,8 +30,12 @@ void Player::moveRight(bool start) {
 }
 
 void Player::moveLeft(bool start) {
-    if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {this->applyForce(this->_movingLeft * -1); // cancel previous force
-        this->_movingLeft = Vector2(); return; }
+    // if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {
+    //     // cancel previous force
+    //     this->applyForce(this->_movingLeft * -1); 
+    //     this->_movingLeft = Vector2();
+    //     return;
+    // }
     Vector2 force = Vector2(-Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingLeft() && start) {
@@ -44,15 +50,20 @@ void Player::moveLeft(bool start) {
     }
 }
 
-
-
-
-
 void Player::update(float deltaTime) {
     this->Body::update(deltaTime);
     this->_animatedSprite.update(deltaTime);
     
     if (_equippedItem) _equippedItem->update(deltaTime);
+
+    // Check if the player's horizontal velocity exceeds the maximum speed
+    Vector2 newVelocity = this->getVelocity();
+    if (std::abs(newVelocity.x) > Constants::PLAYER_MAX_SPEED) {
+        newVelocity.x = (newVelocity.x > 0) ? Constants::PLAYER_MAX_SPEED : -Constants::PLAYER_MAX_SPEED;
+        this->setVelocity(newVelocity);
+    }
+
+    std::cout << this->_movingLeft << this->_movingRight << this->getAcceleration() << std::endl;
 }
 
 void Player::jump() {
