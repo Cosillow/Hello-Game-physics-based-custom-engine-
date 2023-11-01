@@ -7,4 +7,6 @@ class UserInterface {
     public:
         UserInterface(): _fullscreen(false), _demoWindow(false) {}
         void displayDebugMenu(RenderWindow& window, Player& Player);
+        const void newFrame();
+        const void renderFrame();
 };

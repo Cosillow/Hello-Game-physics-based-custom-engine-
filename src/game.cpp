@@ -3,9 +3,6 @@
 #include <string>
 #include <iostream>
 
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
 #include "game.hpp"
 #include "2dphysics.hpp"
 #include "player.hpp"
@@ -93,6 +90,7 @@ void Game::run() {
 
 		// clear
 		this->_window.clear();
+		this->_userInterface.newFrame();
 		
 		// update
 		wilson.update(deltaTime);
@@ -101,27 +99,14 @@ void Game::run() {
 		this->_collisionManager->resolveBounds(wilson);
 		this->_collisionManager->resolveBounds(wilson, testForm);
 		this->_collisionManager->resolveBounds(wilson, testForm2);
-
-
 		
-
-		// Start the Dear ImGui frame
-        ImGui_ImplSDLRenderer2_NewFrame();
-        ImGui_ImplSDL2_NewFrame();
-        ImGui::NewFrame();
-
-
-
-		this->_userInterface.displayDebugMenu(this->_window, wilson);
-
-
-
 		// render
+		this->_userInterface.displayDebugMenu(this->_window, wilson);
 		this->_window.render(wilson);
 		this->_window.render(testForm);
 		this->_window.render(testForm2);
-		ImGui::Render();
-		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+
+		this->_userInterface.renderFrame();
 		
 		// display
 		this->_window.display();

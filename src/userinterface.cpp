@@ -31,3 +31,18 @@ void UserInterface::displayDebugMenu(RenderWindow& window, Player& player)
         ImGui::ShowDemoWindow();
     }
 }
+
+const void UserInterface::newFrame()
+{
+    // Start the Dear ImGui frame
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+}
+
+const void UserInterface::renderFrame()
+{
+	ImGui::Render();
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+}
+	
