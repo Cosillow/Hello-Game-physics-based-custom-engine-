@@ -8,13 +8,6 @@
 #include "constants.hpp"
 
 void Player::moveRight(bool start) {
-
-    // if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {
-    //     // cancel previous force
-    //     this->applyForce(this->_movingRight * -1); 
-    //     this->_movingRight = Vector2();
-    //     return;
-    // }
     Vector2 force = Vector2(Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingRight() && start) {
@@ -22,6 +15,7 @@ void Player::moveRight(bool start) {
         this->_animatedSprite.setMirrorX(false);
         this->_movingRight = force;
         this->applyForce(force);
+        this->setVelocity(Vector2(0, this->getVelocity().y));
     } else if (this->isMovingRight() && !start) {
         // player stops moving right
         this->applyForce(this->_movingRight * -1); // cancel previous force
@@ -30,12 +24,6 @@ void Player::moveRight(bool start) {
 }
 
 void Player::moveLeft(bool start) {
-    // if (start && std::abs(this->getVelocity().x) >= Constants::PLAYER_MAX_SPEED) {
-    //     // cancel previous force
-    //     this->applyForce(this->_movingLeft * -1); 
-    //     this->_movingLeft = Vector2();
-    //     return;
-    // }
     Vector2 force = Vector2(-Constants::PLAYER_SPEED, 0);
 
     if (!this->isMovingLeft() && start) {
@@ -43,6 +31,7 @@ void Player::moveLeft(bool start) {
         this->_animatedSprite.setMirrorX(true);
         this->_movingLeft = force;
         this->applyForce(force);
+        this->setVelocity(Vector2(0, this->getVelocity().y));
     } else if (this->isMovingLeft() && !start) {
         // player stops moving left
         this->applyForce(this->_movingLeft * -1); // cancel previous force

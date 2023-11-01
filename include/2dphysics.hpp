@@ -299,22 +299,20 @@ public:
         }
     }
     virtual void update(float deltaTime) {
-        if (!this->_isStatic) {
+        if (!this->_isStatic)
+        {
 
             Vector2 finalAcceleration = this->getAcceleration();
             Vector2 velocity = this->getVelocity();
 
             
-            if (this->_isTouchingGround && this->getAcceleration().x == 0) {
-                // apply friction
-                const float frictionForceX = velocity.x * Constants::PLAYER_FRICTION * -1;
-                finalAcceleration.x += frictionForceX;
-            }
-            
-            if (this->_isTouchingGround && this->_acceleration.x == 0 && std::abs(velocity.x) <= Constants::MINIMUM_VELOCITY) {
+            if (this->_isTouchingGround && this->_acceleration.x == 0) {
                 // body is stopping
-                this->_oldPosition = this->_position;
-            } else {
+                // apply friction
+                this->_oldPosition = this->_position; // no friction
+                // Constants::MINIMUM_VELOCITY
+            } else
+            {
                 // body is moving
                 Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
                 this->_oldPosition = this->_position;

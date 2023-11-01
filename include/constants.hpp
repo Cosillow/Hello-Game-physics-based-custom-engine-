@@ -13,7 +13,6 @@ namespace Constants {
     extern float WINDOW_WIDTH;
     extern int SPRITE_SCALE;
     extern float PLAYER_FRICTION;
-    extern float FRICTION_COEFFICIENT;
     extern float MINIMUM_VELOCITY;
     extern float FRAME_DURATION;
     extern float COLLISION_BUFFER;

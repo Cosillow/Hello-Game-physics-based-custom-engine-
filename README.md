@@ -7,9 +7,7 @@
   ./buildRun.sh
 
 ## TODO
-* GUI library with https://github.com/mobius3/KiWi
-* make private methods for startMove(bool right) and stopMove(left)
-  ^^ do this so you can clean up the guard for max speed repeating code
+* look at hitbox, make it not update every time?
 
 
 ## game ideas
