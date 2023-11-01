@@ -8,6 +8,12 @@
 
 ## TODO
 * look at hitbox, make it not update every time?
+* make oldposition and newposition protected
+  * api following that
+* add imgui for velocity, acceleration, position
+* figure out edges of platforms
+* DebugMenu class
+  * abstract away imgui
 
 
 ## game ideas

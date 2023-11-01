@@ -16,7 +16,7 @@
 #include "platform.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
-    : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>()), _fullscreen(false)
+    : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
 {
     _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_SHOWN);
     if (!_window)

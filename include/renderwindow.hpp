@@ -37,12 +37,10 @@ public:
 	// getters
 	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
 	SDL_Window& getWindow() const { return *(this->_window); }
-	bool getFullscreen() const { return this->_fullscreen; }
-
-	void setFullscreen(bool on) { this->_fullscreen = on; }
 	void saveRenderingColor();
     void restoreRenderingColor();
 
+	void setFullscreen(const bool on) { SDL_SetWindowFullscreen(this->_window, on ? SDL_WINDOW_FULLSCREEN : 0); }
 	void display();
 	void clear();
 private:
@@ -50,5 +48,4 @@ private:
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
 	std::stack<SDL_Color> _colorStack;
-	bool _fullscreen;
 };

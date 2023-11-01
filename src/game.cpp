@@ -102,37 +102,24 @@ void Game::run() {
 		this->_collisionManager->resolveBounds(wilson, testForm);
 		this->_collisionManager->resolveBounds(wilson, testForm2);
 
-		// std::cout << wilson.getPosition() << wilson.getHitbox()->_inCollision << wilson.getVelocity() << wilson.getAcceleration() << std::endl;
+
 		
 
 		// Start the Dear ImGui frame
         ImGui_ImplSDLRenderer2_NewFrame();
         ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
-		
-
-		ImGui::ShowDemoWindow();
 
 
-		ImGui::Checkbox("Debug mode", &Constants::debugMode);
-		ImGui::SliderFloat("gravity", &Constants::GRAVITY, 0.0f, 10000.0f, "g = %.3f");
-		ImGui::SliderFloat("player speed", &Constants::PLAYER_SPEED, 0.0f, 10000.0f, "s = %.3f");
-		ImGui::SliderFloat("max player speed", &Constants::PLAYER_MAX_SPEED, 0.0f, 50.0f, "m = %.3f");
-		ImGui::SliderFloat("jump force", &Constants::PLAYER_JUMP, 0.0f, 50.0f, "f = %.3f");
-		// ImGui::SliderFloat("friction", &Constants::PLAYER_FRICTION, 0.0f, 10000.0f, "fr = %.3f");
-		ImGui::SliderFloat("collision buffer", &Constants::COLLISION_BUFFER, 0.0001f, 0.00001f, "b = %.9f");
-		if (ImGui::Button("toggle fullscreen")) {
-			const bool fullscreen = !this->_window.getFullscreen();
-			this->_window.setFullscreen(fullscreen);
-			SDL_SetWindowFullscreen(&this->_window.getWindow(), fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-		}
+
+		this->_userInterface.displayDebugMenu(this->_window, wilson);
+
+
 
 		// render
-		
 		this->_window.render(wilson);
 		this->_window.render(testForm);
 		this->_window.render(testForm2);
-
 		ImGui::Render();
 		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 		

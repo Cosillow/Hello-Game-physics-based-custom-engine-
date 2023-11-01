@@ -299,8 +299,7 @@ public:
         }
     }
     virtual void update(float deltaTime) {
-        if (!this->_isStatic)
-        {
+        if (!this->_isStatic){
 
             Vector2 finalAcceleration = this->getAcceleration();
             Vector2 velocity = this->getVelocity();

@@ -4,6 +4,7 @@
 #include "inputmanager.hpp"
 #include "player.hpp"
 #include "collisionmanager.hpp"
+#include "userinterface.hpp"
 
 class Game
 {
@@ -12,7 +13,9 @@ public:
     _gameRunning(true),
     _window(window), 
     _inputManager(std::make_unique<InputManager>()),
-    _collisionManager(std::make_unique<CollisionManager>()) {};
+    _collisionManager(std::make_unique<CollisionManager>()),
+    _userInterface()
+    {};
 
     void run();
     void handleInputs(Player& player1);
@@ -22,4 +25,5 @@ private:
     RenderWindow& _window;
     std::unique_ptr<InputManager> _inputManager;
     std::unique_ptr<CollisionManager> _collisionManager;
+    UserInterface _userInterface;
 };
