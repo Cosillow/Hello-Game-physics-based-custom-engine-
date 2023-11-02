@@ -25,7 +25,8 @@ void UserInterface::displayDebugMenu(RenderWindow& window, Player& player)
     }
     ImGui::Text("Position: (%.2f, %.2f)", player.getPosition().x, player.getPosition().y);
     ImGui::Text("Acceleration: (%.2f, %.2f)", player.getAcceleration().x, player.getAcceleration().y);
-    ImGui::Text("Velocity: (%.2f, %.2f)", player.getVelocity().x, player.getVelocity());
+    ImGui::Text("Velocity: (%.2f, %.2f)", player.getVelocity().x, player.getVelocity().y);
+    ImGui::Text("hitbox bottom: (%.2f)", player.getHitbox()->getBottomY());
     if (this->_demoWindow)
     {
         ImGui::ShowDemoWindow();

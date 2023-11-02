@@ -7,12 +7,8 @@
 #include "renderwindow.hpp"
 #include "2dphysics.hpp"
 #include "player.hpp"
-#include "grapplinghook.hpp"
 #include "constants.hpp"
-#include "rope.hpp"
-#include "item.hpp"
 #include "sprite.hpp"
-#include "canvas.hpp"
 #include "platform.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h)
@@ -74,8 +70,6 @@ void RenderWindow::render(const Body& body)
 void RenderWindow::render(const Player& player)
 {
     this->saveRenderingColor();
-    Item* equippedItem = player.getEquippedItem();
-    if (equippedItem) this->render(*equippedItem);
     this->render(player.getAnimatedSprite(), player.getPosition());
     if (Constants::debugMode && player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
     this->restoreRenderingColor();
@@ -103,74 +97,6 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     SDL_RendererFlip flip = sprite.getMirrorX() ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     SDL_RenderCopyEx(this->_renderer, spritesheet, &spriteRect, &destRect, 0.0, nullptr, flip);
 
-    this->restoreRenderingColor();
-}
-
-
-void RenderWindow::render(const Item& item)
-{
-    item.renderItem(*this);
-}
-
-void RenderWindow::render(const GrapplingHook& grapplingHook)
-{
-    this->saveRenderingColor();
-
-    const Player& player = grapplingHook.getPlayer();
-
-    if (grapplingHook.getState() == GrapplingHook::State::Idle) {
-        Vector2 center = player.getPosition();
-
-        // Calculate the line endpoints based on the look angle
-        double angleRadians = player.getLookAngle() * M_PI / 180.0;
-        int lineLength = 1000;
-        int lineX = static_cast<int>(center.x + lineLength * cos(angleRadians));
-        int lineY = static_cast<int>(center.y + lineLength * sin(angleRadians));
-
-        // Draw a bright green line
-        SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255);
-        SDL_RenderDrawLine(this->_renderer, static_cast<int>(center.x), static_cast<int>(center.y), lineX, lineY);
-    } else if (grapplingHook.getState() == GrapplingHook::State::Extending) {
-
-        this->render(static_cast<Body>(grapplingHook));
-
-        // Set the rendering color to red
-        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);
-
-        // Render the grappling hook as a square
-        Vector2 hookPosition = grapplingHook.getPosition();
-        int hookSize = 50;
-        SDL_Rect hookRect;
-        hookRect.x = static_cast<int>(hookPosition.x - hookSize / 2);
-        hookRect.y = static_cast<int>(hookPosition.y - hookSize / 2);
-        hookRect.w = hookSize;
-        hookRect.h = hookSize;
-        SDL_RenderFillRect(this->_renderer, &hookRect);
-    }
-
-    if (grapplingHook.getState() != GrapplingHook::State::Idle) this->render(grapplingHook.getRope());    
-
-    this->restoreRenderingColor();
-}
-
-void RenderWindow::render(const Rope& rope)
-{
-    this->saveRenderingColor();
-    const std::vector<std::shared_ptr<Body>>& links = rope.getLinks();
-
-    // Set the rendering color to brown
-    SDL_SetRenderDrawColor(this->_renderer, 139, 69, 19, 255);
-
-    // Render each link of the rope as a line
-    for (int i = 0; i < rope.getNumLinks() - 1; ++i)
-    {
-        const Body& currentLink = *(links[i]);
-        const Body& nextLink = *(links[i + 1]);
-
-        // Render the line between the current link and the next link
-        SDL_RenderDrawLine(this->_renderer, static_cast<int>(currentLink.getPosition().x), static_cast<int>(currentLink.getPosition().y),
-                           static_cast<int>(nextLink.getPosition().x), static_cast<int>(nextLink.getPosition().y));
-    }
     this->restoreRenderingColor();
 }
 
@@ -236,71 +162,71 @@ void RenderWindow::render(const Hitbox& hitbox)
 }
 
 
-void RenderWindow::render(const Canvas& canvas) {
-    this->saveRenderingColor();
+// void RenderWindow::render(const Canvas& canvas) {
+//     this->saveRenderingColor();
 
-    // Render the checkered background
-    int gridSize = 50;  // Size of each grid box
-    int numColumns = std::ceil(static_cast<float>(Constants::WINDOW_WIDTH) / gridSize);
-    int numRows = std::ceil(static_cast<float>(Constants::WINDOW_HEIGHT) / gridSize);
+//     // Render the checkered background
+//     int gridSize = 50;  // Size of each grid box
+//     int numColumns = std::ceil(static_cast<float>(Constants::WINDOW_WIDTH) / gridSize);
+//     int numRows = std::ceil(static_cast<float>(Constants::WINDOW_HEIGHT) / gridSize);
 
-    for (int row = 0; row < numRows; ++row) {
-        for (int col = 0; col < numColumns; ++col) {
-            SDL_Rect gridRect;
-            gridRect.x = col * gridSize;
-            gridRect.y = row * gridSize;
-            gridRect.w = gridSize;
-            gridRect.h = gridSize;
+//     for (int row = 0; row < numRows; ++row) {
+//         for (int col = 0; col < numColumns; ++col) {
+//             SDL_Rect gridRect;
+//             gridRect.x = col * gridSize;
+//             gridRect.y = row * gridSize;
+//             gridRect.w = gridSize;
+//             gridRect.h = gridSize;
 
-            if ((row + col) % 2 == 0) {
-                // White box
-                SDL_SetRenderDrawColor(this->_renderer, 255, 255, 255, 255);
-            } else {
-                // Grey box
-                SDL_SetRenderDrawColor(this->_renderer, 200, 200, 200, 255);
-            }
+//             if ((row + col) % 2 == 0) {
+//                 // White box
+//                 SDL_SetRenderDrawColor(this->_renderer, 255, 255, 255, 255);
+//             } else {
+//                 // Grey box
+//                 SDL_SetRenderDrawColor(this->_renderer, 200, 200, 200, 255);
+//             }
 
-            SDL_RenderFillRect(this->_renderer, &gridRect);
-        }
-    }
+//             SDL_RenderFillRect(this->_renderer, &gridRect);
+//         }
+//     }
 
-    // Render the sprite sheet
-    SDL_Texture* spriteSheet = canvas.getPhoto();
-    if (!spriteSheet) {
-        this->restoreRenderingColor();
-        return;
-    }
+//     // Render the sprite sheet
+//     SDL_Texture* spriteSheet = canvas.getPhoto();
+//     if (!spriteSheet) {
+//         this->restoreRenderingColor();
+//         return;
+//     }
 
-    const SDL_Rect& box = canvas.getBox();
+//     const SDL_Rect& box = canvas.getBox();
 
-    // Calculate the zoom factor based on the current zoom percentage
-    float zoomFactor = canvas.getZoom() / 100.0f;
+//     // Calculate the zoom factor based on the current zoom percentage
+//     float zoomFactor = canvas.getZoom() / 100.0f;
 
-    SDL_Rect destRect;
-    destRect.w = static_cast<int>(box.w * zoomFactor);
-    destRect.h = static_cast<int>(box.h * zoomFactor);
-    destRect.x = static_cast<int>(box.x);
-    destRect.y = static_cast<int>(box.y);
+//     SDL_Rect destRect;
+//     destRect.w = static_cast<int>(box.w * zoomFactor);
+//     destRect.h = static_cast<int>(box.h * zoomFactor);
+//     destRect.x = static_cast<int>(box.x);
+//     destRect.y = static_cast<int>(box.y);
 
-    SDL_RenderCopy(this->_renderer, spriteSheet, nullptr, &destRect);
+//     SDL_RenderCopy(this->_renderer, spriteSheet, nullptr, &destRect);
 
-    // Render the selection box
-    const SDL_Rect& selectionBox = canvas.getSelection();
+//     // Render the selection box
+//     const SDL_Rect& selectionBox = canvas.getSelection();
     
-    if (selectionBox.w && selectionBox.h) {
-        // only draw a box if it isn't empty
-        SDL_Rect selectionRect;
-        selectionRect.x = static_cast<int>(selectionBox.x * zoomFactor);
-        selectionRect.y = static_cast<int>(selectionBox.y * zoomFactor);
-        selectionRect.w = static_cast<int>(selectionBox.w);
-        selectionRect.h = static_cast<int>(selectionBox.h);
-        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
-        SDL_RenderDrawRect(this->_renderer, &selectionRect);
-    }
+//     if (selectionBox.w && selectionBox.h) {
+//         // only draw a box if it isn't empty
+//         SDL_Rect selectionRect;
+//         selectionRect.x = static_cast<int>(selectionBox.x * zoomFactor);
+//         selectionRect.y = static_cast<int>(selectionBox.y * zoomFactor);
+//         selectionRect.w = static_cast<int>(selectionBox.w);
+//         selectionRect.h = static_cast<int>(selectionBox.h);
+//         SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);  // Red color for the selection box outline
+//         SDL_RenderDrawRect(this->_renderer, &selectionRect);
+//     }
 
 
-    this->restoreRenderingColor();
-}
+//     this->restoreRenderingColor();
+// }
 
 void RenderWindow::render(const Platform& platform)
 {

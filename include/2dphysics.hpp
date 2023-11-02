@@ -202,6 +202,7 @@ struct Hitbox
                    (topLeft.y < otherTopLeft.y + other._size.y) &&
                    (topLeft.y + this->_size.y > otherTopLeft.y);
         }
+        return false;
     }
 
     float getLeftX() const {

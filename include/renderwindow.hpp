@@ -6,14 +6,10 @@
 
 #include "2dphysics.hpp"
 
-class Rope;
 class Player;
-class GrapplingHook;
-class Item;
 class SpriteContainer;
 class Sprite;
 class Hitbox;
-class Canvas;
 class Platform;
 
 class RenderWindow 
@@ -26,12 +22,8 @@ public:
 	// method overrides: render()
 	void render(const Body& Body);
 	void render(const Player& player);
-	void render(const Item& item);
-	void render(const GrapplingHook& player);
-	void render(const Rope& rope);
 	void render(const Sprite& sprite, const Vector2 position);
 	void render(const Hitbox& hitbox);
-	void render(const Canvas& canvas);
 	void render(const Platform& platform);
 
 	// getters

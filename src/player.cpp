@@ -43,7 +43,6 @@ void Player::update(float deltaTime) {
     this->Body::update(deltaTime);
     this->_animatedSprite.update(deltaTime);
     
-    if (_equippedItem) _equippedItem->update(deltaTime);
 
     // Check if the player's horizontal velocity exceeds the maximum speed
     Vector2 newVelocity = this->getVelocity();
@@ -51,8 +50,6 @@ void Player::update(float deltaTime) {
         newVelocity.x = (newVelocity.x > 0) ? Constants::PLAYER_MAX_SPEED : -Constants::PLAYER_MAX_SPEED;
         this->setVelocity(newVelocity);
     }
-
-    std::cout << this->_movingLeft << this->_movingRight << this->getAcceleration() << std::endl;
 }
 
 void Player::jump() {

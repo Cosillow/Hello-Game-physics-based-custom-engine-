@@ -33,9 +33,8 @@ void InputManager::update(Game& game)
             case SDL_WINDOWEVENT:
                 if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
                     // Handle window resize event
-                    int newWidth = e.window.data1;
-                    int newHeight = e.window.data2;
-                    // Update your rendering logic with the new width and height
+                    // int newWidth = e.window.data1;
+                    // int newHeight = e.window.data2;
                 }
                 break;
             case SDL_MOUSEWHEEL:
