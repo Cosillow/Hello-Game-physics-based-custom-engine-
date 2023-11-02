@@ -10,11 +10,17 @@
 * look at hitbox, make it not update every time?
 * make oldposition and newposition protected
   * api following that
-* add imgui for velocity, acceleration, position
 * figure out edges of platforms
-* DebugMenu class
-  * abstract away imgui
+* level editor
+  * undo/redo with (command pattern)
+  * tilemap = array of pointers to tile objects (flyweight pattern)
+* shared and unique pointers
+  * memory leaks?
+* input handler (command pattern)
+  * return Command* (command interface, having method execute(Player p))
 
+### long (long) term
+* openGL?
 
 ## game ideas
 * I want only keyboard controls if possible, aiming with mouse is annoying, and its easier to play on a laptop, which should be possible, not intensive
