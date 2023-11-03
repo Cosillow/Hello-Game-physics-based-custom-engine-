@@ -14,11 +14,6 @@ LDFLAGS :=
 LIBS := -lSDL2 -lSDL2_image
 endif
 
-
-
-
-
-
 IMGUI_DIR = imgui
 IMGUI_SRCS = $(wildcard $(IMGUI_DIR)/*.cpp)
 IMGUI_OBJS = $(patsubst $(IMGUI_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(IMGUI_SRCS))
@@ -30,11 +25,6 @@ BUILD_DIR = build
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 # Generate corresponding object file names in the build directory
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
-
-
-
-
-
 
 # Default target
 all: $(TARGET)

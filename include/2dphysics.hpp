@@ -328,14 +328,7 @@ public:
     }
     void applyImpulse(const Vector2 impulse) {
         if (!_isStatic) {
-            Vector2 newVelocity = getVelocity() + impulse;
-
-            // Update the position based on the average of old and new velocity
-            Vector2 averageVelocity = (getVelocity() + newVelocity) * 0.5f;
-            this->_position = this->_position + averageVelocity;
-
-            // Update the old position based on the new velocity
-            this->_oldPosition = this->_position - newVelocity;
+            this->setVelocity(getVelocity() + impulse);
         }
     }
 
