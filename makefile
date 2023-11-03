@@ -2,7 +2,7 @@ ifeq ($(os),windows)
 TARGET ?= bin/hellogame.exe
 
 CXX := x86_64-w64-mingw32-g++
-CXXFLAGS := --std=c++17 -g -Wall -I include -I imgui -w -fpermissive -I/usr/local/x86_64-w64-mingw32/include -L/usr/local/x86_64-w64-mingw32/lib -Llib/SDL2-2.0.9/x86_64-w64-mingw32/lib -lSDL2main -lSDL2 -lws2_32 -lSDL2_image
+CXXFLAGS := --std=c++17 -g -Wall -w -fpermissive -I include -I imgui -I/usr/local/x86_64-w64-mingw32/include
 LDFLAGS := -static -static-libgcc
 LIBS := $(shell /usr/local/x86_64-w64-mingw32/bin/sdl2-config --static-libs) -lSDL2_image
 else
