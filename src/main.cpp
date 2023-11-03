@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 		// 	}
 		// }
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
-		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/monkey.png", "./res/first-run-animation-Sheet.png"});
+		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/first-run-animation-Sheet.png"});
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();

@@ -3,5 +3,5 @@
 # Ignore build directory
 /build/
 
-# Ignore executables
-*.exe
+# Ignore linux executables
+*.out
