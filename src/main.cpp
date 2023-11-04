@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
 	if (!(IMG_Init(IMG_INIT_PNG)))
 		std::cout << "IMG_init has failed. Error: " << SDL_GetError() << std::endl;
-
+	char* basePath;
 	{
 		// Create a new scope for `RenderWindow` and `App` deconstructors to be called
 		// Ensures order --> ~Textures(), ~RenderWindow(), SDL_Quit()
@@ -41,7 +41,8 @@ int main(int argc, char* argv[])
 		// 		Constants::debugMode = true;
 		// 	}
 		// }
-		Constants::basePath = SDL_GetBasePath();
+		basePath = SDL_GetBasePath();
+		Constants::basePath = basePath;
 		
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
 		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{".././res/first-run-animation-Sheet.png"});
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
 	
 	std::cout << "quit" << std::endl;
 
-	SDL_free(Constants::basePath);
+	SDL_free(basePath);
 	ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

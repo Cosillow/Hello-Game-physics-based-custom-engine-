@@ -56,6 +56,7 @@ void Player::jump() {
     if (this->isTouchingGround()) {
         this->setIsTouchingGround(false);
         this->Body::applyImpulse({0.0, -Constants::PLAYER_JUMP});
+        std::cout << this->getVelocity() << std::endl;
     }
 }
 

@@ -34,13 +34,19 @@ void Game::handleInputs(Player& player1) {
 	{
 		player1.jump();
 	}
+	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
+	{
+		this->_platforms.push_back(std::make_unique<Platform>(this->_inputManager->getMousePosition(), 1));
+	}
+	if (this->_inputManager->isMouseButtonUp(SDL_BUTTON_LEFT))
+	{
+
+	}
 }
 
 void Game::run() {
 
 	Player wilson({400, 200});
-	Platform testForm({800,700}, 3);
-	Platform testForm2({500,600}, 4);
 	
 	// Canvas spriteTool;
 
@@ -56,23 +62,28 @@ void Game::run() {
 
 		// clear
 		this->_window.clear();
-		this->_userInterface.newFrame();
+		this->_userInterface->newFrame();
 		
 		// update
 		wilson.update(deltaTime);
 
 		// resolve collisions
 		this->_collisionManager->resolveBounds(wilson);
-		this->_collisionManager->resolveBounds(wilson, testForm);
-		this->_collisionManager->resolveBounds(wilson, testForm2);
-		
-		// render
-		this->_userInterface.displayDebugMenu(this->_window, wilson);
-		this->_window.render(wilson);
-		this->_window.render(testForm);
-		this->_window.render(testForm2);
 
-		this->_userInterface.renderFrame();
+		for (auto& p : this->_platforms)
+		{
+			this->_collisionManager->resolveBounds(wilson, *p);
+		}
+
+		// render
+		this->_userInterface->displayDebugMenu(this->_window, wilson);
+		this->_window.render(wilson);
+		for (auto& p : this->_platforms)
+		{
+			this->_window.render(*p);
+		}
+
+		this->_userInterface->renderFrame();
 		
 		// display
 		this->_window.display();

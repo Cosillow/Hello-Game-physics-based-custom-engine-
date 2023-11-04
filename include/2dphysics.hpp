@@ -11,9 +11,6 @@ struct UpdateableI {
     virtual void update(float deltaTime) = 0;
 };
 
-// ********************************************************************************************************
-// VECTOR2
-
 struct Vector2 {
     float x;
     float y;
@@ -142,9 +139,6 @@ struct Vector2Hash
     }
 };
 
-// ********************************************************************************************************
-// Hitbox
-
 struct Hitbox
 {
     enum class Type {
@@ -252,9 +246,6 @@ struct Hitbox
     }
 };
 
-// ********************************************************************************************************
-// BODY
-
 class Body : public UpdateableI {
 private:
     Vector2 _position;
@@ -295,41 +286,37 @@ public:
         this->_hitbox->setCenter(this->_position);
     }
     void applyForce(const Vector2& force) {
-        if (!this->_isStatic) {
-            this->_acceleration += force;
-        }
+        if (this->_isStatic) return;
+        this->_acceleration += force;
     }
     virtual void update(float deltaTime) {
-        if (!this->_isStatic){
+        if (this->_isStatic) return;
+        
+        Vector2 finalAcceleration = this->getAcceleration();
+        Vector2 velocity = this->getVelocity();
 
-            Vector2 finalAcceleration = this->getAcceleration();
-            Vector2 velocity = this->getVelocity();
-
-            
-            if (this->_isTouchingGround && this->_acceleration.x == 0) {
-                // body is stopping
-                // apply friction
-                this->_oldPosition = this->_position; // no friction
-                // Constants::MINIMUM_VELOCITY
-            } else
-            {
-                // body is moving
-                Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
-                this->_oldPosition = this->_position;
-                this->_position = newPosition;
-            }
-            
-            // Update hitbox
-            if (this->_hitbox) this->_hitbox->setCenter(this->_position);
-
-            // reset and allow collisions manager to set true
-            this->setIsTouchingGround(false);
+        if (this->_isTouchingGround && this->_acceleration.x == 0) {
+            // body is stopping
+            // apply friction (stop instantly)
+            this->_oldPosition = this->_position;
+        } else
+        {
+            // body is moving
+            Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
+            this->_oldPosition = this->_position;
+            this->_position = newPosition;
         }
+        
+        // Update hitbox
+        if (this->_hitbox) this->_hitbox->setCenter(this->_position);
+
+        // reset and allow collisions manager to set true
+        this->setIsTouchingGround(false);
+        
     }
     void applyImpulse(const Vector2 impulse) {
-        if (!_isStatic) {
-            this->setVelocity(getVelocity() + impulse);
-        }
+        if (this->_isStatic) return;
+        this->setVelocity(getVelocity() + impulse);
     }
 
     // getters
@@ -361,10 +348,8 @@ public:
         if (this->_hitbox) this->_hitbox->setCollision(isTouchingGround);
     }
     void setVelocity(const Vector2& velocity) {
-        // Update the old position based on the new velocity
+        if (this->_isStatic) return;
         this->_oldPosition = this->_position - velocity;
-
-        // Update the position based on the new velocity
         this->_position = this->_oldPosition + velocity;
     }
 

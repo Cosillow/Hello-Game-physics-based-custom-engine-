@@ -38,8 +38,7 @@ private:
 public:
     static SDL_Texture* openTexture(const std::string &path)
     {
-        char * finalPath = strcat( Constants::basePath, path.c_str());
-        SDL_Surface* surface = IMG_Load(finalPath);
+        SDL_Surface* surface = IMG_Load((Constants::basePath + path).c_str());
         if (!surface)
         {Constants::basePath = SDL_GetBasePath();
             std::cerr << "Failed to load texture: " << path << ", " << IMG_GetError() << std::endl;
