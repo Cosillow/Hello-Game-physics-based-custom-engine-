@@ -18,4 +18,5 @@ namespace Constants {
     extern float COLLISION_BUFFER;
     extern int TILE_SIZE;
     extern int CHUNK_SIZE;
+    extern char* basePath;
 }

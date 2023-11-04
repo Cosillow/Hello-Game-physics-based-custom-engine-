@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <vector>
+#include "constants.hpp"
 
 class ResourceManager
 {
@@ -37,9 +38,10 @@ private:
 public:
     static SDL_Texture* openTexture(const std::string &path)
     {
-        SDL_Surface* surface = IMG_Load(path.c_str());
+        char * finalPath = strcat( Constants::basePath, path.c_str());
+        SDL_Surface* surface = IMG_Load(finalPath);
         if (!surface)
-        {
+        {Constants::basePath = SDL_GetBasePath();
             std::cerr << "Failed to load texture: " << path << ", " << IMG_GetError() << std::endl;
             return nullptr;
         }

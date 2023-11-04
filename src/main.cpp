@@ -6,6 +6,7 @@
 #include "imgui_impl_sdlrenderer2.h"
 #include "renderwindow.hpp"
 #include "game.hpp"
+#include "constants.hpp"
 
 // NON-preventable leaks
 // ==24356== HEAP SUMMARY:
@@ -40,8 +41,10 @@ int main(int argc, char* argv[])
 		// 		Constants::debugMode = true;
 		// 	}
 		// }
+		Constants::basePath = SDL_GetBasePath();
+		
 		RenderWindow window("THE GAME", Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT);
-		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{"./res/first-run-animation-Sheet.png"});
+		ResourceManager::initialize(&(window.getRenderer()), std::vector<std::string>{".././res/first-run-animation-Sheet.png"});
 
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
@@ -71,6 +74,7 @@ int main(int argc, char* argv[])
 	
 	std::cout << "quit" << std::endl;
 
+	SDL_free(Constants::basePath);
 	ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
