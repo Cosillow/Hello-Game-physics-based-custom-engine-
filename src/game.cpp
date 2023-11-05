@@ -34,14 +34,16 @@ void Game::handleInputs(Player& player1) {
 	{
 		player1.jump();
 	}
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_ESCAPE))
+	{
+		std::cout << "escape" << std::endl;
+		this->_debugMenu = !this->_debugMenu;
+	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
 	{
 		this->_platforms.push_back(std::make_unique<Platform>(this->_inputManager->getMousePosition(), 1));
 	}
-	if (this->_inputManager->isMouseButtonUp(SDL_BUTTON_LEFT))
-	{
-
-	}
+	
 }
 
 void Game::run() {
@@ -76,7 +78,7 @@ void Game::run() {
 		}
 
 		// render
-		this->_userInterface->displayDebugMenu(this->_window, wilson);
+		if (this->_debugMenu) this->_userInterface->displayDebugMenu(this->_window, wilson);
 		this->_window.render(wilson);
 		for (auto& p : this->_platforms)
 		{

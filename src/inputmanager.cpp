@@ -44,8 +44,6 @@ void InputManager::update(Game& game)
     }
 }
 
-
-
 bool InputManager::isKeyDown(SDL_Scancode key)
 {
     return _keyState[key] == 1;

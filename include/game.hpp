@@ -17,6 +17,7 @@ public:
     , _collisionManager(std::make_unique<CollisionManager>())
     , _userInterface(std::make_unique<UserInterface>())
     , _platforms(std::vector<std::unique_ptr<Platform>>())
+    , _debugMenu(false)
     {};
 
     void run();
@@ -29,4 +30,5 @@ private:
     std::unique_ptr<CollisionManager> _collisionManager;
     std::unique_ptr<UserInterface> _userInterface;
     std::vector<std::unique_ptr<Platform>> _platforms;
+    bool _debugMenu;
 };
