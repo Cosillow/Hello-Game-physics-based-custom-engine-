@@ -55,19 +55,12 @@ struct Vector2
         return Vector2(this->x * scalar, this->y * scalar);
     }
 
-    // Vector2 operator*(Vector2 other) const {
-    //     return Vector2(this->x * other.x, this->y * other.y);
-    // }
-
     Vector2 operator/(float scalar) const
     {
-        if (scalar != 0.0f)
-        {
-            float invScalar = 1.0f / scalar;
-            return Vector2(this->x * invScalar, this->y * invScalar);
-        }
-        // Handle division by zero gracefully (return a zero vector)
-        return Vector2();
+        if (scalar == 0.0f)
+            return Vector2();
+        float invScalar = 1.0f / scalar;
+        return Vector2(this->x * invScalar, this->y * invScalar);
     }
 
     friend bool operator==(const Vector2 &lhs, const Vector2 &rhs)
@@ -103,14 +96,11 @@ struct Vector2
 
     Vector2 &operator/=(float scalar)
     {
-        if (scalar != 0.0f)
-        {
-            float invScalar = 1.0f / scalar;
-            this->x *= invScalar;
-            this->y *= invScalar;
-        }
-        // Handle division by zero gracefully (do nothing)
-        return *this;
+        if (scalar == 0.0f)
+            return *this;
+        float invScalar = 1.0f / scalar;
+        this->x *= invScalar;
+        this->y *= invScalar;
     }
 
     friend bool operator<(const Vector2 &lhs, const Vector2 &rhs)
@@ -136,13 +126,10 @@ struct Vector2
     Vector2 normalize() const
     {
         float mag = this->magnitude();
-        if (mag != 0.0f)
-        {
-            float invMag = 1.0f / mag;
-            return Vector2(x * invMag, y * invMag);
-        }
-        // Handle zero vector gracefully (return a zero vector)
-        return Vector2();
+        if (mag == 0.0f)
+            return Vector2();
+        float invMag = 1.0f / mag;
+        return Vector2(x * invMag, y * invMag);
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Vector2 &vec)
