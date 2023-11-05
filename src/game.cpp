@@ -36,12 +36,15 @@ void Game::handleInputs(Player& player1) {
 	}
 	if (this->_inputManager->isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
-		std::cout << "escape" << std::endl;
 		this->_debugMenu = !this->_debugMenu;
 	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
 	{
 		this->_platforms.push_back(std::make_unique<Platform>(this->_inputManager->getMousePosition(), 1));
+	}
+	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
+	{
+		this->_platforms.clear();
 	}
 	
 }
