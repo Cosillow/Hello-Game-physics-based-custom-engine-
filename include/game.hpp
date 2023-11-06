@@ -18,11 +18,13 @@ public:
     , _userInterface(std::make_unique<UserInterface>())
     , _platforms(std::vector<std::unique_ptr<Platform>>())
     , _debugMenu(false)
+    , _player(nullptr)
     {};
 
     void run();
     void handleInputs(Player& player1);
     void quit() { _gameRunning = false; }
+    void render();
 private:
     bool _gameRunning;
     RenderWindow& _window;
@@ -31,4 +33,5 @@ private:
     std::unique_ptr<UserInterface> _userInterface;
     std::vector<std::unique_ptr<Platform>> _platforms;
     bool _debugMenu;
+    std::unique_ptr<Player> _player;
 };

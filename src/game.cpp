@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include "game.hpp"
 #include "2dphysics.hpp"
@@ -49,12 +50,23 @@ void Game::handleInputs(Player& player1) {
 	
 }
 
-void Game::run() {
+void Game::render() 
+{
+	if (this->_debugMenu)
+		this->_userInterface->displayDebugMenu(this->_window, *this->_player);
+	this->_window.render(*this->_player);
+	for (auto& p : this->_platforms)
+	{
+		this->_window.render(*p);
+	}
 
-	Player wilson({400, 200});
+	this->_userInterface->renderFrame();
+}
+
+void Game::run()
+{
+	this->_player = std::make_unique<Player>();
 	
-	// Canvas spriteTool;
-
 	Uint32 prevTime = SDL_GetTicks();
 	float deltaTime = 0;
 	while (this->_gameRunning)
@@ -63,32 +75,23 @@ void Game::run() {
         deltaTime = (currentTime - prevTime) / 1000.0f; // Convert to seconds
         prevTime = currentTime;
         
-		this->handleInputs(wilson);
+		this->handleInputs(*this->_player);
 
 		// clear
 		this->_window.clear();
 		this->_userInterface->newFrame();
 		
 		// update
-		wilson.update(deltaTime);
+		this->_player->update(deltaTime);
 
 		// resolve collisions
-		this->_collisionManager->resolveBounds(wilson);
-
+		this->_collisionManager->resolveBounds(*this->_player);
 		for (auto& p : this->_platforms)
 		{
-			this->_collisionManager->resolveBounds(wilson, *p);
+			this->_collisionManager->resolveBounds(*this->_player, *p);
 		}
 
-		// render
-		if (this->_debugMenu) this->_userInterface->displayDebugMenu(this->_window, wilson);
-		this->_window.render(wilson);
-		for (auto& p : this->_platforms)
-		{
-			this->_window.render(*p);
-		}
-
-		this->_userInterface->renderFrame();
+		this->render();
 		
 		// display
 		this->_window.display();
