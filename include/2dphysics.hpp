@@ -163,25 +163,24 @@ struct Hitbox
     float _circleRadius;
     bool _inCollision;
 
-    Hitbox(float offsetX, float offsetY, float width, float height) : _offset({offsetX, offsetY}),
-                                                                      _center({0, 0}),
-                                                                      _size({width, height}),
-                                                                      _circleRadius(0),
-                                                                      _inCollision(0)
-    { /* create bounding box */
-    }
+    Hitbox(float offsetX, float offsetY, float width, float height) : 
+    _offset({offsetX, offsetY}),
+    _center({0, 0}),
+    _size({width, height}),
+    _circleRadius(0),
+    _inCollision(0)
+    { /* create bounding box */ }
 
-    Hitbox(float offsetX, float offsetY, float radius) : _offset({offsetX, offsetY}),
-                                                         _center({0, 0}),
-                                                         _size({0, 0}),
-                                                         _circleRadius(radius),
-                                                         _inCollision(0)
-    { /* create circle */
-    }
+    Hitbox(float offsetX, float offsetY, float radius) : 
+    _offset({offsetX, offsetY}),
+    _center({0, 0}),
+    _size({0, 0}),
+    _circleRadius(radius),
+    _inCollision(0)
+    { /* create circle */ }
 
     Hitbox() : Hitbox(0, 0, 0, 0)
-    { /* create a default bounding box */
-    }
+    { /* create a default bounding box */ }
     ~Hitbox(){};
 
     Type getType() const
