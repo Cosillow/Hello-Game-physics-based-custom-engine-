@@ -264,6 +264,8 @@ struct Hitbox
         }
     }
 
+    Vector2 const getCenter() { return this->_center; }
+
     SDL_Rect &getSDLRect() const
     {
         static SDL_Rect rect;
@@ -354,7 +356,7 @@ public:
             this->_hitbox->setCenter(this->_position);
 
         // reset and allow collisions manager to set true
-        this->setIsTouchingGround(false);
+        this->_isTouchingGround = false;
     }
     void applyImpulse(const Vector2 impulse)
     {
@@ -412,17 +414,23 @@ public:
     {
         this->_position = position;
         this->_oldPosition = position;
+        if (this->_hitbox)
+            this->_hitbox->setCenter(this->_position);
     }
 
     virtual void setPositionY(float y)    
     {
         this->_position.y = y;
         this->_oldPosition.y = y;
+        if (this->_hitbox)
+            this->_hitbox->setCenter(this->_position);
     }
     virtual void setPositionX(float x)    
     {
         this->_position.x = x;
         this->_oldPosition.x = x;
+        if (this->_hitbox)
+            this->_hitbox->setCenter(this->_position);
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Body &body)

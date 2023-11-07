@@ -27,8 +27,13 @@ make -j && sudo make install
 ```
 
 ## TODO
-* cameras should be owned by game and have shared pointer with renderwindow (could be multiple in the future)
-
+* buffer switch for hitbox being touched
+  * touchedNext
+  * then switch touchNext when it updates probably
+  * also try to condense/finilize touchingGround and inCollision
+    * and player and hitbox
+* add zoom functionality to camera
+  * and different camerea tracking options (camera types, something)
 * look at hitbox, make it not update every time?
 * make oldposition and newposition protected
   * api following that

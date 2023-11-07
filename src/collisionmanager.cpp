@@ -13,22 +13,22 @@ void CollisionManager::resolveBounds(Player& player) const
     {
         player.setIsTouchingGround(true);
 
-        const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2) + Constants::COLLISION_BUFFER;
+        const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2);
         player.setPositionY(newYPosition);
     }
     if (hitbox->getTopY() <= 0)
     {
-        const float newYPosition = (hitbox->_size.y / 2) + Constants::COLLISION_BUFFER;
+        const float newYPosition = (hitbox->_size.y / 2);
         player.setPositionY(newYPosition);   
     }
     if (hitbox->getRightX() >= Constants::GAME_WIDTH)
     {
-        const float newXPosition = Constants::GAME_WIDTH - (hitbox->_size.x / 2) + Constants::COLLISION_BUFFER;
+        const float newXPosition = Constants::GAME_WIDTH - (hitbox->_size.x / 2);
         player.setPositionX(newXPosition);   
     }
     if (hitbox->getLeftX() <= 0)
     {
-        const float newXPosition = (hitbox->_size.x / 2) + Constants::COLLISION_BUFFER;
+        const float newXPosition = (hitbox->_size.x / 2);
         player.setPositionX(newXPosition);   
     }
 }

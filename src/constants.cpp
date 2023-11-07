@@ -15,7 +15,7 @@ namespace Constants {
     float WINDOW_HEIGHT = 720;
     float WINDOW_WIDTH = 1280;
     float FRICTION_COEFFICIENT = 0.1;
-    int SPRITE_SCALE = 5;
+    int SPRITE_SCALE = 2;
     float MINIMUM_VELOCITY = 0.3;
     float FRAME_DURATION = .1;
     float COLLISION_BUFFER =  0.000046f;

@@ -8,7 +8,6 @@ public:
     Camera():
     UpdateableI()
     , _center({0,0})
-    , _size({0,0})
     , _player(nullptr) {}
 
     Vector2 worldToScreen(const Vector2& world);
@@ -22,6 +21,5 @@ public:
 
 private:
     Vector2 _center;
-    Vector2 _size;
     std::shared_ptr<Player> _player;
 };

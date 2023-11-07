@@ -143,18 +143,21 @@ void RenderWindow::render() {
     // gray
     SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
 
-    Vector2 centerScreen = this->_camera->worldToScreen(this->_camera->getCenter());
+    if (Constants::debugMode)
+    {
+        Vector2 centerScreen = this->_camera->worldToScreen(this->_camera->getCenter());
 
-    int squareSize = 20;
+        int squareSize = 20;
 
-    SDL_Rect squareRect = {
-        static_cast<int>(centerScreen.x - squareSize / 2),
-        static_cast<int>(centerScreen.y - squareSize / 2),
-        squareSize,
-        squareSize
-    };
-    // render camera focal point square
-    SDL_RenderDrawRect(this->_renderer, &squareRect);
+        SDL_Rect squareRect = {
+            static_cast<int>(centerScreen.x - squareSize / 2),
+            static_cast<int>(centerScreen.y - squareSize / 2),
+            squareSize,
+            squareSize
+        };
+        // render camera focal point square
+        SDL_RenderDrawRect(this->_renderer, &squareRect);
+    }
     SDL_Rect worldRect = {
         0,
         0,

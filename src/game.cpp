@@ -81,13 +81,20 @@ void Game::run()
         
 		this->handleInputs(*this->_player);
 
+		auto h = this->_player->getHitbox();
+		int x=0;
+		if (h)
+			std::cout << ++x << h->_inCollision << std::endl;
+
 		// clear
 		this->_window.clear();
 		this->_userInterface->newFrame();
 		
 		// update
 		this->_player->update(deltaTime);
-		this->_camera->update(deltaTime);
+
+		if (h)
+			std::cout << ++x << h->_inCollision << std::endl;
 
 		// resolve collisions
 		this->_collisionManager->resolveBounds(*this->_player);
@@ -96,6 +103,12 @@ void Game::run()
 			this->_collisionManager->resolveBounds(*this->_player, *p);
 		}
 
+		if (h)
+			std::cout << ++x << h->_inCollision << std::endl;
+			
+		this->_camera->update(deltaTime);
+
+		
 		this->render();
 		
 		// display
