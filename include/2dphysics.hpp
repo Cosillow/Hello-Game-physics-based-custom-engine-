@@ -411,10 +411,18 @@ public:
     virtual void setPosition(const Vector2 &position)
     {
         this->_position = position;
-    }
-    void setOldPosition(const Vector2 &position)
-    {
         this->_oldPosition = position;
+    }
+
+    virtual void setPositionY(float y)    
+    {
+        this->_position.y = y;
+        this->_oldPosition.y = y;
+    }
+    virtual void setPositionX(float x)    
+    {
+        this->_position.x = x;
+        this->_oldPosition.x = x;
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Body &body)
