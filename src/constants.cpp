@@ -22,4 +22,6 @@ namespace Constants {
     int TILE_SIZE = 16; // (px x px)
     int CHUNK_SIZE = 16; // (tile x tile)
     std::string basePath = "";
+    float GAME_HEIGHT = 1000;
+    float GAME_WIDTH = 1000;
 }

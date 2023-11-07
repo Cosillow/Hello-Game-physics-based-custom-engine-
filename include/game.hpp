@@ -19,6 +19,7 @@ public:
     , _platforms(std::vector<std::unique_ptr<Platform>>())
     , _debugMenu(false)
     , _player(nullptr)
+    , _camera(std::make_shared<Camera>())
     {};
 
     void run();
@@ -33,5 +34,6 @@ private:
     std::unique_ptr<UserInterface> _userInterface;
     std::vector<std::unique_ptr<Platform>> _platforms;
     bool _debugMenu;
-    std::unique_ptr<Player> _player;
+    std::shared_ptr<Player> _player;
+    std::shared_ptr<Camera> _camera;
 };

@@ -3,7 +3,9 @@
 #include <SDL2/SDL_image.h>
 #include <string.h>
 #include <stack>
+#include <memory>
 
+#include "camera.hpp"
 #include "2dphysics.hpp"
 
 class Player;
@@ -20,11 +22,11 @@ public:
 	
 
 	// method overrides: render()
-	void render(const Body& Body);
+	void render();
 	void render(const Player& player);
-	void render(const Sprite& sprite, const Vector2 position);
 	void render(const Hitbox& hitbox);
 	void render(const Platform& platform);
+	
 
 	// getters
 	SDL_Renderer& getRenderer() const { return *(this->_renderer); }
@@ -32,12 +34,15 @@ public:
 	void saveRenderingColor();
     void restoreRenderingColor();
 
+	void addCamera(std::shared_ptr<Camera> cam) { this->_camera = cam; }
 	void setFullscreen(const bool on) { SDL_SetWindowFullscreen(this->_window, on ? SDL_WINDOW_FULLSCREEN : 0); }
 	void display();
 	void clear();
 private:
 	void cleanUp();
+	void render(const Sprite& sprite, const Vector2 position);
 	SDL_Window* _window;
 	SDL_Renderer* _renderer;
 	std::stack<SDL_Color> _colorStack;
+	std::shared_ptr<Camera> _camera;
 };

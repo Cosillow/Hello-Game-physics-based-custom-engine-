@@ -27,6 +27,8 @@ make -j && sudo make install
 ```
 
 ## TODO
+* cameras should be owned by game and have shared pointer with renderwindow (could be multiple in the future)
+
 * look at hitbox, make it not update every time?
 * make oldposition and newposition protected
   * api following that

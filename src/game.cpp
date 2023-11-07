@@ -41,7 +41,7 @@ void Game::handleInputs(Player& player1) {
 	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
 	{
-		this->_platforms.push_back(std::make_unique<Platform>(this->_inputManager->getMousePosition(), 1));
+		this->_platforms.push_back(std::make_unique<Platform>(this->_camera->screenToWorld(this->_inputManager->getMousePosition()), 1));
 	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
 	{
@@ -54,18 +54,22 @@ void Game::render()
 {
 	if (this->_debugMenu)
 		this->_userInterface->displayDebugMenu(this->_window, *this->_player);
-	this->_window.render(*this->_player);
+	
+	this->_window.render( *this->_player);
 	for (auto& p : this->_platforms)
 	{
 		this->_window.render(*p);
 	}
 
+	this->_window.render();
 	this->_userInterface->renderFrame();
 }
 
 void Game::run()
 {
-	this->_player = std::make_unique<Player>();
+	this->_player = std::make_shared<Player>();
+	this->_window.addCamera(this->_camera);
+	this->_camera->watchPlayer(this->_player);
 	
 	Uint32 prevTime = SDL_GetTicks();
 	float deltaTime = 0;
@@ -83,6 +87,7 @@ void Game::run()
 		
 		// update
 		this->_player->update(deltaTime);
+		this->_camera->update(deltaTime);
 
 		// resolve collisions
 		this->_collisionManager->resolveBounds(*this->_player);

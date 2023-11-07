@@ -19,4 +19,6 @@ namespace Constants {
     extern int TILE_SIZE;
     extern int CHUNK_SIZE;
     extern std::string basePath;
+    extern float GAME_HEIGHT;
+    extern float GAME_WIDTH;
 }

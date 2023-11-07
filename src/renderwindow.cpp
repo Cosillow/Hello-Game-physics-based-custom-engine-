@@ -11,8 +11,11 @@
 #include "sprite.hpp"
 #include "platform.hpp"
 
-RenderWindow::RenderWindow(const std::string& title, int w, int h)
-    : _window(nullptr), _renderer(nullptr), _colorStack(std::stack<SDL_Color>())
+RenderWindow::RenderWindow(const std::string& title, int w, int h) :
+_window(nullptr)
+, _renderer(nullptr)
+, _colorStack(std::stack<SDL_Color>())
+, _camera(nullptr)
 {
     _window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_SHOWN);
     if (!_window)
@@ -30,53 +33,146 @@ RenderWindow::RenderWindow(const std::string& title, int w, int h)
 }
 
 
-void RenderWindow::cleanUp()
-{
-    if (this->_renderer) {
-        SDL_DestroyRenderer(this->_renderer);
-        this->_renderer = nullptr;
-    }
-    if (_window) {
-        SDL_DestroyWindow(_window);
-        _window = nullptr;
-    }
-}
-
 
 void RenderWindow::clear()
 {
 	SDL_RenderClear(this->_renderer);
 }
 
-void RenderWindow::render(const Body& body)
+void RenderWindow::display()
+{
+	SDL_RenderPresent(this->_renderer);
+}
+
+void RenderWindow::saveRenderingColor()
+{
+    SDL_Color currentColor;
+    SDL_GetRenderDrawColor(this->_renderer, &currentColor.r, &currentColor.g, &currentColor.b, &currentColor.a);
+    this->_colorStack.push(currentColor);
+}
+
+void RenderWindow::restoreRenderingColor()
+{
+    if (!this->_colorStack.empty())
+    {
+        SDL_Color previousColor = this->_colorStack.top();
+        this->_colorStack.pop();
+        SDL_SetRenderDrawColor(this->_renderer, previousColor.r, previousColor.g, previousColor.b, previousColor.a);
+    }
+}
+
+void RenderWindow::render(const Player& player)
+{
+    if (!this->_camera)
+    {
+        std::cerr << "Camera not set for rendering!" << std::endl;
+        return;
+    }
+    this->saveRenderingColor();
+    this->render(player.getAnimatedSprite(), this->_camera->worldToScreen(player.getPosition()));
+    if (Constants::debugMode && player.getHitbox())
+        this->render(static_cast<Hitbox>(*(player.getHitbox())));
+    this->restoreRenderingColor();
+}
+
+void RenderWindow::render(const Hitbox& hitbox)
+{
+    if (!this->_camera)
+    {
+        std::cerr << "Camera not set for rendering!" << std::endl;
+        return;
+    }
+    this->saveRenderingColor();
+    Hitbox::Type hitboxType = hitbox.getType();
+    
+
+    if (hitbox._inCollision)
+        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255); // Red
+    else
+        SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255); // Green
+
+    if (hitboxType == Hitbox::Type::BoundingBox)
+    {
+        // Render bounding box
+        
+        const SDL_Rect& rect = this->_camera->worldToScreen(hitbox.getSDLRect());
+        SDL_RenderDrawRect(this->_renderer, &rect);
+    }
+    else if (hitboxType == Hitbox::Type::Circle)
+    {
+        // Render circle
+        const Vector2& center = this->_camera->worldToScreen(hitbox._center);
+        float radius = hitbox._circleRadius;
+        int centerX = static_cast<int>(center.x);
+        int centerY = static_cast<int>(center.y);
+
+        for (int x = centerX - radius; x <= centerX + radius; x++)
+        {
+            int yTop = centerY - static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
+            int yBottom = centerY + static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
+
+            SDL_RenderDrawLine(this->_renderer, x, yTop, x, yBottom);
+        }
+    }
+
+    this->restoreRenderingColor();
+}
+
+void RenderWindow::render(const Platform& platform)
 {
     this->saveRenderingColor();
-    // Set the rendering color to grey
-    SDL_SetRenderDrawColor(this->_renderer, 128, 128, 128, 255);
+    const Hitbox* hitbox = platform.getHitbox();
 
-    // Create a rectangle with a size of 200x50
-    Hitbox * hitbox = body.getHitbox();
     if (!hitbox) {
         this->restoreRenderingColor();
         return;
     }
     
-    // Render the rectangle
-    SDL_RenderFillRect(this->_renderer, &hitbox->getSDLRect());
+    this->render(static_cast<Hitbox>(*hitbox));
+
 
     this->restoreRenderingColor();
 }
 
-void RenderWindow::render(const Player& player)
-{
+void RenderWindow::render() {
+    if (!this->_camera)
+        return;
+
     this->saveRenderingColor();
-    this->render(player.getAnimatedSprite(), player.getPosition());
-    if (Constants::debugMode && player.getHitbox()) this->render(static_cast<Hitbox>(*(player.getHitbox())));
+
+    // gray
+    SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
+
+    Vector2 centerScreen = this->_camera->worldToScreen(this->_camera->getCenter());
+
+    int squareSize = 20;
+
+    SDL_Rect squareRect = {
+        static_cast<int>(centerScreen.x - squareSize / 2),
+        static_cast<int>(centerScreen.y - squareSize / 2),
+        squareSize,
+        squareSize
+    };
+    // render camera focal point square
+    SDL_RenderDrawRect(this->_renderer, &squareRect);
+    SDL_Rect worldRect = {
+        0,
+        0,
+        Constants::GAME_WIDTH,
+        Constants::GAME_HEIGHT
+    };
+    SDL_Rect worldAdjustedScreen = this->_camera->worldToScreen(worldRect);
+    SDL_RenderDrawRect(this->_renderer, &worldAdjustedScreen);
+    
+
     this->restoreRenderingColor();
 }
 
+
+// private methods
 void RenderWindow::render(const Sprite& sprite, const Vector2 position)
 {
+    // does not take into account camera, just renders at position
     this->saveRenderingColor();
 
     SDL_Texture* spritesheet = sprite.getSpritesheet();
@@ -100,67 +196,17 @@ void RenderWindow::render(const Sprite& sprite, const Vector2 position)
     this->restoreRenderingColor();
 }
 
-void RenderWindow::display()
+void RenderWindow::cleanUp()
 {
-	SDL_RenderPresent(this->_renderer);
-}
-
-void RenderWindow::saveRenderingColor()
-    {
-        SDL_Color currentColor;
-        SDL_GetRenderDrawColor(this->_renderer, &currentColor.r, &currentColor.g, &currentColor.b, &currentColor.a);
-        _colorStack.push(currentColor);
+    if (this->_renderer) {
+        SDL_DestroyRenderer(this->_renderer);
+        this->_renderer = nullptr;
     }
-
-void RenderWindow::restoreRenderingColor()
-{
-    if (!_colorStack.empty())
-    {
-        SDL_Color previousColor = _colorStack.top();
-        _colorStack.pop();
-        SDL_SetRenderDrawColor(this->_renderer, previousColor.r, previousColor.g, previousColor.b, previousColor.a);
+    if (_window) {
+        SDL_DestroyWindow(_window);
+        _window = nullptr;
     }
 }
-
-void RenderWindow::render(const Hitbox& hitbox)
-{
-    this->saveRenderingColor();
-    Hitbox::Type hitboxType = hitbox.getType();
-    
-
-    if (hitbox._inCollision)
-        SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255); // Red
-    else
-        SDL_SetRenderDrawColor(this->_renderer, 0, 255, 0, 255); // Green
-
-
-
-    if (hitboxType == Hitbox::Type::BoundingBox)
-    {
-        // Render bounding box
-        const SDL_Rect& rect = hitbox.getSDLRect();
-        SDL_RenderDrawRect(this->_renderer, &rect);
-    }
-    else if (hitboxType == Hitbox::Type::Circle)
-    {
-        // Render circle
-        const Vector2& center = hitbox._center;
-        float radius = hitbox._circleRadius;
-        int centerX = static_cast<int>(center.x);
-        int centerY = static_cast<int>(center.y);
-
-        for (int x = centerX - radius; x <= centerX + radius; x++)
-        {
-            int yTop = centerY - static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
-            int yBottom = centerY + static_cast<int>(sqrt(radius * radius - (x - centerX) * (x - centerX)));
-
-            SDL_RenderDrawLine(this->_renderer, x, yTop, x, yBottom);
-        }
-    }
-
-    this->restoreRenderingColor();
-}
-
 
 // void RenderWindow::render(const Canvas& canvas) {
 //     this->saveRenderingColor();
@@ -228,18 +274,3 @@ void RenderWindow::render(const Hitbox& hitbox)
 //     this->restoreRenderingColor();
 // }
 
-void RenderWindow::render(const Platform& platform)
-{
-    this->saveRenderingColor();
-    const Hitbox* hitbox = platform.getHitbox();
-
-    if (!hitbox) {
-        this->restoreRenderingColor();
-        return;
-    }
-    
-    this->render(static_cast<Hitbox>(*hitbox));
-
-
-    this->restoreRenderingColor();
-}
