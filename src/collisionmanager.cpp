@@ -38,12 +38,12 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
     Hitbox* playerHitbox = player.getHitbox();
     Hitbox* platformHitbox = platform.getHitbox();
 
-    if (!playerHitbox || !platformHitbox) return;
-    
-    if (playerHitbox->checkCollisions(*platformHitbox))
-    {
-        player.setIsTouchingGround(true);
-        const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2)+ Constants::COLLISION_BUFFER;
-        player.setPositionY(newYPosition);
-    }
+    if (!playerHitbox || !platformHitbox)
+        return;
+    if (!playerHitbox->checkCollisions(*platformHitbox))
+        return;
+        
+    player.setIsTouchingGround(true);
+    const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2)+ Constants::COLLISION_BUFFER;
+    player.setPositionY(newYPosition);
 }

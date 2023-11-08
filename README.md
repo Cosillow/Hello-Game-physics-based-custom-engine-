@@ -34,7 +34,6 @@ make -j && sudo make install
     * and player and hitbox
 * add zoom functionality to camera
   * and different camerea tracking options (camera types, something)
-* look at hitbox, make it not update every time?
 * make oldposition and newposition protected
   * api following that
 * figure out edges of platforms

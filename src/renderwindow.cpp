@@ -178,7 +178,6 @@ void RenderWindow::render()
     this->restoreRenderingColor();
 }
 
-
 // private methods
 void RenderWindow::render(const Sprite& sprite, const Vector2 position)
 {
