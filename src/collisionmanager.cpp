@@ -43,7 +43,58 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
     if (!playerHitbox->checkCollisions(*platformHitbox))
         return;
         
-    player.setIsTouchingGround(true);
-    const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2)+ Constants::COLLISION_BUFFER;
-    player.setPositionY(newYPosition);
+    
+
+
+
+
+    // Assuming you have the necessary variables defined, calculate the depth
+    // similar to your previous code
+    Vector2 playerCenter = player.getPosition();
+    Vector2 platformCenter = platform.getPosition();
+
+    // Calculate the distance between centers
+    float diffX = playerCenter.x - platformCenter.x;
+    float diffY = playerCenter.y - platformCenter.y;
+
+    // Calculate the minimum distance to separate along X and Y
+    float minXDist = (playerHitbox->_size.x + platformHitbox->_size.x) / 2;
+    float minYDist = (playerHitbox->_size.y + platformHitbox->_size.y) / 2;
+
+    // Calculate the depth of collision for both the X and Y axis
+    float depthX = diffX > 0 ? minXDist - diffX : -minXDist - diffX;
+    float depthY = diffY > 0 ? minYDist - diffY : -minYDist - diffY;
+
+    // Now that you have the depth, you can pick the smaller depth and move
+    // along that axis.
+    if (depthX != 0 && depthY != 0)
+    {
+        if (std::abs(depthX) < std::abs(depthY))
+        {
+            if (depthX > 0)
+            {
+                const float newXPosition = platformHitbox->getRightX() + (playerHitbox->_size.x / 2);
+                player.setPositionX(newXPosition);
+            } else
+            {
+                const float newXPosition = platformHitbox->getLeftX() - (playerHitbox->_size.x / 2);
+                player.setPositionX(newXPosition);
+            }
+        } else
+        {
+            if (depthY > 0)
+            {
+                const float newYPosition = platformHitbox->getBottomY() + (playerHitbox->_size.y / 2);
+                player.setPositionY(newYPosition); 
+                
+            } else
+            {
+                player.setIsTouchingGround(true);
+                const float newYPosition = platformHitbox->getTopY() - (playerHitbox->_size.y / 2);
+                player.setPositionY(newYPosition);
+            }
+        }
+
+    }
+
 }

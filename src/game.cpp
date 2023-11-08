@@ -41,7 +41,7 @@ void Game::handleInputs(Player& player1) {
 	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_LEFT))
 	{
-		this->_platforms.push_back(std::make_unique<Platform>(this->_camera->screenToWorld(this->_inputManager->getMousePosition()), 1));
+		this->_platforms.push_back(std::make_unique<Platform>(this->_camera->screenToWorld(this->_inputManager->getMousePosition()), 3));
 	}
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
 	{
