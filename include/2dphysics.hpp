@@ -132,7 +132,12 @@ struct Vector2
         return Vector2(x * invMag, y * invMag);
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Vector2 &vec)
+    Vector2 element_wise_multiply(const Vector2& vec) const
+    {
+        return Vector2(this->x * vec.x, this->y * vec.y);
+    }
+
+    friend std::ostream &operator<<(std::ostream& os, const Vector2& vec)
     {
         os << "(" << vec.x << ", " << vec.y << ")";
         return os;

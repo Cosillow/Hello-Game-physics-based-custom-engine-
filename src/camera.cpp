@@ -23,12 +23,15 @@ Vector2 Camera::screenToWorld(const Vector2& screenPosition)
 
 void Camera::watchPlayer(const std::shared_ptr<Player>& player)
 {
-    _player = player;
+    this->_player = player;
 }
 
 void Camera::update(float deltaTime)
 {
     if (this->_player == nullptr)
         return;
-    this->_center = this->_player->getPosition();
+    auto p = this->_player->getPosition();
+    const float scaleFactor = 3.0f;
+    this->_center.x += scaleFactor*((p.x - this->_center.x) * deltaTime);
+    this->_center.y = p.y;
 }

@@ -26,7 +26,7 @@ public:
 	void render(const Player& player);
 	void render(const Hitbox& hitbox);
 	void render(const Platform& platform);
-	
+	void renderCamera();
 
 	// getters
 	SDL_Renderer& getRenderer() const { return *(this->_renderer); }

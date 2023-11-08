@@ -130,21 +130,16 @@ void RenderWindow::render(const Platform& platform)
     
     this->render(static_cast<Hitbox>(*hitbox));
 
-
     this->restoreRenderingColor();
 }
 
-void RenderWindow::render() {
-    if (!this->_camera)
-        return;
-
+void RenderWindow::renderCamera()
+{ 
     this->saveRenderingColor();
-
-    // gray
-    SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
-
     if (Constants::debugMode)
     {
+        // gray
+        SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
         Vector2 centerScreen = this->_camera->worldToScreen(this->_camera->getCenter());
 
         int squareSize = 20;
@@ -158,6 +153,19 @@ void RenderWindow::render() {
         // render camera focal point square
         SDL_RenderDrawRect(this->_renderer, &squareRect);
     }
+    this->restoreRenderingColor();
+}
+
+void RenderWindow::render()
+{
+    if (!this->_camera)
+        return;
+
+    this->saveRenderingColor();
+
+    // gray
+    SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
+
     SDL_Rect worldRect = {
         0,
         0,
@@ -167,7 +175,6 @@ void RenderWindow::render() {
     SDL_Rect worldAdjustedScreen = this->_camera->worldToScreen(worldRect);
     SDL_RenderDrawRect(this->_renderer, &worldAdjustedScreen);
     
-
     this->restoreRenderingColor();
 }
 
