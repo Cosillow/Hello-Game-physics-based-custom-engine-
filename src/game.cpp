@@ -50,7 +50,7 @@ void Game::handleInputs(Player& player1) {
 	}
 	if (this->_inputManager->isKeyDown(SDL_SCANCODE_R))
 	{
-		this->_ropes.push_back(std::make_unique<Rope>(32, this->_camera->screenToWorld(this->_inputManager->getMousePosition())));	
+		this->_ropes.push_back(std::make_unique<Rope>(30, this->_camera->screenToWorld(this->_inputManager->getMousePosition())));	
 	}
 	
 }
@@ -84,7 +84,7 @@ void Game::run()
 	float deltaTime = 0;
 
 
-	Rope r = Rope(32, this->_player->getPosition());
+	Rope r = Rope(69, this->_player->getPosition());
 	while (this->_gameRunning)
 	{
 		Uint32 currentTime = SDL_GetTicks();
@@ -105,7 +105,7 @@ void Game::run()
 		}
 
 		this->_player->update(deltaTime);
-		r.setPosition(this->_player->getPosition());
+		r.setPosition(this->_player->getPosition() + Vector2(200.0f, -350.0f));
 		r.update(deltaTime);
 
 		// resolve collisions

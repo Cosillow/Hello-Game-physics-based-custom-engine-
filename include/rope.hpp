@@ -2,23 +2,25 @@
 
 #include "2dphysics.hpp"
 
-using links = std::vector<Body>;
+using segments = std::vector<Body>;
 
 class Rope: UpdateableI
 {
 public:
     Rope(): UpdateableI() {}
     Rope(int numLinks, const Vector2& position);
-    static constexpr float RopeSize = 3.0f;
+    static constexpr float RopeSize = 10.0f;
 
-    const links& getLinks() const { return this->_links; }
+    const segments& getSegments() const { return this->_links; }
 
     void setPosition(const Vector2& pos) { this->_position = pos; }
 
     virtual void update(float deltaTime);
+
 private:
     void applyConstraints();    
-    links _links;
+    segments _links;
     Vector2 _position;
+    
     
 };

@@ -53,3 +53,7 @@ make -j && sudo make install
 ## Game ideas
 * I want only keyboard controls if possible, aiming with mouse is annoying, and its easier to play on a laptop, which should be possible, not intensive
 * could have an aim circle that you can switch rotating left and right on player axis
+* balloons that make you float up, and enemies can attack them
+  * could be linked to life in the game
+  * or just be a powerup
+* shoot something that you can control with WASD, like a ness attack

@@ -1,4 +1,5 @@
 #include "rope.hpp"
+#include "constants.hpp"
 
 Rope::Rope(int numLinks, const Vector2& position) :
 UpdateableI()
@@ -6,17 +7,20 @@ UpdateableI()
 {
     for (int i = 0; i < numLinks; ++i)
     {
-        this->_links.emplace_back(position);
+        Body point = Body(position + Vector2(0, ( i * this->RopeSize )));
+        // point.applyForce({0, -Constants::GRAVITY* 2}); // balloon
+        point.applyForce({0, -Constants::GRAVITY* (0.5f)}); // reduced
+        this->_links.push_back(point);
     }
 }
 
 void Rope::update(float deltaTime)
 {
-    const auto maxX = this->_links.size() - 1;
+    const int maxX = this->_links.size() - 1;
     int i;
-    for (i = 1; i < maxX; ++i)
+    for (auto& seg: this->_links)
     {
-        this->_links[i].update(deltaTime);
+        seg.update(deltaTime);
     }
 
     for (i=0; i<50; ++i)
@@ -27,13 +31,13 @@ void Rope::update(float deltaTime)
 
 void Rope::applyConstraints()
 {
-    const auto maxX = this->_links.size() - 1;
+    const int maxX = this->_links.size() - 1;
     this->_links[0].setPosition(this->_position);
 
     for (int i = 0; i < maxX; ++i)
     {
-        Body firstSeg = this->_links[i];
-        Body secondSeg = this->_links[i+1];
+        Body& firstSeg = this->_links[i];
+        Body& secondSeg = this->_links[i+1];
 
         float dist = (firstSeg.getPosition() - secondSeg.getPosition()).magnitude();
         float error = dist - this->RopeSize;
@@ -44,30 +48,11 @@ void Rope::applyConstraints()
         if (i != 0)
         {
             firstSeg.setCurrentPosition(firstSeg.getPosition() - (changeAmount * 0.5f));
-            this->_links[i] = firstSeg;
-
             secondSeg.setCurrentPosition(secondSeg.getPosition() + (changeAmount * 0.5f));
-            this->_links[i + 1] = secondSeg;
         }
         else
         {
-            secondSeg.setCurrentPosition(secondSeg.getPosition() + (changeAmount ));
-            this->_links[i + 1] = secondSeg;
-
+            secondSeg.setCurrentPosition(secondSeg.getPosition() + (changeAmount));
         }
-
-        // Vector2 vec1 = this->_links[i - 1].getPosition() - this->_links[i].getPosition();
-
-        // float Magnitude1 = vec1.magnitude();
-        // float Extension1 = Magnitude1 - this->RopeSize;
-
-        // Vector2 vec2 = this->_links[i + 1].getPosition() - this->_links[i].getPosition();
-
-        // float Magnitude2 = vec2.magnitude();
-        // float Extension2 = Magnitude2 - this->RopeSize;
-
-        // Vector2 final = (vec1 / Magnitude1 * Extension1) + (vec2 / Magnitude2 * Extension2);
-
-        // this->_links[i].applyImpulse(final * 0.01);
     }
 }
