@@ -362,10 +362,13 @@ public:
 
         // Update hitbox
         if (this->_hitbox)
+        {
             this->_hitbox->setCenter(this->_position);
-
+            // this->_hitbox->_inCollision = false;
+        }
         // reset and allow collisions manager to set true
         this->_isTouchingGround = false;
+        
     }
     void applyImpulse(const Vector2 impulse)
     {

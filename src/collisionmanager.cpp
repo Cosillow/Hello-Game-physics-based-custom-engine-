@@ -13,22 +13,22 @@ void CollisionManager::resolveBounds(Body& body) const
     {
         body.setIsTouchingGround(true);
 
-        const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2);
+        const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2.0f);
         body.setPositionY(newYPosition);
     }
     if (hitbox->getTopY() <= 0)
     {
-        const float newYPosition = (hitbox->_size.y / 2);
+        const float newYPosition = (hitbox->_size.y / 2.0f);
         body.setPositionY(newYPosition);   
     }
     if (hitbox->getRightX() >= Constants::GAME_WIDTH)
     {
-        const float newXPosition = Constants::GAME_WIDTH - (hitbox->_size.x / 2);
+        const float newXPosition = Constants::GAME_WIDTH - (hitbox->_size.x / 2.0f);
         body.setPositionX(newXPosition);   
     }
     if (hitbox->getLeftX() <= 0)
     {
-        const float newXPosition = (hitbox->_size.x / 2);
+        const float newXPosition = (hitbox->_size.x / 2.0f);
         body.setPositionX(newXPosition);   
     }
 }
@@ -41,7 +41,14 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
     if (!bodyHitbox || !platformHitbox)
         return;
     if (!bodyHitbox->checkCollisions(*platformHitbox))
+    {
+        std::cout << "no collision" << std::endl;
         return;
+    } else
+    {
+        std::cout << "yes collision" << std::endl;
+    }
+        
         
     Vector2 bodyCenter = body.getPosition();
     Vector2 platformCenter = platform.getPosition();
@@ -51,12 +58,12 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
     float diffY = bodyCenter.y - platformCenter.y;
 
     // Calculate the minimum distance to separate along X and Y
-    float minXDist = (bodyHitbox->_size.x + platformHitbox->_size.x) / 2;
-    float minYDist = (bodyHitbox->_size.y + platformHitbox->_size.y) / 2;
+    float minXDist = (bodyHitbox->_size.x + platformHitbox->_size.x) / 2.0f;
+    float minYDist = (bodyHitbox->_size.y + platformHitbox->_size.y) / 2.0f;
 
     // Calculate the depth of collision for both the X and Y axis
-    float depthX = diffX > 0 ? minXDist - diffX : -minXDist - diffX;
-    float depthY = diffY > 0 ? minYDist - diffY : -minYDist - diffY;
+    float depthX = diffX > 0 ? minXDist - diffX : - minXDist - diffX;
+    float depthY = diffY > 0 ? minYDist - diffY : - minYDist - diffY;
 
     if (depthX != 0 && depthY != 0)
     {
@@ -64,24 +71,24 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
         {
             if (depthX > 0)
             {
-                const float newXPosition = platformHitbox->getRightX() + (bodyHitbox->_size.x / 2);
+                const float newXPosition = platformHitbox->getRightX() + (bodyHitbox->_size.x / 2.0f);
                 body.setPositionX(newXPosition);
             } else
             {
-                const float newXPosition = platformHitbox->getLeftX() - (bodyHitbox->_size.x / 2);
+                const float newXPosition = platformHitbox->getLeftX() - (bodyHitbox->_size.x / 2.0f);
                 body.setPositionX(newXPosition);
             }
         } else
         {
             if (depthY > 0)
             {
-                const float newYPosition = platformHitbox->getBottomY() + (bodyHitbox->_size.y / 2);
+                const float newYPosition = platformHitbox->getBottomY() + (bodyHitbox->_size.y / 2.0f);
                 body.setPositionY(newYPosition); 
                 
             } else
             {
                 body.setIsTouchingGround(true);
-                const float newYPosition = platformHitbox->getTopY() - (bodyHitbox->_size.y / 2);
+                const float newYPosition = platformHitbox->getTopY() - (bodyHitbox->_size.y / 2.0f);
                 body.setPositionY(newYPosition);
             }
         }
