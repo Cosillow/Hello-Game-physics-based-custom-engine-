@@ -312,6 +312,9 @@ public:
             delete this->_hitbox;
     }
 
+    Body(const Body& other) = delete;
+    Body& operator=(const Body& other) = delete;
+
     void addHitboxBB(float offsetX, float offsetY, float width, float height)
     {
         this->cleanup();
@@ -431,6 +434,8 @@ public:
         if (this->_isStatic)
             return;
         this->_position = position;
+        if (this->_hitbox)
+            this->_hitbox->setCenter(this->_position);
     }
 
     virtual void setPositionY(float y)    

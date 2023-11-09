@@ -109,6 +109,11 @@ void Game::run()
 		r.update(deltaTime);
 
 		// resolve collisions
+		auto& segs = r.getSegments();
+		for (auto& seg : segs)
+		{
+			this->_collisionManager->resolveBounds(const_cast<Body&>(*seg));
+		}
 		this->_collisionManager->resolveBounds(*this->_player);
 		for (auto& p : this->_platforms)
 		{

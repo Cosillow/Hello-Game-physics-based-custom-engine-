@@ -7,9 +7,11 @@ UpdateableI()
 {
     for (int i = 0; i < numLinks; ++i)
     {
-        Body point = Body(position + Vector2(0, ( i * this->RopeSize )));
-        // point.applyForce({0, -Constants::GRAVITY* 2}); // balloon
-        point.applyForce({0, -Constants::GRAVITY* (0.5f)}); // reduced
+        auto point = std::make_shared<Body>(position + Vector2(0, (i * this->RopeSize)));
+        point->addHitboxBB(3, 3);
+        // point->applyForce({0, -Constants::GRAVITY* 2}); // balloon
+        point->applyForce({0, -Constants::GRAVITY * (0.5f)}); // reduced
+
         this->_links.push_back(point);
     }
 }
@@ -20,7 +22,7 @@ void Rope::update(float deltaTime)
     int i;
     for (auto& seg: this->_links)
     {
-        seg.update(deltaTime);
+        seg->update(deltaTime);
     }
 
     for (i=0; i<50; ++i)
@@ -32,12 +34,12 @@ void Rope::update(float deltaTime)
 void Rope::applyConstraints()
 {
     const int maxX = this->_links.size() - 1;
-    this->_links[0].setPosition(this->_position);
+    this->_links[0]->setPosition(this->_position);
 
     for (int i = 0; i < maxX; ++i)
     {
-        Body& firstSeg = this->_links[i];
-        Body& secondSeg = this->_links[i+1];
+        Body& firstSeg = *this->_links[i];
+        Body& secondSeg = *this->_links[i+1];
 
         float dist = (firstSeg.getPosition() - secondSeg.getPosition()).magnitude();
         float error = dist - this->RopeSize;

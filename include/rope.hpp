@@ -1,8 +1,9 @@
 #include <vector>
+#include <memory>
 
 #include "2dphysics.hpp"
 
-using segments = std::vector<Body>;
+using segments = std::vector<std::shared_ptr<Body>>;
 
 class Rope: UpdateableI
 {
