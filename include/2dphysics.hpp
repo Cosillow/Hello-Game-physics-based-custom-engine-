@@ -336,6 +336,7 @@ public:
     }
     virtual void update(float deltaTime)
     {
+        // update using verlet integration
         if (this->_isStatic)
             return;
 
@@ -351,9 +352,9 @@ public:
         else
         {
             // body is moving
-            Vector2 newPosition = (this->_position * 2.0f) - this->_oldPosition + (finalAcceleration * (deltaTime * deltaTime));
+            Vector2 newPosition = this->_position - this->_oldPosition + (finalAcceleration * deltaTime);
             this->_oldPosition = this->_position;
-            this->_position = newPosition;
+            this->_position += newPosition;
         }
 
         // Update hitbox
@@ -417,10 +418,19 @@ public:
 
     virtual void setPosition(const Vector2 &position)
     {
+        if (this->_isStatic)
+            return;
         this->_position = position;
         this->_oldPosition = position;
         if (this->_hitbox)
             this->_hitbox->setCenter(this->_position);
+    }
+
+    void setCurrentPosition(const Vector2 &position)
+    {
+        if (this->_isStatic)
+            return;
+        this->_position = position;
     }
 
     virtual void setPositionY(float y)    

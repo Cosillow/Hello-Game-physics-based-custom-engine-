@@ -10,6 +10,7 @@
 #include "constants.hpp"
 #include "sprite.hpp"
 #include "platform.hpp"
+#include "rope.hpp"
 
 RenderWindow::RenderWindow(const std::string& title, int w, int h) :
 _window(nullptr)
@@ -177,6 +178,44 @@ void RenderWindow::render()
     
     this->restoreRenderingColor();
 }
+
+void RenderWindow::render(const Rope& rope)
+{
+    if (!this->_camera)
+    {
+        std::cerr << "Camera not set for rendering!" << std::endl;
+        return;
+    }
+
+    this->saveRenderingColor();
+
+    const auto& links = rope.getLinks();
+    
+
+    // Draw a line between each link and a dot at each link
+    for (size_t i = 0; i < links.size(); ++i)
+    {
+        const Vector2& pos = this->_camera->worldToScreen(links[i].getPosition());
+
+        // grey
+        // SDL_SetRenderDrawColor(this->_renderer, 150, 150, 150, 255);
+        // SDL_RenderDrawPoint(this->_renderer, static_cast<int>(pos.x), static_cast<int>(pos.y));
+
+        // Draw a line between each link (except the first one)
+        if (i > 0)
+        {
+            // brown
+            SDL_SetRenderDrawColor(this->_renderer, 139, 69, 19, 255);
+            const Vector2& pos1 = this->_camera->worldToScreen(links[i - 1].getPosition());
+            SDL_RenderDrawLine(this->_renderer, static_cast<int>(pos1.x), static_cast<int>(pos1.y),
+                               static_cast<int>(pos.x), static_cast<int>(pos.y));
+        }
+    }
+
+    this->restoreRenderingColor();
+}
+
+
 
 // private methods
 void RenderWindow::render(const Sprite& sprite, const Vector2 position)

@@ -13,6 +13,7 @@ class SpriteContainer;
 class Sprite;
 class Hitbox;
 class Platform;
+class Rope;
 
 class RenderWindow 
 {
@@ -26,6 +27,7 @@ public:
 	void render(const Player& player);
 	void render(const Hitbox& hitbox);
 	void render(const Platform& platform);
+	void render(const Rope& rope);
 	void renderCamera();
 
 	// getters

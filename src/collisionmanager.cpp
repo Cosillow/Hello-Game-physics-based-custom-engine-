@@ -43,13 +43,6 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
     if (!playerHitbox->checkCollisions(*platformHitbox))
         return;
         
-    
-
-
-
-
-    // Assuming you have the necessary variables defined, calculate the depth
-    // similar to your previous code
     Vector2 playerCenter = player.getPosition();
     Vector2 platformCenter = platform.getPosition();
 
@@ -65,8 +58,6 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
     float depthX = diffX > 0 ? minXDist - diffX : -minXDist - diffX;
     float depthY = diffY > 0 ? minYDist - diffY : -minYDist - diffY;
 
-    // Now that you have the depth, you can pick the smaller depth and move
-    // along that axis.
     if (depthX != 0 && depthY != 0)
     {
         if (std::abs(depthX) < std::abs(depthY))
@@ -94,7 +85,5 @@ void CollisionManager::resolveBounds(Player& player, Platform& platform) const
                 player.setPositionY(newYPosition);
             }
         }
-
     }
-
 }

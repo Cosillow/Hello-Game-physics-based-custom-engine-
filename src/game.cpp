@@ -15,23 +15,23 @@ void Game::handleInputs(Player& player1) {
 	this->_inputManager->update(*this);
 
 	// player 1
-	if (this->_inputManager->isKeyDown(SDL_SCANCODE_A)) 
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_LEFT)) 
 	{
 		player1.moveLeft(true);
 	}
-	if (this->_inputManager->isKeyUp(SDL_SCANCODE_A))
+	if (this->_inputManager->isKeyUp(SDL_SCANCODE_LEFT))
 	{
 		player1.moveLeft(false);
 	}
-	if (this->_inputManager->isKeyDown(SDL_SCANCODE_D)) 
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_RIGHT)) 
 	{
 		player1.moveRight(true);
 	}
-	if (this->_inputManager->isKeyUp(SDL_SCANCODE_D))
+	if (this->_inputManager->isKeyUp(SDL_SCANCODE_RIGHT))
 	{
 		player1.moveRight(false);
 	}
-	if (this->_inputManager->isKeyDown(SDL_SCANCODE_SPACE))
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_Z))
 	{
 		player1.jump();
 	}
@@ -46,6 +46,11 @@ void Game::handleInputs(Player& player1) {
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
 	{
 		this->_platforms.clear();
+		this->_ropes.clear();
+	}
+	if (this->_inputManager->isKeyDown(SDL_SCANCODE_R))
+	{
+		this->_ropes.push_back(std::make_unique<Rope>(32, this->_camera->screenToWorld(this->_inputManager->getMousePosition())));	
 	}
 	
 }
@@ -60,6 +65,10 @@ void Game::render()
 	{
 		this->_window.render(*p);
 	}
+	for (auto& r : this->_ropes)
+	{
+		this->_window.render(*r);
+	}
 
 	this->_window.render();
 	this->_userInterface->renderFrame();
@@ -73,6 +82,9 @@ void Game::run()
 	
 	Uint32 prevTime = SDL_GetTicks();
 	float deltaTime = 0;
+
+
+	Rope r = Rope(32, this->_player->getPosition());
 	while (this->_gameRunning)
 	{
 		Uint32 currentTime = SDL_GetTicks();
@@ -86,7 +98,15 @@ void Game::run()
 		this->_userInterface->newFrame();
 		
 		// update
+		this->_camera->update(deltaTime);
+		for (auto& r : this->_ropes)
+		{
+			(*r).update(deltaTime);
+		}
+
 		this->_player->update(deltaTime);
+		r.setPosition(this->_player->getPosition());
+		r.update(deltaTime);
 
 		// resolve collisions
 		this->_collisionManager->resolveBounds(*this->_player);
@@ -95,9 +115,7 @@ void Game::run()
 			this->_collisionManager->resolveBounds(*this->_player, *p);
 		}
 
-		this->_camera->update(deltaTime);
-
-		
+		this->_window.render(r);
 		this->render();
 		
 		// display

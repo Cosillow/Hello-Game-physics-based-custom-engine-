@@ -4,10 +4,10 @@
 
 namespace Constants {
     bool debugMode = false;
-    float PLAYER_SPEED = 1230.0;
+    float PLAYER_SPEED = 20.0;
     float PLAYER_MAX_SPEED = 10.0;
     float PLAYER_FRICTION = 2758.0;
-    float GRAVITY = 5430.0; 
+    float GRAVITY = 130.0; 
     float PLAYER_JUMP = 35;
     float DAMPING = 0.8;
     float RESTING_ROPE_LENGTH = 0.1;

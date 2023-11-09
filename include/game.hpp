@@ -6,6 +6,7 @@
 #include "collisionmanager.hpp"
 #include "userinterface.hpp"
 #include "platform.hpp"
+#include "rope.hpp"
 
 class Game
 {
@@ -20,7 +21,7 @@ public:
     , _debugMenu(false)
     , _player(nullptr)
     , _camera(std::make_shared<Camera>())
-    {};
+    { };
 
     void run();
     void handleInputs(Player& player1);
@@ -33,6 +34,7 @@ private:
     std::unique_ptr<CollisionManager> _collisionManager;
     std::unique_ptr<UserInterface> _userInterface;
     std::vector<std::unique_ptr<Platform>> _platforms;
+    std::vector<std::unique_ptr<Rope>> _ropes;
     bool _debugMenu;
     std::shared_ptr<Player> _player;
     std::shared_ptr<Camera> _camera;
