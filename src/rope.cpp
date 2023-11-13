@@ -8,7 +8,7 @@ UpdateableI()
     for (int i = 0; i < numLinks; ++i)
     {
         auto point = std::make_shared<Body>(position + Vector2(0, (i * this->RopeSize)));
-        point->addHitboxBB(3, 3);
+        point->addHitboxBB(1, 1);
         // point->applyForce({0, -Constants::GRAVITY* 2}); // balloon
         point->applyForce({0, -Constants::GRAVITY * (0.5f)}); // reduced
 

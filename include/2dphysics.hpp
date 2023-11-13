@@ -343,21 +343,30 @@ public:
         if (this->_isStatic)
             return;
 
-        Vector2 finalAcceleration = this->getAcceleration();
+        Vector2 acc = this->getAcceleration();
         Vector2 velocity = this->getVelocity();
 
         if (this->_isTouchingGround && this->_acceleration.x == 0)
         {
             // body is stopping
-            // apply friction (stop instantly)
+            
+            // // instant stop
             this->_oldPosition = this->_position;
+
+            // friction
+            // Vector2 increment = velocity;
+            // this->_oldPosition = this->_position;
+            // this->_position += increment;
+
+            // Vector2 friction = velocity * Constants::FRICTION * deltaTime;
+            // this->_position -= friction;
         }
         else
         {
             // body is moving
-            Vector2 newPosition = this->_position - this->_oldPosition + (finalAcceleration * deltaTime);
+            Vector2 increment = velocity + (acc * deltaTime);
             this->_oldPosition = this->_position;
-            this->_position += newPosition;
+            this->_position += increment;
         }
 
         // Update hitbox
