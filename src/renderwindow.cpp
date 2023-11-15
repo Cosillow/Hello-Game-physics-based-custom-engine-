@@ -207,15 +207,19 @@ void RenderWindow::render(const Rope& rope)
                                static_cast<int>(pos.x), static_cast<int>(pos.y));
         }
     }
-    // red
-    SDL_SetRenderDrawColor(this->_renderer, 255, 0, 0, 255);
-    for (i = 0; i < segments.size(); ++i)
+    if (Constants::debugMode)
     {
-        const Vector2& pos = this->_camera->worldToScreen(segments[i]->getPosition());
-        SDL_RenderDrawPoint(this->_renderer, static_cast<int>(pos.x), static_cast<int>(pos.y));
-        if (Constants::debugMode && segments[i]->getHitbox())
-            this->render(static_cast<Hitbox>(*(segments[i]->getHitbox())));
+        for (i = 0; i < segments.size(); ++i)
+        {
+            const Hitbox* hitbox = segments[i]->getHitbox();
+            if (!hitbox)
+                continue;
+            
+            this->render(static_cast<Hitbox>(*hitbox));
+        }
+         
     }
+    
     
     this->restoreRenderingColor();
 }

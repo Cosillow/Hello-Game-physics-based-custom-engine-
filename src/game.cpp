@@ -84,8 +84,7 @@ void Game::run()
 	float deltaTime = 0;
 
 
-	Rope r = Rope(30
-	, this->_player->getPosition());
+	Rope r = Rope(100, this->_player->getPosition());
 	while (this->_gameRunning)
 	{
 		Uint32 currentTime = SDL_GetTicks();
@@ -104,6 +103,8 @@ void Game::run()
 		{
 			(*r).update(deltaTime);
 		}
+
+		std::cout << r.getSize() << std::endl;
 
 		this->_player->update(deltaTime);
 		r.setPosition(this->_camera->screenToWorld(this->_inputManager->getMousePosition()));

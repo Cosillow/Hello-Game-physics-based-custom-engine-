@@ -6,24 +6,13 @@
 sudo apt-get install libsdl2-dev
 sudo apt-get install libsdl2-image-dev
 
-# for windows cross compile
+# for windows cross compile on linux
 sudo apt-get install mingw-w64
 sudo apt-get install mingw-w64-tools
-
-# build libraries statically for the cross compile
-# first download the source
-# then cd into root and run the script
-# installed locally: /usr/local/win64/
-PREFIX=/usr/local/win64
-TOOLSET=x86_64-w64-mingw32
-CROSSPATH=$PREFIX/$TOOLSET
-# https://github.com/libsdl-org/SDL/releases/tag/release-2.28.5
-mkdir build && cd build
-export CC="$TOOLSET-gcc -static-libgcc"
-../configure --target=$TOOLSET --host=$TOOLSET --build=x86_64-linux --prefix=$CROSSPATH
-make -j && sudo make install
-# https://zlib.net/
-
+# download the mingw version of sdl and sdl-image
+# make cross both libraries
+# https://github.com/libsdl-org/SDL/releases
+# https://github.com/libsdl-org/SDL_image/releases
 ```
 
 ## TODO
@@ -32,11 +21,10 @@ make -j && sudo make install
   * then switch touchNext when it updates probably
   * also try to condense/finilize touchingGround and inCollision
     * and player and hitbox
+* friction options
 * add zoom functionality to camera
   * and different camerea tracking options (camera types, something)
-* make oldposition and newposition protected
-  * api following that
-* figure out edges of platforms
+* VerletBody and EulerBody ?
 * level editor
   * undo/redo with (command pattern)
   * tilemap = array of pointers to tile objects (flyweight pattern)

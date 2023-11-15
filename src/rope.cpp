@@ -25,7 +25,7 @@ void Rope::update(float deltaTime)
         seg->update(deltaTime);
     }
 
-    for (i=0; i<50; ++i)
+    for (i=0; i<200; ++i)
     {
         this->applyConstraints();    
     }
