@@ -46,11 +46,6 @@ void Game::handleInputs(Player& player1) {
 	if (this->_inputManager->isMouseButtonDown(SDL_BUTTON_RIGHT))
 	{
 		this->_platforms.clear();
-		this->_ropes.clear();
-	}
-	if (this->_inputManager->isKeyDown(SDL_SCANCODE_R))
-	{
-		this->_ropes.push_back(std::make_unique<Rope>(30, this->_camera->screenToWorld(this->_inputManager->getMousePosition())));	
 	}
 	
 }
@@ -65,10 +60,6 @@ void Game::render()
 	{
 		this->_window.render(*p);
 	}
-	for (auto& r : this->_ropes)
-	{
-		this->_window.render(*r);
-	}
 
 	this->_window.render();
 	this->_userInterface->renderFrame();
@@ -80,52 +71,69 @@ void Game::run()
 	this->_window.addCamera(this->_camera);
 	this->_camera->watchPlayer(this->_player);
 	
-	Uint32 prevTime = SDL_GetTicks();
-	float deltaTime = 0;
+	Uint32 currentTime = SDL_GetTicks();
+	float accumulator = 0;
+	const double dt = 0.01;
 
+    int frames = 0;
+    Uint32 fpsTimer = currentTime;
 
 	Rope r = Rope(100, this->_player->getPosition());
 	while (this->_gameRunning)
 	{
-		Uint32 currentTime = SDL_GetTicks();
-        deltaTime = (currentTime - prevTime) / 1000.0f; // Convert to seconds
-        prevTime = currentTime;
+		Uint32 newTime = SDL_GetTicks();
+        float frameTime = (newTime - currentTime) / 1000.0f; // convert to seconds
+		currentTime = newTime;
+		accumulator += frameTime;
+		++frames;
+        
         
 		this->handleInputs(*this->_player);
+
+		
+		while (accumulator >= dt)
+		{
+			// update
+			this->_camera->update(dt);
+
+			this->_player->update(dt);
+			r.setPosition(this->_camera->screenToWorld(this->_inputManager->getMousePosition()));
+			r.update(dt);
+
+			// resolve collisions
+			auto& segs = r.getSegments();
+			for (auto& seg : segs)
+			{
+				this->_collisionManager->resolveBounds(const_cast<Body&>(*seg));
+			}
+			this->_collisionManager->resolveBounds(*this->_player);
+			for (auto& p : this->_platforms)
+			{
+				this->_collisionManager->resolveBounds(*this->_player, *p);
+			}
+
+			accumulator -= dt;
+		}
+		
+
 
 		// clear
 		this->_window.clear();
 		this->_userInterface->newFrame();
-		
-		// update
-		this->_camera->update(deltaTime);
-		for (auto& r : this->_ropes)
-		{
-			(*r).update(deltaTime);
-		}
-
-		std::cout << r.getSize() << std::endl;
-
-		this->_player->update(deltaTime);
-		r.setPosition(this->_camera->screenToWorld(this->_inputManager->getMousePosition()));
-		r.update(deltaTime);
-
-		// resolve collisions
-		auto& segs = r.getSegments();
-		for (auto& seg : segs)
-		{
-			this->_collisionManager->resolveBounds(const_cast<Body&>(*seg));
-		}
-		this->_collisionManager->resolveBounds(*this->_player);
-		for (auto& p : this->_platforms)
-		{
-			this->_collisionManager->resolveBounds(*this->_player, *p);
-		}
 
 		this->_window.render(r);
 		this->render();
 		
 		// display
 		this->_window.display();
+
+		// Calculate and print FPS every second
+        Uint32 elapsed = SDL_GetTicks() - fpsTimer;
+        if (elapsed >= 1000)
+        {
+            std::cout << "FPS: " << frames << std::endl;
+            frames = 0;
+            fpsTimer = SDL_GetTicks();
+        }
 	}
 }

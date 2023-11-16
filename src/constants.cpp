@@ -8,7 +8,7 @@ namespace Constants {
     float PLAYER_MAX_SPEED = 10.0;
     float FRICTION = 0.5;
     float GRAVITY = 130.0; 
-    float PLAYER_JUMP = 35;
+    float PLAYER_JUMP = 24;
     float DAMPING = 0.8;
     float RESTING_ROPE_LENGTH = 0.1;
     float GRAPPLING_HOOK_SPEED = 1000;

@@ -34,7 +34,6 @@ private:
     std::unique_ptr<CollisionManager> _collisionManager;
     std::unique_ptr<UserInterface> _userInterface;
     std::vector<std::unique_ptr<Platform>> _platforms;
-    std::vector<std::unique_ptr<Rope>> _ropes;
     bool _debugMenu;
     std::shared_ptr<Player> _player;
     std::shared_ptr<Camera> _camera;

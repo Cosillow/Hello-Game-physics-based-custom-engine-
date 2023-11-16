@@ -42,11 +42,11 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
         return;
     if (!bodyHitbox->checkCollisions(*platformHitbox))
     {
-        std::cout << "no collision" << std::endl;
+        // std::cout << "no collision" << std::endl;
         return;
     } else
     {
-        std::cout << "yes collision" << std::endl;
+        // std::cout << "yes collision" << std::endl;
     }
         
         
