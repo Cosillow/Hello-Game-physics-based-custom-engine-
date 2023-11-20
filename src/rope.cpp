@@ -9,8 +9,8 @@ UpdateableI()
     {
         auto point = std::make_shared<Body>(position + Vector2(0, (i * this->RopeSize)));
         point->addHitboxBB(1, 1);
-        // point->applyForce({0, -Constants::GRAVITY* 2}); // balloon
-        point->applyForce({0, -Constants::GRAVITY * (0.5f)}); // reduced
+        point->applyForce({0, -Constants::GRAVITY* 2}); // balloon
+        // point->applyForce({0, -Constants::GRAVITY * (0.5f)}); // reduced
 
         this->_links.push_back(point);
     }

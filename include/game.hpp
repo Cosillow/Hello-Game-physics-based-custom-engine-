@@ -21,6 +21,7 @@ public:
     , _debugMenu(false)
     , _player(nullptr)
     , _camera(std::make_shared<Camera>())
+    , _floating(false)
     { };
 
     void run();
@@ -37,4 +38,5 @@ private:
     bool _debugMenu;
     std::shared_ptr<Player> _player;
     std::shared_ptr<Camera> _camera;
+    bool _floating;
 };

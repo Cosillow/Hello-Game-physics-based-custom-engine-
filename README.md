@@ -16,6 +16,7 @@ sudo apt-get install mingw-w64-tools
 ```
 
 ## TODO
+* lock down a resolution and sprite size
 * buffer switch for hitbox being touched
   * touchedNext
   * then switch touchNext when it updates probably
@@ -40,8 +41,42 @@ sudo apt-get install mingw-w64-tools
 
 ## Game ideas
 * I want only keyboard controls if possible, aiming with mouse is annoying, and its easier to play on a laptop, which should be possible, not intensive
-* could have an aim circle that you can switch rotating left and right on player axis
-* balloons that make you float up, and enemies can attack them
-  * could be linked to life in the game
-  * or just be a powerup
 * shoot something that you can control with WASD, like a ness attack
+* balloon game where you float upwards, avoiding clouds, maybe enemies
+ * if you hit a cloud, a balloon pops and you slow down for a bit
+ * if you hit a cloud you lose a life/balloon
+ * different balloon powerups
+* camera will center player in the bottom center of the screen (hard y) and slow catching up x
+* some incentive to go faster?
+  * does less balloons mean you float slower?
+* shop, with a hand that grabs you out of the air
+* rainbows?
+  * pot of gold
+* dynamic weather?
+  * wind gusts
+  * rain
+  * lightning
+    * how would this work? clouds are already dangerous... unless clouds are safe and only dangerous if there is lightning
+* day night cycle
+* enemies
+  * birds
+  * sky pirates
+  * harpies
+  * drones
+  * airplane
+  * blimp
+  * cloud mimics
+  * crying cloud
+  * sky diver
+    * sky dive teams making formation
+  * helicopter
+
+### Story
+* Balloon Cult!!
+
+* player stumbles upon charismatic balloon guy
+* introduces you to balloon society
+* higher lvl balloon members have access to better things (maybe they run the shops)
+* offers you special balloons to use
+  * these balloons were taken from the special place above where the player is trying to go
+  *  

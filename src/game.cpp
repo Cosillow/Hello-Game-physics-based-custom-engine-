@@ -47,7 +47,17 @@ void Game::handleInputs(Player& player1) {
 	{
 		this->_platforms.clear();
 	}
-	
+	if (!this->_floating && this->_inputManager->isKeyDown(SDL_SCANCODE_UP))
+	{
+		this->_floating = true;
+		this->_player->applyForce({0, -1.4*Constants::GRAVITY});
+	}
+	if (this->_floating && this->_inputManager->isKeyUp(SDL_SCANCODE_UP))
+	{
+		this->_floating = false;
+		this->_player->applyForce({0, 1.4*Constants::GRAVITY});
+	}
+	std::cout << this->_floating << std::endl;
 }
 
 void Game::render() 
@@ -75,17 +85,15 @@ void Game::run()
 	float accumulator = 0;
 	const double dt = 0.01;
 
-    int frames = 0;
-    Uint32 fpsTimer = currentTime;
 
 	Rope r = Rope(100, this->_player->getPosition());
+	Rope r2 = Rope(100, this->_player->getPosition());
 	while (this->_gameRunning)
 	{
 		Uint32 newTime = SDL_GetTicks();
         float frameTime = (newTime - currentTime) / 1000.0f; // convert to seconds
 		currentTime = newTime;
 		accumulator += frameTime;
-		++frames;
         
         
 		this->handleInputs(*this->_player);
@@ -97,8 +105,10 @@ void Game::run()
 			this->_camera->update(dt);
 
 			this->_player->update(dt);
-			r.setPosition(this->_camera->screenToWorld(this->_inputManager->getMousePosition()));
+			r.setPosition(this->_player->getPosition());
 			r.update(dt);
+			r2.setPosition(this->_player->getPosition());
+			r2.update(dt);
 
 			// resolve collisions
 			auto& segs = r.getSegments();
@@ -122,18 +132,10 @@ void Game::run()
 		this->_userInterface->newFrame();
 
 		this->_window.render(r);
+		this->_window.render(r2);
 		this->render();
 		
 		// display
 		this->_window.display();
-
-		// Calculate and print FPS every second
-        Uint32 elapsed = SDL_GetTicks() - fpsTimer;
-        if (elapsed >= 1000)
-        {
-            std::cout << "FPS: " << frames << std::endl;
-            frames = 0;
-            fpsTimer = SDL_GetTicks();
-        }
 	}
 }
