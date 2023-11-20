@@ -11,15 +11,16 @@ void CollisionManager::resolveBounds(Body& body) const
     // resolve bounds of game world
     if (hitbox->getBottomY() >= Constants::GAME_HEIGHT)
     {
-        body.setIsTouchingGround(true);
-
         const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2.0f);
         body.setPositionY(newYPosition);
     }
     if (hitbox->getTopY() <= 0)
     {
-        const float newYPosition = (hitbox->_size.y / 2.0f);
-        body.setPositionY(newYPosition);   
+        const Vector2 v = body.getVelocity();
+        // const float newYPosition = (hitbox->_size.y / 2.0f);
+        const float newYPosition = Constants::GAME_HEIGHT - (hitbox->_size.y / 2.0f);
+        body.setPositionY(newYPosition);
+        body.setVelocity(v);
     }
     if (hitbox->getRightX() >= Constants::GAME_WIDTH)
     {
@@ -87,7 +88,6 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
                 
             } else
             {
-                body.setIsTouchingGround(true);
                 const float newYPosition = platformHitbox->getTopY() - (bodyHitbox->_size.y / 2.0f);
                 body.setPositionY(newYPosition);
             }

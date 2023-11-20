@@ -290,7 +290,6 @@ private:
     Vector2 _acceleration;
     bool _isStatic;
     Hitbox *_hitbox;
-    bool _isTouchingGround;
 
 public:
     Body(Vector2 position, bool a_isStatic = false) : 
@@ -299,8 +298,7 @@ public:
     , _oldPosition(position)
     , _acceleration(Vector2())
     , _isStatic(a_isStatic)
-    , _hitbox(nullptr)
-    , _isTouchingGround(false) {}
+    , _hitbox(nullptr) {}
 
     Body(bool isStatic) : Body({0, 0}, isStatic) {}
     Body() : Body(0.0) {}
@@ -346,38 +344,17 @@ public:
         Vector2 acc = this->getAcceleration();
         Vector2 velocity = this->getVelocity();
 
-        if (this->_isTouchingGround && this->_acceleration.x == 0)
-        {
-            // body is stopping
-            
-            // // instant stop
-            this->_oldPosition = this->_position;
-
-            // friction
-            // Vector2 increment = velocity;
-            // this->_oldPosition = this->_position;
-            // this->_position += increment;
-
-            // Vector2 friction = velocity * Constants::FRICTION * deltaTime;
-            // this->_position -= friction;
-        }
-        else
-        {
-            // body is moving
-            Vector2 increment = velocity + (acc * deltaTime);
-            this->_oldPosition = this->_position;
-            this->_position += increment;
-        }
+        // body is moving
+        Vector2 increment = velocity + (acc * deltaTime);
+        this->_oldPosition = this->_position;
+        this->_position += increment;
 
         // Update hitbox
         if (this->_hitbox)
         {
             this->_hitbox->setCenter(this->_position);
             // this->_hitbox->_inCollision = false;
-        }
-        // reset and allow collisions manager to set true
-        this->_isTouchingGround = false;
-        
+        }        
     }
     void applyImpulse(const Vector2 impulse)
     {
@@ -402,26 +379,17 @@ public:
     }
     const Vector2 getAcceleration() const
     {
-        return (this->_acceleration + Vector2(0, Constants::GRAVITY));
+        return this->_acceleration;
+        // return (this->_acceleration + Vector2(0, Constants::GRAVITY));
     }
     bool isStaticBody() const
     {
         return this->_isStatic;
     }
-    bool isTouchingGround() const
-    {
-        return this->_isTouchingGround;
-    }
     // setters
     void setStatic(bool isStatic)
     {
         this->_isStatic = isStatic;
-    }
-    void setIsTouchingGround(bool isTouchingGround)
-    {
-        this->_isTouchingGround = isTouchingGround;
-        if (this->_hitbox)
-            this->_hitbox->setCollision(isTouchingGround);
     }
     void setVelocity(const Vector2 &velocity)
     {

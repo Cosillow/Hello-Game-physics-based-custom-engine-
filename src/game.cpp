@@ -47,17 +47,6 @@ void Game::handleInputs(Player& player1) {
 	{
 		this->_platforms.clear();
 	}
-	if (!this->_floating && this->_inputManager->isKeyDown(SDL_SCANCODE_UP))
-	{
-		this->_floating = true;
-		this->_player->applyForce({0, -1.4*Constants::GRAVITY});
-	}
-	if (this->_floating && this->_inputManager->isKeyUp(SDL_SCANCODE_UP))
-	{
-		this->_floating = false;
-		this->_player->applyForce({0, 1.4*Constants::GRAVITY});
-	}
-	std::cout << this->_floating << std::endl;
 }
 
 void Game::render() 
@@ -77,7 +66,7 @@ void Game::render()
 
 void Game::run()
 {
-	this->_player = std::make_shared<Player>();
+	this->_player = std::make_shared<Player>(Vector2(2370, 9968));
 	this->_window.addCamera(this->_camera);
 	this->_camera->watchPlayer(this->_player);
 	
