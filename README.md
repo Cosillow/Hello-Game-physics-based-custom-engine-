@@ -16,6 +16,11 @@ sudo apt-get install mingw-w64-tools
 ```
 
 ## TODO
+* new physics system
+  * handle multiple speeds without crazy acceleration up
+  * if you are accelerating in the y, you can change your velocity up until (normal_speed) +-(fan_power_distance)
+  * this will be done via acceleration when the user is pressing the control as (fan_power_acceleration)
+  * when the user lets go of the control, the speed will settle back at (normal speed)
 * lock down a resolution and sprite size
 * buffer switch for hitbox being touched
   * touchedNext
@@ -46,6 +51,7 @@ sudo apt-get install mingw-w64-tools
  * if you hit a cloud, a balloon pops and you slow down for a bit
  * if you hit a cloud you lose a life/balloon
  * different balloon powerups
+* or... even better, you use the clouds to slow yourself down, avoiding the other enemies in the game
 * camera will center player in the bottom center of the screen (hard y) and slow catching up x
 * some incentive to go faster?
   * does less balloons mean you float slower?

@@ -19,8 +19,6 @@ public:
 
     void moveLeft(bool start);
     void moveRight(bool start);
-    void jump();
-
 
     void setLookAngle(const Vector2& mousePosition);
     void update(float deltaTime) override;

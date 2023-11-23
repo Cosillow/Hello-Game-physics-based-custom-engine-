@@ -2,6 +2,20 @@
 #include "player.hpp"
 #include "constants.hpp"
 #include "platform.hpp"
+#include "cloud.hpp"
+
+void CollisionManager::resolveBounds(Player& player, Cloud& cloud) const
+{
+    Hitbox* playerHitbox = player.getHitbox();
+    Hitbox* cloudHitbox = cloud.getHitbox();
+
+    if (!playerHitbox || !cloudHitbox)
+        return;
+    if (!playerHitbox->checkCollisions(*cloudHitbox))
+        return;
+
+
+}
 
 void CollisionManager::resolveBounds(Body& body) const
 {
@@ -43,11 +57,7 @@ void CollisionManager::resolveBounds(Body& body, Platform& platform) const
         return;
     if (!bodyHitbox->checkCollisions(*platformHitbox))
     {
-        // std::cout << "no collision" << std::endl;
         return;
-    } else
-    {
-        // std::cout << "yes collision" << std::endl;
     }
         
         

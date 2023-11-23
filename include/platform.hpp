@@ -1,8 +1,6 @@
 #pragma once
 
 #include "2dphysics.hpp"
-#include "animatedsprite.hpp"
-#include "resourcemanager.hpp"
 
 class Platform: public Body
 {

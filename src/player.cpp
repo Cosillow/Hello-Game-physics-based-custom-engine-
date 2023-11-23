@@ -59,11 +59,6 @@ void Player::update(float deltaTime)
     }
 }
 
-void Player::jump()
-{
-    this->Body::applyImpulse({0.0, -Constants::PLAYER_JUMP});
-}
-
 void Player::setLookAngle(const Vector2& mousePosition)
 {
     _lookAngle = this->getPosition().calculateAngle(mousePosition);

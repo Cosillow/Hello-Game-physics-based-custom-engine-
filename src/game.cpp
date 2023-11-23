@@ -31,10 +31,6 @@ void Game::handleInputs(Player& player1) {
 	{
 		player1.moveRight(false);
 	}
-	if (this->_inputManager->isKeyDown(SDL_SCANCODE_Z))
-	{
-		player1.jump();
-	}
 	if (this->_inputManager->isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		this->_debugMenu = !this->_debugMenu;
@@ -67,6 +63,8 @@ void Game::render()
 void Game::run()
 {
 	this->_player = std::make_shared<Player>(Vector2(2370, 9968));
+	this->_player->applyImpulse({0.0, -Constants::PLAYER_JUMP});
+
 	this->_window.addCamera(this->_camera);
 	this->_camera->watchPlayer(this->_player);
 	
