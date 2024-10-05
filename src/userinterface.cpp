@@ -34,7 +34,7 @@ void UserInterface::displayDebugMenu(RenderWindow& window, Player& player)
     }
 }
 
-const void UserInterface::newFrame()
+void UserInterface::newFrame() const
 {
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer2_NewFrame();
@@ -42,7 +42,7 @@ const void UserInterface::newFrame()
     ImGui::NewFrame();
 }
 
-const void UserInterface::renderFrame()
+void UserInterface::renderFrame() const
 {
 	ImGui::Render();
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());

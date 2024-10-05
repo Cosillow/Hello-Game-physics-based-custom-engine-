@@ -52,8 +52,7 @@ void Game::handleInputs(Player& player1) {
 
 void Game::render() 
 {
-	if (this->_debugMenu)
-		this->_userInterface->displayDebugMenu(this->_window, *this->_player);
+	if (this->_debugMenu) this->_userInterface->displayDebugMenu(this->_window, *this->_player);
 	
 	this->_window.render( *this->_player);
 	for (auto& p : this->_platforms)
@@ -87,10 +86,8 @@ void Game::run()
 		accumulator += frameTime;
 		++frames;
         
-        
 		this->handleInputs(*this->_player);
 
-		
 		while (accumulator >= dt)
 		{
 			// update
@@ -115,8 +112,6 @@ void Game::run()
 			accumulator -= dt;
 		}
 		
-
-
 		// clear
 		this->_window.clear();
 		this->_userInterface->newFrame();
